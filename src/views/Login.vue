@@ -20,6 +20,9 @@ export default {
     }
   },
   mounted () {
+    if (sessionStorage.getItem('user')) {
+      this.$router.push({ name: 'Home' })
+    }
     this.$refs.inputUser.focus()
   },
   methods: {
