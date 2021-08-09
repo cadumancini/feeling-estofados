@@ -1,0 +1,84 @@
+{
+  "produtos": [
+    {
+      "produto": "XPTO",
+      "descricao": "Lorem ipsum dolor sit amet consectetur",
+      "filhos": [
+        {
+          "produto": "FILHO_1",
+          "derivacao": "1",
+          "descricao": "Descricao do filho 1",
+          "qtde": 1,
+          "filhos": [
+            {
+              "produto": "NETO_1",
+              "derivacao": "G",
+              "descricao": "Descricao do neto 1",
+              "qtde": 2
+            },
+            {
+              "produto": "NETO_2",
+              "derivacao": "1",
+              "descricao": "Descricao do neto 2",
+              "qtde": 4
+            }
+          ]
+        },
+        {
+          "produto": "FILHO_2",
+          "derivacao": "1",
+          "descricao": "Descricao do filho 2",
+          "qtde": 1,
+          "filhos": [
+            {
+              "produto": "NETO_1",
+              "derivacao": "G",
+              "descricao": "Descricao do neto 1",
+              "qtde": 2
+            },
+            {
+              "produto": "NETO_3",
+              "derivacao": "1",
+              "descricao": "Descricao do neto 3",
+              "qtde": 1
+            }
+          ]
+        },
+        {
+          "produto": "FILHO_3",
+          "derivacao": "2",
+          "descricao": "Descricao do filho 3",
+          "qtde": 2,
+          "filhos": [
+            {
+              "produto": "NETO_4",
+              "derivacao": "1",
+              "descricao": "Descricao do neto 4",
+              "qtde": 2,
+              "filhos": [
+                {
+                  "produto": "BISNETO_1",
+                  "derivacao": "G",
+                  "descricao": "Descricao do bisneto 1",
+                  "qtde": 2
+                },
+                {
+                  "produto": "BISNETO_2",
+                  "derivacao": "1",
+                  "descricao": "Descricao do bisneto 2",
+                  "qtde": 2
+                },
+                {
+                  "produto": "BISNETO_3",
+                  "derivacao": "2",
+                  "descricao": "Descricao do bisneto 3",
+                  "qtde": 4
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
