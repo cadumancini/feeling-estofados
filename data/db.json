@@ -1,6 +1,7 @@
 {
   "produtos": [
     {
+      "id": 1,
       "produto": "XPTO",
       "descricao": "Lorem ipsum dolor sit amet consectetur",
       "filhos": [
