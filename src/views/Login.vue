@@ -42,6 +42,9 @@ export default {
 </script>
 
 <style>
+  h1, h3 {
+    text-align: center;
+  }
   .formLogin {
       max-width: 420px;
       margin: 30px auto;

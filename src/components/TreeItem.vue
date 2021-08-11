@@ -1,13 +1,15 @@
 <template>
   <li>
     <div>
-      {{ item.produto }}
+      {{ item.produto }} - {{ item.descricao }}
     </div>
-    <TreeItem
-      v-for="(child, index) in item.filhos"
-      :key="index"
-      :item="child"
-      ></TreeItem>
+    <ul>
+      <TreeItem
+        v-for="(child, index) in item.filhos"
+        :key="index"
+        :item="child"
+        ></TreeItem>
+    </ul>
   </li>
 </template>
 
@@ -19,5 +21,7 @@ export default {
 </script>
 
 <style>
-
+ li {
+   margin: 10px 0;
+ }
 </style>

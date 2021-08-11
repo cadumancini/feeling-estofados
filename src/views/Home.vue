@@ -5,9 +5,11 @@
       <label>Produto:</label>
       <input type="text" required v-model="product" ref="inputProduct">
       <button>Buscar</button>
-      <TreeItem
-        v-show="productFound"
-        :item="fullProduct"></TreeItem>
+      <ul>
+        <TreeItem
+          v-show="productFound"
+          :item="fullProduct"></TreeItem>
+      </ul>
     </form>
   </div>
 </template>
@@ -46,3 +48,12 @@ export default {
 }
 
 </script>
+
+<style>
+  ul {
+    padding-left: 1em;
+    line-height: 1.5em;
+    /* list-style-type: dot; */
+    list-style-type: dot;
+  }
+</style>
