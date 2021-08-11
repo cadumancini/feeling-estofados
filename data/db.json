@@ -1,8 +1,7 @@
 {
   "produtos": [
     {
-      "id": 1,
-      "produto": "XPTO",
+      "id": "XPTO",
       "descricao": "Lorem ipsum dolor sit amet consectetur",
       "filhos": [
         {
@@ -15,7 +14,27 @@
               "produto": "NETO_1",
               "derivacao": "G",
               "descricao": "Descricao do neto 1",
-              "qtde": 2
+              "qtde": 2,
+              "filhos": [
+                {
+                  "produto": "BISNETO_1",
+                  "derivacao": "G",
+                  "descricao": "Descricao do bisneto 1",
+                  "qtde": 2
+                },
+                {
+                  "produto": "BISNETO_2",
+                  "derivacao": "1",
+                  "descricao": "Descricao do bisneto 2",
+                  "qtde": 2
+                },
+                {
+                  "produto": "BISNETO_3",
+                  "derivacao": "2",
+                  "descricao": "Descricao do bisneto 3",
+                  "qtde": 4
+                }
+              ]
             },
             {
               "produto": "NETO_2",
@@ -41,7 +60,27 @@
               "produto": "NETO_3",
               "derivacao": "1",
               "descricao": "Descricao do neto 3",
-              "qtde": 1
+              "qtde": 1,
+              "filhos": [
+                {
+                  "produto": "BISNETO_1",
+                  "derivacao": "G",
+                  "descricao": "Descricao do bisneto 1",
+                  "qtde": 2
+                },
+                {
+                  "produto": "BISNETO_2",
+                  "derivacao": "1",
+                  "descricao": "Descricao do bisneto 2",
+                  "qtde": 2
+                },
+                {
+                  "produto": "BISNETO_3",
+                  "derivacao": "2",
+                  "descricao": "Descricao do bisneto 3",
+                  "qtde": 4
+                }
+              ]
             }
           ]
         },

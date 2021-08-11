@@ -5,12 +5,19 @@
       <label>Produto:</label>
       <input type="text" required v-model="product" ref="inputProduct">
       <button>Buscar</button>
-      <ul>
-        <TreeItem
-          v-show="productFound"
-          :item="fullProduct"></TreeItem>
-      </ul>
     </form>
+    <div v-if="hasSearched">
+      <div v-if="productFound">
+        <ul>
+          <TreeItem
+            v-show="productFound"
+            :item="fullProduct"></TreeItem>
+        </ul>
+      </div>
+      <div v-else>
+        <p>Produto não encontrado!</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -21,8 +28,9 @@ export default {
   components: { TreeItem },
   data () {
     return {
+      hasSearched: false,
       product: '',
-      productFound: false,
+      productFound: true,
       fullProduct: ''
     }
   },
@@ -31,18 +39,24 @@ export default {
       this.$router.push({ name: 'Login' })
     }
     this.$refs.inputProduct.focus()
+    this.productFound = false
   },
   methods: {
-    handleSubmit () {
-      this.productFound = true
-      fetch('http://localhost:3000/produtos/1')
-        .then(response => response.json())
-        .then((data) => {
-          console.log('chegou aqui')
-          console.log(data)
-          this.fullProduct = data
-        })
-        .catch(err => console.log(err.message))
+    async handleSubmit () {
+      this.productFound = false
+      this.hasSearched = true
+      try {
+        const response = await fetch('http://localhost:3000/produtos/' + this.product)
+        if (!response.ok) {
+          this.productFound = false
+          throw Error('Produto não encontrado!')
+        }
+        this.productFound = true
+        this.fullProduct = await response.json()
+        console.log(this.fullProduct)
+      } catch (err) {
+        console.log(err.message)
+      }
     }
   }
 }
@@ -53,7 +67,7 @@ export default {
   ul {
     padding-left: 1em;
     line-height: 1.5em;
-    /* list-style-type: dot; */
     list-style-type: dot;
+    cursor: pointer;
   }
 </style>

@@ -1,9 +1,10 @@
 <template>
   <li>
-    <div>
-      {{ item.produto }} - {{ item.descricao }}
+    <div @click="toggleOpen">
+      {{ item.id ? item.id : item.produto }} - {{ item.descricao }}
+      <span v-if="item.filhos">[ {{ isOpen ? '-' : '+' }} ]</span>
     </div>
-    <ul>
+    <ul v-show="isOpen">
       <TreeItem
         v-for="(child, index) in item.filhos"
         :key="index"
@@ -16,7 +17,17 @@
 <script>
 export default {
   name: 'TreeItem',
-  props: ['item']
+  props: ['item'],
+  data () {
+    return {
+      isOpen: false
+    }
+  },
+  methods: {
+    toggleOpen () {
+      this.isOpen = !this.isOpen
+    }
+  }
 }
 </script>
 
