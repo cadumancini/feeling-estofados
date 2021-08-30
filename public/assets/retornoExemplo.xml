@@ -1,0 +1,1821 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+    <S:Body>
+        <ns2:EstruturaResponse xmlns:ns2="http://services.senior.com.br">
+            <result>
+                <componentes>
+                    <codDer>138</codDer>
+                    <codNiv>1.0</codNiv>
+                    <codPro>14010088002</codPro>
+                    <desDer>138cm</desDer>
+                    <desPro>Módulo Unaí  - 1ass. 1br.</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>138</codDer>
+                    <codNiv>1.0.0</codNiv>
+                    <codPro>13010400026</codPro>
+                    <desDer>138cm</desDer>
+                    <desPro>Revestido gavetão Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>138</codDer>
+                    <codNiv>1.0.0.0</codNiv>
+                    <codPro>12010400026</codPro>
+                    <desDer>138cm</desDer>
+                    <desPro>Colado gavetão Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>138</codDer>
+                    <codNiv>1.0.0.0.0</codNiv>
+                    <codPro>04010400025</codPro>
+                    <desDer>138cm</desDer>
+                    <desPro>Laminado gavetão Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.0.0.0.0</codNiv>
+                    <codPro>01270007</codPro>
+                    <desDer> </desDer>
+                    <desPro>Espuma D20 Soft</desPro>
+                    <qtdCon>0.00223</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M3</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>138</codDer>
+                    <codNiv>1.0.0.0.1</codNiv>
+                    <codPro>10010400020</codPro>
+                    <desDer>138cm</desDer>
+                    <desPro>Montado gavetão Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>138</codDer>
+                    <codNiv>1.0.0.0.1.0</codNiv>
+                    <codPro>09010400022</codPro>
+                    <desDer>138cm</desDer>
+                    <desPro>Serrado gavetão Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.0.0.1.0.0</codNiv>
+                    <codPro>01130002</codPro>
+                    <desDer> </desDer>
+                    <desPro>Madeira sarrafeada</desPro>
+                    <qtdCon>0.02383</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M3</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.0.0.1.1</codNiv>
+                    <codPro>01170003</codPro>
+                    <desDer> </desDer>
+                    <desPro>Grampo 80x14</desPro>
+                    <qtdCon>94.37419</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UND</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.0.0.1.2</codNiv>
+                    <codPro>01170007</codPro>
+                    <desDer> </desDer>
+                    <desPro>Grampo 14x42</desPro>
+                    <qtdCon>16.91613</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UND</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.0.0.2</codNiv>
+                    <codPro>01010003</codPro>
+                    <desDer> </desDer>
+                    <desPro>Cola para espuma</desPro>
+                    <qtdCon>0.00401</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>KG</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>138</codDer>
+                    <codNiv>1.0.0.1</codNiv>
+                    <codPro>08010400019</codPro>
+                    <desDer>138cm</desDer>
+                    <desPro>Revisado gavetão Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>138</codDer>
+                    <codNiv>1.0.0.1.0</codNiv>
+                    <codPro>07010400024</codPro>
+                    <desDer>138cm</desDer>
+                    <desPro>Costurado gavetão Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>138</codDer>
+                    <codNiv>1.0.0.1.0.0</codNiv>
+                    <codPro>06010400027</codPro>
+                    <desDer>138cm</desDer>
+                    <desPro>Preparado gavetão Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>138</codDer>
+                    <codNiv>1.0.0.1.0.0.0</codNiv>
+                    <codPro>05010400026</codPro>
+                    <desDer>138cm</desDer>
+                    <desPro>Talhado gavetão Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>G</codDer>
+                    <codNiv>1.0.0.1.0.0.0.0</codNiv>
+                    <codPro>020100073</codPro>
+                    <desDer>Cor genérica</desDer>
+                    <desPro>Tecido genérico</desPro>
+                    <qtdCon>1.41</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>G</codDer>
+                    <codNiv>1.0.0.1.0.0.0.1</codNiv>
+                    <codPro>02020009</codPro>
+                    <desDer>Cor genérica</desDer>
+                    <desPro>Couro genérico</desPro>
+                    <qtdCon>2.538</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M2</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>G</codDer>
+                    <codNiv>1.0.0.1.0.1</codNiv>
+                    <codPro>01030002</codPro>
+                    <desDer>Acabanento genérico</desDer>
+                    <desPro>Linha 40</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>GR</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>G</codDer>
+                    <codNiv>1.0.0.1.1</codNiv>
+                    <codPro>01070001</codPro>
+                    <desDer>Acabanento genérico</desDer>
+                    <desPro>Zíper padrão 200mts</desPro>
+                    <qtdCon>1.33548</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>G</codDer>
+                    <codNiv>1.0.0.1.2</codNiv>
+                    <codPro>01310004</codPro>
+                    <desDer>Cor genérica</desDer>
+                    <desPro>Tnt 60gr largura 1,05m</desPro>
+                    <qtdCon>1.13516</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M2</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>U</codDer>
+                    <codNiv>1.0.0.1.3</codNiv>
+                    <codPro>01250042</codPro>
+                    <desDer>Sem opção de acabamento</desDer>
+                    <desPro>Cursor para zíper</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.0.2</codNiv>
+                    <codPro>01170002</codPro>
+                    <desDer> </desDer>
+                    <desPro>Grampo 80x10</desPro>
+                    <qtdCon>153.13548</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UND</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>115</codDer>
+                    <codNiv>1.0.1</codNiv>
+                    <codPro>13010200028</codPro>
+                    <desDer>115cm</desDer>
+                    <desPro>Revestido encosto Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>115</codDer>
+                    <codNiv>1.0.1.0</codNiv>
+                    <codPro>12010200027</codPro>
+                    <desDer>115cm</desDer>
+                    <desPro>Colado encosto Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>115</codDer>
+                    <codNiv>1.0.1.0.0</codNiv>
+                    <codPro>04010200026</codPro>
+                    <desDer>115cm</desDer>
+                    <desPro>Laminado encosto Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.1.0.0.0</codNiv>
+                    <codPro>01270007</codPro>
+                    <desDer> </desDer>
+                    <desPro>Espuma D20 Soft</desPro>
+                    <qtdCon>0.09568</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M3</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.1.0.0.1</codNiv>
+                    <codPro>01040002</codPro>
+                    <desDer> </desDer>
+                    <desPro>Fibra manta 150gr x 2,20m resinada</desPro>
+                    <qtdCon>1.2075</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M2</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>115</codDer>
+                    <codNiv>1.0.1.0.1</codNiv>
+                    <codPro>11010200010</codPro>
+                    <desDer>115cm</desDer>
+                    <desPro>Percintado encosto Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>115</codDer>
+                    <codNiv>1.0.1.0.1.0</codNiv>
+                    <codPro>10010200021</codPro>
+                    <desDer>115cm</desDer>
+                    <desPro>Montado encosto Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>115</codDer>
+                    <codNiv>1.0.1.0.1.0.0</codNiv>
+                    <codPro>09010200023</codPro>
+                    <desDer>115cm</desDer>
+                    <desPro>Serrado encosto Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.1.0.1.0.0.0</codNiv>
+                    <codPro>01130002</codPro>
+                    <desDer> </desDer>
+                    <desPro>Madeira sarrafeada</desPro>
+                    <qtdCon>0.009</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M3</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.1.0.1.0.1</codNiv>
+                    <codPro>01170007</codPro>
+                    <desDer> </desDer>
+                    <desPro>Grampo 14x42</desPro>
+                    <qtdCon>79.12</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UND</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>U</codDer>
+                    <codNiv>1.0.1.0.1.1</codNiv>
+                    <codPro>01310012</codPro>
+                    <desDer>Sem opção de acabamento</desDer>
+                    <desPro>Rafia largura 0,83</desPro>
+                    <qtdCon>0.45641</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M2</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.1.0.1.2</codNiv>
+                    <codPro>01170003</codPro>
+                    <desDer> </desDer>
+                    <desPro>Grampo 80x14</desPro>
+                    <qtdCon>309.12</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UND</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.1.0.2</codNiv>
+                    <codPro>01010003</codPro>
+                    <desDer> </desDer>
+                    <desPro>Cola para espuma</desPro>
+                    <qtdCon>0.06532</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>KG</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>115</codDer>
+                    <codNiv>1.0.1.1</codNiv>
+                    <codPro>08010200020</codPro>
+                    <desDer>115cm</desDer>
+                    <desPro>Revisado encosto Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>115</codDer>
+                    <codNiv>1.0.1.1.0</codNiv>
+                    <codPro>07010200025</codPro>
+                    <desDer>115cm</desDer>
+                    <desPro>Costurado encosto Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>115</codDer>
+                    <codNiv>1.0.1.1.0.0</codNiv>
+                    <codPro>06010200028</codPro>
+                    <desDer>115cm</desDer>
+                    <desPro>Preparado encosto Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>115</codDer>
+                    <codNiv>1.0.1.1.0.0.0</codNiv>
+                    <codPro>05010200027</codPro>
+                    <desDer>115cm</desDer>
+                    <desPro>Talhado encosto Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>G</codDer>
+                    <codNiv>1.0.1.1.0.0.0.0</codNiv>
+                    <codPro>020100073</codPro>
+                    <desDer>Cor genérica</desDer>
+                    <desPro>Tecido genérico</desPro>
+                    <qtdCon>2.35</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>G</codDer>
+                    <codNiv>1.0.1.1.0.0.0.1</codNiv>
+                    <codPro>02020009</codPro>
+                    <desDer>Cor genérica</desDer>
+                    <desPro>Couro genérico</desPro>
+                    <qtdCon>4.23</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M2</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>G</codDer>
+                    <codNiv>1.0.1.1.0.1</codNiv>
+                    <codPro>01030002</codPro>
+                    <desDer>Acabanento genérico</desDer>
+                    <desPro>Linha 40</desPro>
+                    <qtdCon>1.36344</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>GR</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.1.2</codNiv>
+                    <codPro>01170002</codPro>
+                    <desDer> </desDer>
+                    <desPro>Grampo 80x10</desPro>
+                    <qtdCon>92.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UND</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>023</codDer>
+                    <codNiv>1.0.2</codNiv>
+                    <codPro>13010300029</codPro>
+                    <desDer>23cm</desDer>
+                    <desPro>Revestido braço Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>023</codDer>
+                    <codNiv>1.0.2.0</codNiv>
+                    <codPro>12010300028</codPro>
+                    <desDer>23cm</desDer>
+                    <desPro>Colado braço Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>023</codDer>
+                    <codNiv>1.0.2.0.0</codNiv>
+                    <codPro>04010300027</codPro>
+                    <desDer>23cm</desDer>
+                    <desPro>Laminado braço Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.2.0.0.0</codNiv>
+                    <codPro>01270012</codPro>
+                    <desDer> </desDer>
+                    <desPro>Espuma D33 Soft</desPro>
+                    <qtdCon>0.02751</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M3</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.2.0.0.1</codNiv>
+                    <codPro>01040002</codPro>
+                    <desDer> </desDer>
+                    <desPro>Fibra manta 150gr x 2,20m resinada</desPro>
+                    <qtdCon>1.3864</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M2</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>023</codDer>
+                    <codNiv>1.0.2.0.1</codNiv>
+                    <codPro>11010300011</codPro>
+                    <desDer>23cm</desDer>
+                    <desPro>Percintado braço Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>023</codDer>
+                    <codNiv>1.0.2.0.1.0</codNiv>
+                    <codPro>10010300022</codPro>
+                    <desDer>23cm</desDer>
+                    <desPro>Montado braço Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>023</codDer>
+                    <codNiv>1.0.2.0.1.0.0</codNiv>
+                    <codPro>09010300024</codPro>
+                    <desDer>23cm</desDer>
+                    <desPro>Serrado braço Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.2.0.1.0.0.0</codNiv>
+                    <codPro>01130002</codPro>
+                    <desDer> </desDer>
+                    <desPro>Madeira sarrafeada</desPro>
+                    <qtdCon>0.00728</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M3</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.2.0.1.0.0.1</codNiv>
+                    <codPro>01120010</codPro>
+                    <desDer> </desDer>
+                    <desPro>Mdf carb 18mm 1,85x2,75cm</desPro>
+                    <qtdCon>0.0918</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M2</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.2.0.1.0.1</codNiv>
+                    <codPro>01170007</codPro>
+                    <desDer> </desDer>
+                    <desPro>Grampo 14x42</desPro>
+                    <qtdCon>65.16667</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UND</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>U</codDer>
+                    <codNiv>1.0.2.0.1.1</codNiv>
+                    <codPro>01310012</codPro>
+                    <desDer>Sem opção de acabamento</desDer>
+                    <desPro>Rafia largura 0,83</desPro>
+                    <qtdCon>0.391</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M2</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.2.0.1.2</codNiv>
+                    <codPro>01170003</codPro>
+                    <desDer> </desDer>
+                    <desPro>Grampo 80x14</desPro>
+                    <qtdCon>134.93333</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UND</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.2.0.2</codNiv>
+                    <codPro>01010003</codPro>
+                    <desDer> </desDer>
+                    <desPro>Cola para espuma</desPro>
+                    <qtdCon>0.04907</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>KG</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>023</codDer>
+                    <codNiv>1.0.2.1</codNiv>
+                    <codPro>08010300021</codPro>
+                    <desDer>23cm</desDer>
+                    <desPro>Revisado braço Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>023</codDer>
+                    <codNiv>1.0.2.1.0</codNiv>
+                    <codPro>07010300026</codPro>
+                    <desDer>23cm</desDer>
+                    <desPro>Costurado braço Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>023</codDer>
+                    <codNiv>1.0.2.1.0.0</codNiv>
+                    <codPro>06010300029</codPro>
+                    <desDer>23cm</desDer>
+                    <desPro>Preparado braço Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>023</codDer>
+                    <codNiv>1.0.2.1.0.0.0</codNiv>
+                    <codPro>05010300028</codPro>
+                    <desDer>23cm</desDer>
+                    <desPro>Talhado braço Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>G</codDer>
+                    <codNiv>1.0.2.1.0.0.0.0</codNiv>
+                    <codPro>020100073</codPro>
+                    <desDer>Cor genérica</desDer>
+                    <desPro>Tecido genérico</desPro>
+                    <qtdCon>0.851</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>G</codDer>
+                    <codNiv>1.0.2.1.0.0.0.1</codNiv>
+                    <codPro>02020009</codPro>
+                    <desDer>Cor genérica</desDer>
+                    <desPro>Couro genérico</desPro>
+                    <qtdCon>1.53333</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M2</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>G</codDer>
+                    <codNiv>1.0.2.1.0.1</codNiv>
+                    <codPro>01030002</codPro>
+                    <desDer>Acabanento genérico</desDer>
+                    <desPro>Linha 40</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>GR</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>U</codDer>
+                    <codNiv>1.0.2.2</codNiv>
+                    <codPro>01250067</codPro>
+                    <desDer>Sem opção de acabamento</desDer>
+                    <desPro>Contra chapa etiqueta de metal feeling</desPro>
+                    <qtdCon>0.5</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>U</codDer>
+                    <codNiv>1.0.2.3</codNiv>
+                    <codPro>01250040</codPro>
+                    <desDer>Sem opção de acabamento</desDer>
+                    <desPro>Etiqueta de metal 35x12 grafite</desPro>
+                    <qtdCon>0.5</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.2.4</codNiv>
+                    <codPro>01170002</codPro>
+                    <desDer> </desDer>
+                    <desPro>Grampo 80x10</desPro>
+                    <qtdCon>44.46667</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UND</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>023</codDer>
+                    <codNiv>1.0.3</codNiv>
+                    <codPro>13010300030</codPro>
+                    <desDer>23cm</desDer>
+                    <desPro>Revestido braço c/USB Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>023</codDer>
+                    <codNiv>1.0.3.0</codNiv>
+                    <codPro>12010300029</codPro>
+                    <desDer>23cm</desDer>
+                    <desPro>Colado braço c/USB Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>023</codDer>
+                    <codNiv>1.0.3.0.0</codNiv>
+                    <codPro>04010300028</codPro>
+                    <desDer>23cm</desDer>
+                    <desPro>Laminado braço c/USB Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.3.0.0.0</codNiv>
+                    <codPro>01270012</codPro>
+                    <desDer> </desDer>
+                    <desPro>Espuma D33 Soft</desPro>
+                    <qtdCon>0.02751</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M3</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.3.0.0.1</codNiv>
+                    <codPro>01040002</codPro>
+                    <desDer> </desDer>
+                    <desPro>Fibra manta 150gr x 2,20m resinada</desPro>
+                    <qtdCon>1.3864</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M2</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>023</codDer>
+                    <codNiv>1.0.3.0.1</codNiv>
+                    <codPro>11010300012</codPro>
+                    <desDer>23cm</desDer>
+                    <desPro>Percintado braço c/USB Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>023</codDer>
+                    <codNiv>1.0.3.0.1.0</codNiv>
+                    <codPro>10010300023</codPro>
+                    <desDer>23cm</desDer>
+                    <desPro>Montado braço c/USB Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>023</codDer>
+                    <codNiv>1.0.3.0.1.0.0</codNiv>
+                    <codPro>09010300025</codPro>
+                    <desDer>23cm</desDer>
+                    <desPro>Serrado braço c/USB Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.3.0.1.0.0.0</codNiv>
+                    <codPro>01130002</codPro>
+                    <desDer> </desDer>
+                    <desPro>Madeira sarrafeada</desPro>
+                    <qtdCon>0.00728</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M3</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.3.0.1.0.0.1</codNiv>
+                    <codPro>01120010</codPro>
+                    <desDer> </desDer>
+                    <desPro>Mdf carb 18mm 1,85x2,75cm</desPro>
+                    <qtdCon>0.09936</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M2</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.3.0.1.0.1</codNiv>
+                    <codPro>01170007</codPro>
+                    <desDer> </desDer>
+                    <desPro>Grampo 14x42</desPro>
+                    <qtdCon>65.16667</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UND</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.3.0.1.0.2</codNiv>
+                    <codPro>01300003</codPro>
+                    <desDer> </desDer>
+                    <desPro>Tubo Pvc 32mm 1 metro</desPro>
+                    <qtdCon>0.02683</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.3.0.1.0.3</codNiv>
+                    <codPro>01150005</codPro>
+                    <desDer> </desDer>
+                    <desPro>Parafuso 5.0x25 chato</desPro>
+                    <qtdCon>0.76667</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UND</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>U</codDer>
+                    <codNiv>1.0.3.0.1.1</codNiv>
+                    <codPro>01310012</codPro>
+                    <desDer>Sem opção de acabamento</desDer>
+                    <desPro>Rafia largura 0,83</desPro>
+                    <qtdCon>0.391</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M2</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.3.0.1.2</codNiv>
+                    <codPro>01170003</codPro>
+                    <desDer> </desDer>
+                    <desPro>Grampo 80x14</desPro>
+                    <qtdCon>134.93333</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UND</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.3.0.2</codNiv>
+                    <codPro>01010003</codPro>
+                    <desDer> </desDer>
+                    <desPro>Cola para espuma</desPro>
+                    <qtdCon>0.05417</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>KG</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>023</codDer>
+                    <codNiv>1.0.3.1</codNiv>
+                    <codPro>08010300022</codPro>
+                    <desDer>23cm</desDer>
+                    <desPro>Revisado braço c/USB Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>023</codDer>
+                    <codNiv>1.0.3.1.0</codNiv>
+                    <codPro>07010300027</codPro>
+                    <desDer>23cm</desDer>
+                    <desPro>Costurado braço c/USB Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>023</codDer>
+                    <codNiv>1.0.3.1.0.0</codNiv>
+                    <codPro>06010300030</codPro>
+                    <desDer>23cm</desDer>
+                    <desPro>Preparado braço c/USB Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>023</codDer>
+                    <codNiv>1.0.3.1.0.0.0</codNiv>
+                    <codPro>05010300029</codPro>
+                    <desDer>23cm</desDer>
+                    <desPro>Talhado braço c/USB Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>G</codDer>
+                    <codNiv>1.0.3.1.0.0.0.0</codNiv>
+                    <codPro>020100073</codPro>
+                    <desDer>Cor genérica</desDer>
+                    <desPro>Tecido genérico</desPro>
+                    <qtdCon>0.851</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>G</codDer>
+                    <codNiv>1.0.3.1.0.0.0.1</codNiv>
+                    <codPro>02020009</codPro>
+                    <desDer>Cor genérica</desDer>
+                    <desPro>Couro genérico</desPro>
+                    <qtdCon>1.53333</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M2</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>G</codDer>
+                    <codNiv>1.0.3.1.0.1</codNiv>
+                    <codPro>01030002</codPro>
+                    <desDer>Acabanento genérico</desDer>
+                    <desPro>Linha 40</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>GR</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.3.2</codNiv>
+                    <codPro>01170002</codPro>
+                    <desDer> </desDer>
+                    <desPro>Grampo 80x10</desPro>
+                    <qtdCon>44.46667</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UND</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>U</codDer>
+                    <codNiv>1.0.3.3</codNiv>
+                    <codPro>01250048</codPro>
+                    <desDer>Sem opção de acabamento</desDer>
+                    <desPro>Carregador USB de embutir</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>U</codDer>
+                    <codNiv>1.0.3.4</codNiv>
+                    <codPro>01250049</codPro>
+                    <desDer>Sem opção de acabamento</desDer>
+                    <desPro>Ponteira do carregador USB</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>115</codDer>
+                    <codNiv>1.0.4</codNiv>
+                    <codPro>13010100031</codPro>
+                    <desDer>115cm</desDer>
+                    <desPro>Revestido assento Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>115</codDer>
+                    <codNiv>1.0.4.0</codNiv>
+                    <codPro>12010100030</codPro>
+                    <desDer>115cm</desDer>
+                    <desPro>Colado assento Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>115</codDer>
+                    <codNiv>1.0.4.0.0</codNiv>
+                    <codPro>04010100029</codPro>
+                    <desDer>115cm</desDer>
+                    <desPro>Laminado assento Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.4.0.0.0</codNiv>
+                    <codPro>01270012</codPro>
+                    <desDer> </desDer>
+                    <desPro>Espuma D33 Soft</desPro>
+                    <qtdCon>0.14835</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M3</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.4.0.0.1</codNiv>
+                    <codPro>01270004</codPro>
+                    <desDer> </desDer>
+                    <desPro>Espuma D28</desPro>
+                    <qtdCon>0.00736</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M3</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.4.0.0.2</codNiv>
+                    <codPro>01270005</codPro>
+                    <desDer> </desDer>
+                    <desPro>Espuma D26 Ultra</desPro>
+                    <qtdCon>0.02438</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M3</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.4.0.0.3</codNiv>
+                    <codPro>01040002</codPro>
+                    <desDer> </desDer>
+                    <desPro>Fibra manta 150gr x 2,20m resinada</desPro>
+                    <qtdCon>1.7388</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M2</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>115</codDer>
+                    <codNiv>1.0.4.0.1</codNiv>
+                    <codPro>11010100013</codPro>
+                    <desDer>115cm</desDer>
+                    <desPro>Percintado assento Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>115</codDer>
+                    <codNiv>1.0.4.0.1.0</codNiv>
+                    <codPro>10010100024</codPro>
+                    <desDer>115cm</desDer>
+                    <desPro>Montado assento Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>115</codDer>
+                    <codNiv>1.0.4.0.1.0.0</codNiv>
+                    <codPro>09010100026</codPro>
+                    <desDer>115cm</desDer>
+                    <desPro>Serrado assento Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.4.0.1.0.0.0</codNiv>
+                    <codPro>01130002</codPro>
+                    <desDer> </desDer>
+                    <desPro>Madeira sarrafeada</desPro>
+                    <qtdCon>0.00786</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M3</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.4.0.1.0.1</codNiv>
+                    <codPro>01170003</codPro>
+                    <desDer> </desDer>
+                    <desPro>Grampo 80x14</desPro>
+                    <qtdCon>153.64</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UND</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.4.0.1.1</codNiv>
+                    <codPro>01090003</codPro>
+                    <desDer> </desDer>
+                    <desPro>Percinta 370 para assento</desPro>
+                    <qtdCon>5.6212</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.4.0.1.2</codNiv>
+                    <codPro>01170003</codPro>
+                    <desDer> </desDer>
+                    <desPro>Grampo 80x14</desPro>
+                    <qtdCon>110.4</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UND</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.4.0.2</codNiv>
+                    <codPro>01010003</codPro>
+                    <desDer> </desDer>
+                    <desPro>Cola para espuma</desPro>
+                    <qtdCon>0.07084</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>KG</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>115</codDer>
+                    <codNiv>1.0.4.1</codNiv>
+                    <codPro>08010100023</codPro>
+                    <desDer>115cm</desDer>
+                    <desPro>Revisado assento Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>115</codDer>
+                    <codNiv>1.0.4.1.0</codNiv>
+                    <codPro>07010100028</codPro>
+                    <desDer>115cm</desDer>
+                    <desPro>Costurado assento Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>115</codDer>
+                    <codNiv>1.0.4.1.0.0</codNiv>
+                    <codPro>06010100031</codPro>
+                    <desDer>115cm</desDer>
+                    <desPro>Preparado assento Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>115</codDer>
+                    <codNiv>1.0.4.1.0.0.0</codNiv>
+                    <codPro>05010100030</codPro>
+                    <desDer>115cm</desDer>
+                    <desPro>Talhado assento Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>G</codDer>
+                    <codNiv>1.0.4.1.0.0.0.0</codNiv>
+                    <codPro>020100073</codPro>
+                    <desDer>Cor genérica</desDer>
+                    <desPro>Tecido genérico</desPro>
+                    <qtdCon>2.61</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>G</codDer>
+                    <codNiv>1.0.4.1.0.0.0.1</codNiv>
+                    <codPro>02020009</codPro>
+                    <desDer>Cor genérica</desDer>
+                    <desPro>Couro genérico</desPro>
+                    <qtdCon>4.698</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M2</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>G</codDer>
+                    <codNiv>1.0.4.1.0.1</codNiv>
+                    <codPro>01030002</codPro>
+                    <desDer>Acabanento genérico</desDer>
+                    <desPro>Linha 40</desPro>
+                    <qtdCon>1.305</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>GR</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.4.2</codNiv>
+                    <codPro>01170002</codPro>
+                    <desDer> </desDer>
+                    <desPro>Grampo 80x10</desPro>
+                    <qtdCon>101.2</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UND</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>065</codDer>
+                    <codNiv>1.0.5</codNiv>
+                    <codPro>13010500032</codPro>
+                    <desDer>65cm</desDer>
+                    <desPro>Revestido almofada de encosto Unaí</desPro>
+                    <qtdCon>2.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>065</codDer>
+                    <codNiv>1.0.5.0</codNiv>
+                    <codPro>12010500031</codPro>
+                    <desDer>65cm</desDer>
+                    <desPro>Colado almofada de encosto Unaí</desPro>
+                    <qtdCon>2.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>065</codDer>
+                    <codNiv>1.0.5.0.0</codNiv>
+                    <codPro>04010500030</codPro>
+                    <desDer>65cm</desDer>
+                    <desPro>Laminado almofada de encosto Unaí</desPro>
+                    <qtdCon>2.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.5.0.0.0</codNiv>
+                    <codPro>01060003</codPro>
+                    <desDer> </desDer>
+                    <desPro>Almofada pena de ganso 75x60cm (1,900Kg)</desPro>
+                    <qtdCon>2.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>065</codDer>
+                    <codNiv>1.0.5.1</codNiv>
+                    <codPro>08010500024</codPro>
+                    <desDer>65cm</desDer>
+                    <desPro>Revisado almofada de encosto Unaí</desPro>
+                    <qtdCon>2.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>065</codDer>
+                    <codNiv>1.0.5.1.0</codNiv>
+                    <codPro>07010500029</codPro>
+                    <desDer>65cm</desDer>
+                    <desPro>Costurado almofada de encosto Unaí</desPro>
+                    <qtdCon>2.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>065</codDer>
+                    <codNiv>1.0.5.1.0.0</codNiv>
+                    <codPro>06010500032</codPro>
+                    <desDer>65cm</desDer>
+                    <desPro>Preparado almofada de encosto Unaí</desPro>
+                    <qtdCon>2.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>065</codDer>
+                    <codNiv>1.0.5.1.0.0.0</codNiv>
+                    <codPro>05010500031</codPro>
+                    <desDer>65cm</desDer>
+                    <desPro>Talhado almofada de encosto Unaí</desPro>
+                    <qtdCon>2.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>G</codDer>
+                    <codNiv>1.0.5.1.0.0.0.0</codNiv>
+                    <codPro>020100073</codPro>
+                    <desDer>Cor genérica</desDer>
+                    <desPro>Tecido genérico</desPro>
+                    <qtdCon>1.46</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>G</codDer>
+                    <codNiv>1.0.5.1.0.0.0.1</codNiv>
+                    <codPro>02020009</codPro>
+                    <desDer>Cor genérica</desDer>
+                    <desPro>Couro genérico</desPro>
+                    <qtdCon>2.628</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M2</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>U</codDer>
+                    <codNiv>1.0.5.1.0.0.1</codNiv>
+                    <codPro>01250042</codPro>
+                    <desDer>Sem opção de acabamento</desDer>
+                    <desPro>Cursor para zíper</desPro>
+                    <qtdCon>2.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>G</codDer>
+                    <codNiv>1.0.5.1.0.0.2</codNiv>
+                    <codPro>01070001</codPro>
+                    <desDer>Acabanento genérico</desDer>
+                    <desPro>Zíper padrão 200mts</desPro>
+                    <qtdCon>1.08</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>G</codDer>
+                    <codNiv>1.0.5.1.0.1</codNiv>
+                    <codPro>01030002</codPro>
+                    <desDer>Acabanento genérico</desDer>
+                    <desPro>Linha 40</desPro>
+                    <qtdCon>1.0512</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>GR</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.6</codNiv>
+                    <codPro>01170002</codPro>
+                    <desDer> </desDer>
+                    <desPro>Grampo 80x10</desPro>
+                    <qtdCon>44.51613</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UND</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.7</codNiv>
+                    <codPro>01150002</codPro>
+                    <desDer> </desDer>
+                    <desPro>Parafuso 5.0x60 flangeado</desPro>
+                    <qtdCon>10.90323</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UND</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>G</codDer>
+                    <codNiv>1.0.8</codNiv>
+                    <codPro>01220078</codPro>
+                    <desDer>Acabamento genérico</desDer>
+                    <desPro>Pé central aço duplo 250x125x1 (Unaí)</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>G</codDer>
+                    <codNiv>1.0.9</codNiv>
+                    <codPro>01220079</codPro>
+                    <desDer>Acabamento genérico</desDer>
+                    <desPro>Pé aço duplo 125x240x1 (Unaí)</desPro>
+                    <qtdCon>2.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.10</codNiv>
+                    <codPro>01200004</codPro>
+                    <desDer> </desDer>
+                    <desPro>Engate preto c/2 pinos (Blend)</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>U</codDer>
+                    <codNiv>1.0.11</codNiv>
+                    <codPro>01220063</codPro>
+                    <desDer>Sem opção de acabamento</desDer>
+                    <desPro>Sapata clip canoa mod1 (6,4mm) preto</desPro>
+                    <qtdCon>3.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.12</codNiv>
+                    <codPro>01280007</codPro>
+                    <desDer> </desDer>
+                    <desPro>Plástico picotado para embalagem interna pés (40x60)</desPro>
+                    <qtdCon>4.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.0.13</codNiv>
+                    <codPro>01330007</codPro>
+                    <desDer> </desDer>
+                    <desPro>Pino tag 40mm</desPro>
+                    <qtdCon>2.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>138</codDer>
+                    <codNiv>1.1</codNiv>
+                    <codPro>15012200004</codPro>
+                    <desDer>138cm</desDer>
+                    <desPro>Embalado malha Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.1.0</codNiv>
+                    <codPro>01290001</codPro>
+                    <desDer> </desDer>
+                    <desPro>Certificado de garantia</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.1.1</codNiv>
+                    <codPro>01290002</codPro>
+                    <desDer> </desDer>
+                    <desPro>Certificado anti chama</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.1.2</codNiv>
+                    <codPro>01290015</codPro>
+                    <desDer> </desDer>
+                    <desPro>Etiqueta adesiva 102x305mm branca (embalagem)</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.1.3</codNiv>
+                    <codPro>03030002</codPro>
+                    <desDer> </desDer>
+                    <desPro>Cartão de operação (OP) amarelo</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.1.4</codNiv>
+                    <codPro>01330003</codPro>
+                    <desDer> </desDer>
+                    <desPro>Fita adesiva transparente 25mmx50m (estreita)</desPro>
+                    <qtdCon>5.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.1.5</codNiv>
+                    <codPro>01280002</codPro>
+                    <desDer> </desDer>
+                    <desPro>Papelão ondulado 1,20 para embalagem</desPro>
+                    <qtdCon>1.23755</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>KG</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.1.6</codNiv>
+                    <codPro>01320001</codPro>
+                    <desDer> </desDer>
+                    <desPro>Plástico bolha 1,20x100m 60gr</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M2</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.1.7</codNiv>
+                    <codPro>01280001</codPro>
+                    <desDer> </desDer>
+                    <desPro>Malha branca de embalagem</desPro>
+                    <qtdCon>0.22258</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>KG</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.1.8</codNiv>
+                    <codPro>01290019</codPro>
+                    <desDer> </desDer>
+                    <desPro>Saco plástico 180x220x0,08</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.1.9</codNiv>
+                    <codPro>01290058</codPro>
+                    <desDer> </desDer>
+                    <desPro>Manual produto - Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>138</codDer>
+                    <codNiv>1.2</codNiv>
+                    <codPro>15012100005</codPro>
+                    <desDer>138cm</desDer>
+                    <desPro>Embalado malha e capacete Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.2.0</codNiv>
+                    <codPro>01290001</codPro>
+                    <desDer> </desDer>
+                    <desPro>Certificado de garantia</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.2.1</codNiv>
+                    <codPro>01290002</codPro>
+                    <desDer> </desDer>
+                    <desPro>Certificado anti chama</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.2.2</codNiv>
+                    <codPro>01290015</codPro>
+                    <desDer> </desDer>
+                    <desPro>Etiqueta adesiva 102x305mm branca (embalagem)</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.2.3</codNiv>
+                    <codPro>03030002</codPro>
+                    <desDer> </desDer>
+                    <desPro>Cartão de operação (OP) amarelo</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.2.4</codNiv>
+                    <codPro>01330003</codPro>
+                    <desDer> </desDer>
+                    <desPro>Fita adesiva transparente 25mmx50m (estreita)</desPro>
+                    <qtdCon>5.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.2.5</codNiv>
+                    <codPro>01280002</codPro>
+                    <desDer> </desDer>
+                    <desPro>Papelão ondulado 1,20 para embalagem</desPro>
+                    <qtdCon>1.23755</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>KG</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.2.6</codNiv>
+                    <codPro>01320001</codPro>
+                    <desDer> </desDer>
+                    <desPro>Plástico bolha 1,20x100m 60gr</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M2</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.2.7</codNiv>
+                    <codPro>01280001</codPro>
+                    <desDer> </desDer>
+                    <desPro>Malha branca de embalagem</desPro>
+                    <qtdCon>0.22258</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>KG</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.2.8</codNiv>
+                    <codPro>01290019</codPro>
+                    <desDer> </desDer>
+                    <desPro>Saco plástico 180x220x0,08</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.2.9</codNiv>
+                    <codPro>01290058</codPro>
+                    <desDer> </desDer>
+                    <desPro>Manual produto - Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.2.10</codNiv>
+                    <codPro>01290066</codPro>
+                    <desDer> </desDer>
+                    <desPro>Capacete Unaí p/braço 380x100</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.2.11</codNiv>
+                    <codPro>01290067</codPro>
+                    <desDer> </desDer>
+                    <desPro>Capacete Unaí p/acabamento lateral 550x100</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.2.12</codNiv>
+                    <codPro>01320002</codPro>
+                    <desDer> </desDer>
+                    <desPro>Isomanta 1,20x50m</desPro>
+                    <qtdCon>2.88</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M2</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>143</codDer>
+                    <codNiv>1.3</codNiv>
+                    <codPro>15011400006</codPro>
+                    <desDer>143cm</desDer>
+                    <desPro>Embalado estrado fechado Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>143</codDer>
+                    <codNiv>1.3.0</codNiv>
+                    <codPro>10011400025</codPro>
+                    <desDer>143cm</desDer>
+                    <desPro>Montado estrado fechado Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer>143</codDer>
+                    <codNiv>1.3.0.0</codNiv>
+                    <codPro>09011400027</codPro>
+                    <desDer>143cm</desDer>
+                    <desPro>Serrado estrado fechado Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>P</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.3.0.0.0</codNiv>
+                    <codPro>01130002</codPro>
+                    <desDer> </desDer>
+                    <desPro>Madeira sarrafeada</desPro>
+                    <qtdCon>0.0256</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M3</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.3.0.0.1</codNiv>
+                    <codPro>01120008</codPro>
+                    <desDer> </desDer>
+                    <desPro>Eucatex 2,5mm</desPro>
+                    <qtdCon>5.9818</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M2</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.3.0.1</codNiv>
+                    <codPro>01170003</codPro>
+                    <desDer> </desDer>
+                    <desPro>Grampo 80x14</desPro>
+                    <qtdCon>426.66667</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UND</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.3.1</codNiv>
+                    <codPro>01290001</codPro>
+                    <desDer> </desDer>
+                    <desPro>Certificado de garantia</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.3.2</codNiv>
+                    <codPro>01290002</codPro>
+                    <desDer> </desDer>
+                    <desPro>Certificado anti chama</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.3.3</codNiv>
+                    <codPro>01290015</codPro>
+                    <desDer> </desDer>
+                    <desPro>Etiqueta adesiva 102x305mm branca (embalagem)</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.3.4</codNiv>
+                    <codPro>03030002</codPro>
+                    <desDer> </desDer>
+                    <desPro>Cartão de operação (OP) amarelo</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.3.5</codNiv>
+                    <codPro>01330003</codPro>
+                    <desDer> </desDer>
+                    <desPro>Fita adesiva transparente 25mmx50m (estreita)</desPro>
+                    <qtdCon>5.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.3.6</codNiv>
+                    <codPro>01280002</codPro>
+                    <desDer> </desDer>
+                    <desPro>Papelão ondulado 1,20 para embalagem</desPro>
+                    <qtdCon>1.23755</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>KG</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.3.7</codNiv>
+                    <codPro>01320001</codPro>
+                    <desDer> </desDer>
+                    <desPro>Plástico bolha 1,20x100m 60gr</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>M2</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.3.8</codNiv>
+                    <codPro>01280001</codPro>
+                    <desDer> </desDer>
+                    <desPro>Malha branca de embalagem</desPro>
+                    <qtdCon>0.22258</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>KG</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.3.9</codNiv>
+                    <codPro>01290019</codPro>
+                    <desDer> </desDer>
+                    <desPro>Saco plástico 180x220x0,08</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.3.10</codNiv>
+                    <codPro>01290058</codPro>
+                    <desDer> </desDer>
+                    <desPro>Manual produto - Unaí</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.3.11</codNiv>
+                    <codPro>01150001</codPro>
+                    <desDer> </desDer>
+                    <desPro>Parafuso 5.0x45 flangeado</desPro>
+                    <qtdCon>8.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UND</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.3.12</codNiv>
+                    <codPro>01170001</codPro>
+                    <desDer> </desDer>
+                    <desPro>Grampo 14x38</desPro>
+                    <qtdCon>213.33333</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UND</uniMed>
+                </componentes>
+                <componentes>
+                    <codDer> </codDer>
+                    <codNiv>1.4</codNiv>
+                    <codPro>01290014</codPro>
+                    <desDer> </desDer>
+                    <desPro>Etiqueta adesiva 102x64mm branca (expedição)</desPro>
+                    <qtdCon>1.0</qtdCon>
+                    <tipPro>C</tipPro>
+                    <uniMed>UN</uniMed>
+                </componentes>
+                <erroExecucao xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+                <msgRet>OK</msgRet>
+            </result>
+        </ns2:EstruturaResponse>
+    </S:Body>
+</S:Envelope>

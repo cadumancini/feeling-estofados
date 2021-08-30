@@ -23,6 +23,8 @@
 
 <script>
 import TreeItem from '../components/TreeItem.vue'
+import axios from 'axios'
+// import xml2js from 'xml2js'
 export default {
   name: 'Home',
   components: { TreeItem },
@@ -46,14 +48,62 @@ export default {
       this.productFound = false
       this.hasSearched = true
       try {
-        const response = await fetch('http://localhost:3000/produtos/' + this.product)
-        if (!response.ok) {
-          this.productFound = false
-          throw Error('Produto não encontrado!')
-        }
+        // VOLTAR AQUI DEPOIS DE RESOLVER PROBLEMA DO CORS
+        // ...
+        // const xmlBody = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://services.senior.com.br">
+        //                   <soapenv:Header/>
+        //                   <soapenv:Body>
+        //                       <ser:Estrutura>
+        //                           <user>heintje</user>
+        //                           <password>Mercedes3#</password>
+        //                           <encryption>0</encryption>
+        //                           <parameters>
+        //                               <codEmp>1</codEmp>
+        //                               <codFil>1</codFil>
+        //                               <codPro>110088002</codPro>
+        //                               <codDer>138</codDer>
+        //                               <flowInstanceID>?</flowInstanceID>
+        //                               <flowName>?</flowName>
+        //                               <numPed>33022</numPed>
+        //                               <seqIpd>1</seqIpd>
+        //                           </parameters>
+        //                       </ser:Estrutura>
+        //                   </soapenv:Body>
+        //               </soapenv:Envelope>`
+        // const config = {
+        //   headers: { 'Content-Type': 'text/xml' }
+        // }
+        // axios
+        //   .post(
+        //     'http://baseteste.feelingestofados.com.br/g5-senior-services/sapiens_Synccustomizado?wsdl',
+        //     xmlBody,
+        //     config
+        //   )
+        //   .then((response) => console.log(response))
+        //   .catch((err) => console.log(err))
         this.productFound = true
-        this.fullProduct = await response.json()
-        console.log(this.fullProduct)
+        var parseString = require('xml2js').parseString
+        var json = null
+        const response = await axios.get('assets/retornoExemplo.xml')
+        parseString(response.data, { explicitArray: false }, (err, result) => {
+          if (err) {
+            console.log(err)
+          }
+          json = result
+          // console.log(json)
+          this.fullProduct = json['S:Envelope']['S:Body']['ns2:EstruturaResponse'].result.componentes
+          console.log(this.fullProduct)
+        })
+        // USANDO POR ENQUANTO COMO BASE
+        // ...
+        // const response = await fetch('http://localhost:3000/produtos/' + this.product)
+        // if (!response.ok) {
+        //   this.productFound = false
+        //   throw Error('Produto não encontrado!')
+        // }
+        // this.productFound = true
+        // this.fullProduct = await response.json()
+        // console.log(this.fullProduct)
       } catch (err) {
         console.log(err.message)
       }
