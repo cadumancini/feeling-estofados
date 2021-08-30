@@ -1,7 +1,7 @@
 <template>
   <li>
     <div @click="toggleOpen">
-      {{ item.id ? item.id : item.produto }} - {{ item.descricao }}
+      {{ item.codNiv }} -> {{ item.codPro }} - {{ item.codDer }} - {{ item.desPro }} {{ item.desDer }} - Qtde {{ item.qtdCon }} {{ item.uniMed }}
       <span v-if="item.filhos">[ {{ isOpen ? '-' : '+' }} ]</span>
     </div>
     <ul v-show="isOpen">
@@ -33,6 +33,6 @@ export default {
 
 <style>
  li {
-   margin: 10px 0;
+   margin: 10px 30px;
  }
 </style>

@@ -33,7 +33,8 @@ export default {
       hasSearched: false,
       product: '',
       productFound: true,
-      fullProduct: ''
+      fullProduct: '',
+      allComponents: ''
     }
   },
   mounted () {
@@ -90,22 +91,35 @@ export default {
             console.log(err)
           }
           json = result
-          // console.log(json)
-          this.fullProduct = json['S:Envelope']['S:Body']['ns2:EstruturaResponse'].result.componentes
-          console.log(this.fullProduct)
+          this.allComponents = json['S:Envelope']['S:Body']['ns2:EstruturaResponse'].result.componentes
         })
-        // USANDO POR ENQUANTO COMO BASE
-        // ...
-        // const response = await fetch('http://localhost:3000/produtos/' + this.product)
-        // if (!response.ok) {
-        //   this.productFound = false
-        //   throw Error('Produto não encontrado!')
-        // }
-        // this.productFound = true
-        // this.fullProduct = await response.json()
-        // console.log(this.fullProduct)
+        this.parseAllComponentsIntoFullProduct(this.allComponents)
       } catch (err) {
         console.log(err.message)
+      }
+    },
+    parseAllComponentsIntoFullProduct (allComponents) {
+      this.fullProduct = allComponents[0] // inserindo primeiro (produto pai) no objeto
+      allComponents.shift() // removendo produto pai do array
+      allComponents.forEach(component => {
+        // percorrer objeto completo
+        this.checkNodeChildren(this.fullProduct, component)
+      })
+      console.log(this.fullProduct)
+    },
+    checkNodeChildren (node, component) {
+      // comparar niveis
+      if ((node.codNiv === component.codNiv.substring(0, node.codNiv.length)) &&
+          (/^\.\d+$/.test(component.codNiv.substring(node.codNiv.length)))) {
+        if (node.filhos) {
+          node.filhos.push(component)
+        } else {
+          node.filhos = [component]
+        }
+      } else {
+        if (node.filhos) {
+          node.filhos.forEach(filho => this.checkNodeChildren(filho, component))
+        }
       }
     }
   }
@@ -117,7 +131,7 @@ export default {
   ul {
     padding-left: 1em;
     line-height: 1.5em;
-    list-style-type: dot;
+    list-style-type: none;
     cursor: pointer;
   }
 </style>
