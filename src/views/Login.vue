@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'Login',
   data () {
@@ -20,22 +21,27 @@ export default {
     }
   },
   mounted () {
-    if (sessionStorage.getItem('user')) {
+    if (sessionStorage.getItem('token')) {
       this.$router.push({ name: 'Home' })
     }
     this.$refs.inputUser.focus()
   },
   methods: {
     handleSubmit () {
-      if (this.user !== 'test' && this.password !== 'test') {
-        alert('Credenciais inválidas.')
-        this.user = ''
-        this.password = ''
-        this.$refs.inputUser.focus()
-      } else {
-        sessionStorage.setItem('user', this.user)
-        this.$router.push({ name: 'Home' })
-      }
+      const formData = new FormData()
+      formData.append('user', this.user)
+      formData.append('pswd', this.password)
+      axios.post('http://localhost:8080/login', formData)
+        .then((response) => {
+          if (response.data === 'Credenciais inválidas') {
+            alert(response.data)
+            this.$refs.inputUser.focus()
+          } else {
+            sessionStorage.setItem('token', response.data)
+            this.$router.push({ name: 'Home' })
+          }
+        })
+        .catch((err) => console.log(err))
     }
   }
 }
