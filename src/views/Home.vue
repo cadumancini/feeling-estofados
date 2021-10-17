@@ -2,6 +2,7 @@
   <div class="home">
     <h1>Feeling Estofados</h1>
     <form class="formHome" @submit.prevent="handleSubmit">
+      <ProductSelector/>
       <label>Produto:</label>
       <input type="text" required v-model="product" ref="inputProduct">
       <button>Buscar</button>
@@ -23,11 +24,12 @@
 
 <script>
 import TreeItem from '../components/TreeItem.vue'
+import ProductSelector from '../components/ProductSelector.vue'
 import axios from 'axios'
 // import xml2js from 'xml2js'
 export default {
   name: 'Home',
-  components: { TreeItem },
+  components: { TreeItem, ProductSelector },
   data () {
     return {
       hasSearched: false,
