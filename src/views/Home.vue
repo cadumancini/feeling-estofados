@@ -38,7 +38,7 @@ export default {
     }
   },
   mounted () {
-    if (!sessionStorage.getItem('user')) {
+    if (!sessionStorage.getItem('token')) {
       this.$router.push({ name: 'Login' })
     }
     this.$refs.inputProduct.focus()
