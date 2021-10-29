@@ -14,6 +14,15 @@
       <option disabled value="">Selecione um produto...</option>
       <option v-for="produto in produtos" :key="produto.CODPRO" :value="produto.CODPRO">{{ produto.CODPRO }} - {{ produto.DESPRO }}</option>
     </select>
+    <br>
+    <label>Selecione a derivação:</label>
+    <label v-if="!selectedProduto">Ainda não selecionou produto!</label>
+    <label v-else-if="derivacoes === null">Buscando derivações...</label>
+    <label v-else-if="derivacoes.length === 0">Não existe derivação cadastrada para este produto!</label>
+    <select v-else id="selectedDerivacoes" v-model="selectedDerivacao" @change="onSelectDerivacao()">
+      <option disabled value="">Selecione uma derivação...</option>
+      <option v-for="derivacao in derivacoes" :key="derivacao.CODDER" :value="derivacao.CODDER">{{ derivacao.CODDER }} - {{ derivacao.DESDER }}</option>
+    </select>
   </div>
 </template>
 
@@ -26,7 +35,9 @@ export default {
       estilos: null,
       selectedEstilo: '',
       produtos: null,
-      selectedProduto: ''
+      selectedProduto: '',
+      derivacoes: null,
+      selectedDerivacao: ''
     }
   },
   created () {
@@ -43,7 +54,15 @@ export default {
       axios.get('http://localhost:8080/produtosPorEstilo?emp=1&estilo=' + this.selectedEstilo + '&token=' + token)
         .then((response) => {
           this.produtos = response.data.produtos
-          console.log(this.produtos)
+        })
+        .catch((err) => console.log(err))
+    },
+    onSelectProduto () {
+      const token = sessionStorage.getItem('token')
+      axios.get('http://localhost:8080/derivacoesPorProduto?emp=1&produto=' + this.selectedProduto + '&token=' + token)
+        .then((response) => {
+          this.derivacoes = response.data.derivacoes
+          console.log(this.derivacoes)
         })
         .catch((err) => console.log(err))
     }
