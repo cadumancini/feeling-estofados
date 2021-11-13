@@ -1,11 +1,11 @@
 <template>
   <div class="home">
     <h1>Feeling Estofados</h1>
-    <form class="formHome" @submit.prevent="handleSubmit">
-      <ProductSelector/>
-      <label>Produto:</label>
-      <input type="text" required v-model="product" ref="inputProduct">
-      <button>Buscar</button>
+    <div id="nav">
+      <router-link :to="{ name: 'GerarPedido' }">Gerar Pedido</router-link>
+    </div>
+    <router-view/>
+    <!-- <form class="formHome" @submit.prevent="handleSubmit">
     </form>
     <div v-if="hasSearched">
       <div v-if="productFound">
@@ -18,18 +18,17 @@
       <div v-else>
         <p>Produto não encontrado!</p>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
-import TreeItem from '../components/TreeItem.vue'
-import ProductSelector from '../components/ProductSelector.vue'
+// import TreeItem from '../components/TreeItem.vue'
 import axios from 'axios'
 // import xml2js from 'xml2js'
 export default {
   name: 'Home',
-  components: { TreeItem, ProductSelector },
+  // components: { TreeItem },
   data () {
     return {
       hasSearched: false,
@@ -43,8 +42,8 @@ export default {
     if (!sessionStorage.getItem('token')) {
       this.$router.push({ name: 'Login' })
     }
-    this.$refs.inputProduct.focus()
-    this.productFound = false
+    // this.$refs.inputProduct.focus()
+    // this.productFound = false
   },
   methods: {
     async handleSubmit () {

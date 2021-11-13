@@ -19,10 +19,19 @@
     <label v-if="!selectedProduto">Ainda não selecionou produto!</label>
     <label v-else-if="derivacoes === null">Buscando derivações...</label>
     <label v-else-if="derivacoes.length === 0">Não existe derivação cadastrada para este produto!</label>
-    <select v-else id="selectedDerivacoes" v-model="selectedDerivacao" @change="onSelectDerivacao()">
+    <select v-else id="selectedDerivacoes" v-model="selectedDerivacao">
       <option disabled value="">Selecione uma derivação...</option>
       <option v-for="derivacao in derivacoes" :key="derivacao.CODDER" :value="derivacao.CODDER">{{ derivacao.CODDER }} - {{ derivacao.DESDER }}</option>
     </select>
+    <br>
+    <label v-show="selectedDerivacao">Quantidade:</label>
+    <input v-show="selectedDerivacao" type="number" v-model="quantidade">
+    <br>
+    <label v-show="selectedDerivacao">Valor Unitário:</label>
+    <input v-show="selectedDerivacao" type="number" v-model="valorUnitario">
+    <br>
+    <button :disabled="selectedDerivacao ? false : true" @click="addProduto">Adicionar</button>
+    <br>
   </div>
 </template>
 
@@ -37,7 +46,9 @@ export default {
       produtos: null,
       selectedProduto: '',
       derivacoes: null,
-      selectedDerivacao: ''
+      selectedDerivacao: '',
+      quantidade: 1,
+      valorUnitario: 0
     }
   },
   created () {
@@ -62,9 +73,20 @@ export default {
       axios.get('http://localhost:8080/derivacoesPorProduto?emp=1&produto=' + this.selectedProduto + '&token=' + token)
         .then((response) => {
           this.derivacoes = response.data.derivacoes
-          console.log(this.derivacoes)
         })
         .catch((err) => console.log(err))
+    },
+    addProduto () {
+      if (this.quantidade <= 0 || this.valorUnitario <= 0) {
+        alert('Quantidade e/ou Valor Unitário devem ser um valor positivo!')
+      } else {
+        this.$emit('addItem', { codPro: this.selectedProduto, codDer: this.selectedDerivacao, seqIpd: 0, qtdPed: this.quantidade, preUni: this.valorUnitario })
+        this.selectedEstilo = ''
+        this.selectedProduto = ''
+        this.selectedDerivacao = ''
+        this.quantidade = 1
+        this.valorUnitario = 0
+      }
     }
   }
 }
