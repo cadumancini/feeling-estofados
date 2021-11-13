@@ -55,7 +55,7 @@
   <br>
   <button v-if="itens.length" @click="gerarPedido">Gerar Pedido</button>
 
-  <label v-if="pedidoGerado > 0">Pedido {{ pedidoGerado }} gerado com sucesso! Clique <a href="/">aqui</a> para voltar à página inicial, ou <a :href="'/manipulaPedido/' + pedidoGerado">aqui</a> para editar os componentes do pedido.</label>
+  <label v-if="pedidoGerado > 0">Pedido {{ pedidoGerado }} gerado com sucesso! Clique <a href="/">aqui</a> para voltar à página inicial, ou <a :href="'/manipularPedido/' + pedidoGerado">aqui</a> para editar os componentes do pedido.</label>
 </template>
 
 <script>

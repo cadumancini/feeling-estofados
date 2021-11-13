@@ -3,6 +3,8 @@
     <h1>Feeling Estofados</h1>
     <div id="nav">
       <router-link :to="{ name: 'GerarPedido' }">Gerar Pedido</router-link>
+      <br>
+      <router-link :to="{ name: 'ManipularPedido' }">Manipular Pedido</router-link>
     </div>
     <router-view/>
     <!-- <form class="formHome" @submit.prevent="handleSubmit">
