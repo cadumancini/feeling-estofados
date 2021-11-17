@@ -1,8 +1,9 @@
 <template>
-  <li v-bind:class="{ trocar: item.codDer === 'G'}">
+  <li id="node" v-bind:class="{ trocar: item.codDer === 'G', temG: item.temG, atencao: item.trocar }">
     <div @click="toggleOpen">
       {{ item.codNiv }} -> {{ item.codPro }} - {{ item.codDer }} - {{ item.desPro }} {{ item.desDer }} - Qtde {{ item.qtdCon }} {{ item.uniMed }}
       <span v-if="item.filhos">[ {{ isOpen ? '-' : '+' }} ]</span>
+      <span v-if="item.temG || item.trocar">!!!</span>
     </div>
     <ul v-show="isOpen">
       <TreeItem
@@ -34,6 +35,10 @@ export default {
 <style>
  li {
    margin: 10px 10px;
+   color: black;
+ }
+ .atencao, .temG {
+   color: green;
  }
  .trocar {
    color: red;

@@ -10,7 +10,7 @@
         <ul>
           <TreeItem
             v-if="item.PRODUCTFOUND"
-            :item="item.FULLPRODUCT"></TreeItem>
+            :item="item.ACABADO"></TreeItem>
         </ul>
       </div>
     </li>
@@ -60,17 +60,19 @@ export default {
           }
           json = result
           item.ALLCOMPONENTS = json['S:Envelope']['S:Body']['ns2:EstruturaResponse'].result.componentes
-          item.FULLPRODUCT = item.ALLCOMPONENTS[0] // inserindo primeiro (produto pai) no objeto
+          item.ACABADO = item.ALLCOMPONENTS[0] // inserindo primeiro (produto pai) no objeto
         })
         this.parseAllComponentsIntoFullProduct(item)
         item.PRODUCTFOUND = true
+        this.markItemsToExchange(item.ACABADO)
+        console.log(item.ACABADO)
       }
     },
     parseAllComponentsIntoFullProduct (item) {
       item.ALLCOMPONENTS.shift() // removendo produto pai do array
       item.ALLCOMPONENTS.forEach(component => {
         // percorrer objeto completo
-        this.checkNodeChildren(item.FULLPRODUCT, component)
+        this.checkNodeChildren(item.ACABADO, component)
       })
     },
     checkNodeChildren (node, component) {
@@ -82,10 +84,34 @@ export default {
         } else {
           node.filhos = [component]
         }
+        if (component.codDer === 'G') {
+          node.temG = true
+        }
       } else {
         if (node.filhos) {
-          node.filhos.forEach(filho => this.checkNodeChildren(filho, component))
+          node.filhos.forEach(filho => {
+            this.checkNodeChildren(filho, component)
+          })
         }
+      }
+    },
+    markItemsToExchange (node) {
+      if (node.temG) {
+        node.atencao = true
+      }
+      if (node.filhos) {
+        node.filhos.forEach(filho => this.checkItems(node, filho))
+      }
+    },
+    checkItems (pai, filho) {
+      if (filho.temG || filho.trocar) {
+        pai.trocar = true
+      }
+      if (filho.filhos) {
+        filho.filhos.forEach(neto => this.checkItems(filho, neto))
+      }
+      if (filho.temG || filho.trocar) {
+        pai.trocar = true
       }
     }
   }
