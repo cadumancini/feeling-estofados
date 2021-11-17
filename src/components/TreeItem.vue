@@ -1,5 +1,5 @@
 <template>
-  <li>
+  <li v-bind:class="{ trocar: item.codDer === 'G'}">
     <div @click="toggleOpen">
       {{ item.codNiv }} -> {{ item.codPro }} - {{ item.codDer }} - {{ item.desPro }} {{ item.desDer }} - Qtde {{ item.qtdCon }} {{ item.uniMed }}
       <span v-if="item.filhos">[ {{ isOpen ? '-' : '+' }} ]</span>
@@ -34,5 +34,8 @@ export default {
 <style>
  li {
    margin: 10px 10px;
+ }
+ .trocar {
+   color: red;
  }
 </style>
