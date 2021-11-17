@@ -7,12 +7,10 @@
     <li v-for="item in itens" :key="item.SEQIPD">Seq. {{ item.SEQIPD }} | Prod. {{ item.CODPRO }} | Der. {{ item.CODDER }} | Qtde. {{ item.QTDPED }} | <button @click="manipularItem(item)">Manipular Estrutura</button>
       <br>
       <div v-if="item.MANIPULAR">
-        <label>Manipulando item {{ item.SEQIPD }}</label>
-        <br>
         <ul>
           <TreeItem
-            v-show="item.PRODUCTFOUND"
-            :item="fullProduct"></TreeItem>
+            v-if="item.PRODUCTFOUND"
+            :item="item.FULLPRODUCT"></TreeItem>
         </ul>
       </div>
     </li>
@@ -28,8 +26,7 @@ export default {
   data () {
     return {
       pedido: this.numPed,
-      itens: [],
-      fullProduct: ''
+      itens: []
     }
   },
   methods: {
@@ -62,18 +59,18 @@ export default {
             console.log(err)
           }
           json = result
-          item.PRODUCTFOUND = true
           item.ALLCOMPONENTS = json['S:Envelope']['S:Body']['ns2:EstruturaResponse'].result.componentes
+          item.FULLPRODUCT = item.ALLCOMPONENTS[0] // inserindo primeiro (produto pai) no objeto
         })
-        this.parseAllComponentsIntoFullProduct(item.ALLCOMPONENTS)
+        this.parseAllComponentsIntoFullProduct(item)
+        item.PRODUCTFOUND = true
       }
     },
-    parseAllComponentsIntoFullProduct (allComponents) {
-      this.fullProduct = allComponents[0] // inserindo primeiro (produto pai) no objeto
-      allComponents.shift() // removendo produto pai do array
-      allComponents.forEach(component => {
+    parseAllComponentsIntoFullProduct (item) {
+      item.ALLCOMPONENTS.shift() // removendo produto pai do array
+      item.ALLCOMPONENTS.forEach(component => {
         // percorrer objeto completo
-        this.checkNodeChildren(this.fullProduct, component)
+        this.checkNodeChildren(item.FULLPRODUCT, component)
       })
     },
     checkNodeChildren (node, component) {

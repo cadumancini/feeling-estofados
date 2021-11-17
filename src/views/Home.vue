@@ -13,15 +13,6 @@
 <script>
 export default {
   name: 'Home',
-  data () {
-    return {
-      hasSearched: false,
-      product: '',
-      productFound: true,
-      fullProduct: '',
-      allComponents: ''
-    }
-  },
   mounted () {
     if (!sessionStorage.getItem('token')) {
       this.$router.push({ name: 'Login' })
