@@ -33,6 +33,6 @@ export default {
 
 <style>
  li {
-   margin: 10px 30px;
+   margin: 10px 10px;
  }
 </style>
