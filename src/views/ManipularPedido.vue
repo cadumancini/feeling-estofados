@@ -65,7 +65,6 @@ export default {
         await this.parseAllComponentsIntoFullProduct(item)
         item.PRODUCTFOUND = true
         await this.markItemsToExchange(item.ACABADO)
-        console.log(item.ACABADO)
       }
     },
     async parseAllComponentsIntoFullProduct (item) {
@@ -124,9 +123,6 @@ export default {
       }
       if (filho.temG || filho.trocar) {
         pai.trocar = true
-      }
-      if (filho.temGen) {
-        console.log('AQUI!!!!')
       }
     }
   }
