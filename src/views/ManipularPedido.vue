@@ -62,20 +62,20 @@ export default {
           item.ALLCOMPONENTS = json['S:Envelope']['S:Body']['ns2:EstruturaResponse'].result.componentes
           item.ACABADO = item.ALLCOMPONENTS[0] // inserindo primeiro (produto pai) no objeto
         })
-        this.parseAllComponentsIntoFullProduct(item)
+        await this.parseAllComponentsIntoFullProduct(item)
         item.PRODUCTFOUND = true
-        this.markItemsToExchange(item.ACABADO)
+        await this.markItemsToExchange(item.ACABADO)
         console.log(item.ACABADO)
       }
     },
-    parseAllComponentsIntoFullProduct (item) {
+    async parseAllComponentsIntoFullProduct (item) {
       item.ALLCOMPONENTS.shift() // removendo produto pai do array
       item.ALLCOMPONENTS.forEach(component => {
         // percorrer objeto completo
         this.checkNodeChildren(item.ACABADO, component)
       })
     },
-    checkNodeChildren (node, component) {
+    async checkNodeChildren (node, component) {
       // comparar niveis
       if ((node.codNiv === component.codNiv.substring(0, node.codNiv.length)) &&
           (/^\.\d+$/.test(component.codNiv.substring(node.codNiv.length)))) {
@@ -87,6 +87,21 @@ export default {
         if (component.codDer === 'G') {
           node.temG = true
         }
+        // Buscar dados adicionais:
+        const token = sessionStorage.getItem('token')
+        let dadosProduto = null
+        await axios.get('http://localhost:8080/dadosProduto?emp=1&pro=' + component.codPro + '&token=' + token)
+          .then((response) => {
+            dadosProduto = response.data.dados
+            component.exiCmp = dadosProduto[0].EXICMP
+            component.proGen = dadosProduto[0].PROGEN
+            component.codFam = dadosProduto[0].CODFAM
+            if (component.proGen === 'S') {
+              node.temGen = true
+              node.trocar = true
+            }
+          })
+          .catch((err) => console.log(err))
       } else {
         if (node.filhos) {
           node.filhos.forEach(filho => {
@@ -95,10 +110,7 @@ export default {
         }
       }
     },
-    markItemsToExchange (node) {
-      if (node.temG) {
-        node.atencao = true
-      }
+    async markItemsToExchange (node) {
       if (node.filhos) {
         node.filhos.forEach(filho => this.checkItems(node, filho))
       }
@@ -112,6 +124,9 @@ export default {
       }
       if (filho.temG || filho.trocar) {
         pai.trocar = true
+      }
+      if (filho.temGen) {
+        console.log('AQUI!!!!')
       }
     }
   }
