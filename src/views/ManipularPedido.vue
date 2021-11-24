@@ -62,17 +62,18 @@ export default {
           item.ALLCOMPONENTS = json['S:Envelope']['S:Body']['ns2:EstruturaResponse'].result.componentes
           item.ACABADO = item.ALLCOMPONENTS[0] // inserindo primeiro (produto pai) no objeto
         })
-        await this.parseAllComponentsIntoFullProduct(item)
+        this.parseAllComponentsIntoFullProduct(item)
         item.PRODUCTFOUND = true
-        await this.markItemsToExchange(item.ACABADO)
+        console.log(item.ACABADO)
       }
     },
     async parseAllComponentsIntoFullProduct (item) {
       item.ALLCOMPONENTS.shift() // removendo produto pai do array
-      item.ALLCOMPONENTS.forEach(component => {
+      item.ALLCOMPONENTS.forEach(async component => {
         // percorrer objeto completo
-        this.checkNodeChildren(item.ACABADO, component)
+        await this.checkNodeChildren(item.ACABADO, component)
       })
+      this.markItemsToExchange(item.ACABADO)
     },
     async checkNodeChildren (node, component) {
       // comparar niveis
@@ -82,9 +83,6 @@ export default {
           node.filhos.push(component)
         } else {
           node.filhos = [component]
-        }
-        if (component.codDer === 'G') {
-          node.temG = true
         }
         // Buscar dados adicionais:
         const token = sessionStorage.getItem('token')
@@ -109,12 +107,16 @@ export default {
         }
       }
     },
-    async markItemsToExchange (node) {
+    markItemsToExchange (node) {
       if (node.filhos) {
         node.filhos.forEach(filho => this.checkItems(node, filho))
       }
     },
     checkItems (pai, filho) {
+      console.log(filho.codDer + ' | ' + filho.exiCcmp)
+      if (filho.codDer === 'G' && filho.exiCmp !== 'S') {
+        pai.temG = true
+      }
       if (filho.temG || filho.trocar) {
         pai.trocar = true
       }
@@ -123,6 +125,9 @@ export default {
       }
       if (filho.temG || filho.trocar) {
         pai.trocar = true
+      }
+      if (filho.codDer === 'G') {
+        pai.temG = true
       }
     }
   }

@@ -1,9 +1,10 @@
 <template>
   <li id="node" v-bind:class="{ trocar: (item.codDer === 'G' || item.proGen === 'S'), temG: item.temG, atencao: item.trocar }">
     <div @click="toggleOpen">
-      {{ item.codNiv }} -> {{ item.codPro }} - {{ item.codDer }} - {{ item.desPro }} {{ item.desDer }} - Qtde {{ item.qtdCon }} {{ item.uniMed }} - ProGen {{ item.proGen }}
+      {{ item.codNiv }} -> {{ item.codPro }} - {{ item.codDer }} - {{ item.desPro }} {{ item.desDer }} - Qtde {{ item.qtdCon }} {{ item.uniMed }} - ExiCmp {{ item.exiCmp }}
       <span v-if="item.filhos">[ {{ isOpen ? '-' : '+' }} ]</span>
       <span v-if="item.temG || item.trocar">!!!</span>
+      <button v-if="item.codDer === 'G' || item.proGen === 'S'">trocar</button>
     </div>
     <ul v-show="isOpen">
       <TreeItem
