@@ -84,21 +84,6 @@ export default {
         } else {
           node.filhos = [component]
         }
-        // Buscar dados adicionais:
-        const token = sessionStorage.getItem('token')
-        let dadosProduto = null
-        await axios.get('http://localhost:8080/dadosProduto?emp=1&pro=' + component.codPro + '&token=' + token)
-          .then((response) => {
-            dadosProduto = response.data.dados
-            component.exiCmp = dadosProduto[0].EXICMP
-            component.proGen = dadosProduto[0].PROGEN
-            component.codFam = dadosProduto[0].CODFAM
-            if (component.proGen === 'S') {
-              node.temGen = true
-              node.trocar = true
-            }
-          })
-          .catch((err) => console.log(err))
       } else {
         if (node.filhos) {
           node.filhos.forEach(filho => {
@@ -113,7 +98,7 @@ export default {
       }
     },
     checkItems (pai, filho) {
-      console.log(filho.codDer + ' | ' + filho.exiCcmp)
+      console.log(filho.codDer + ' | ' + filho.exiCmp)
       if (filho.codDer === 'G' && filho.exiCmp !== 'S') {
         pai.temG = true
       }
@@ -126,7 +111,7 @@ export default {
       if (filho.temG || filho.trocar) {
         pai.trocar = true
       }
-      if (filho.codDer === 'G') {
+      if (filho.codDer === 'G' && filho.exiCmp !== 'S') {
         pai.temG = true
       }
     }

@@ -1,5 +1,5 @@
 <template>
-  <li id="node" v-bind:class="{ trocar: (item.codDer === 'G' || item.proGen === 'S'), temG: item.temG, atencao: item.trocar }">
+  <li id="node" v-if="item.exiCmp !== 'S'" v-bind:class="{ trocar: (item.codDer === 'G' || item.proGen === 'S'), temG: item.temG, atencao: item.trocar }">
     <div @click="toggleOpen">
       {{ item.codNiv }} -> {{ item.codPro }} - {{ item.codDer }} - {{ item.desPro }} {{ item.desDer }} - Qtde {{ item.qtdCon }} {{ item.uniMed }} - ExiCmp {{ item.exiCmp }}
       <span v-if="item.filhos">[ {{ isOpen ? '-' : '+' }} ]</span>
