@@ -64,7 +64,6 @@ export default {
         })
         this.parseAllComponentsIntoFullProduct(item)
         item.PRODUCTFOUND = true
-        console.log(item.ACABADO)
       }
     },
     async parseAllComponentsIntoFullProduct (item) {
@@ -84,6 +83,7 @@ export default {
         } else {
           node.filhos = [component]
         }
+        component.codMod = node.codPro
       } else {
         if (node.filhos) {
           node.filhos.forEach(filho => {
@@ -98,8 +98,7 @@ export default {
       }
     },
     checkItems (pai, filho) {
-      console.log(filho.codDer + ' | ' + filho.exiCmp)
-      if (filho.codDer === 'G' && filho.exiCmp !== 'S') {
+      if ((filho.codDer === 'G' || filho.proGen === 'S') && filho.exiCmp !== 'S') {
         pai.temG = true
       }
       if (filho.temG || filho.trocar) {
@@ -111,7 +110,7 @@ export default {
       if (filho.temG || filho.trocar) {
         pai.trocar = true
       }
-      if (filho.codDer === 'G' && filho.exiCmp !== 'S') {
+      if ((filho.codDer === 'G' || filho.proGen === 'S') && filho.exiCmp !== 'S') {
         pai.temG = true
       }
     }
