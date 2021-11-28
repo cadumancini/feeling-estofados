@@ -84,6 +84,14 @@ export default {
           node.filhos = [component]
         }
         component.codMod = node.codPro
+        const token = sessionStorage.getItem('token')
+        axios.get('http://localhost:8080/equivalentesAdicionais?modelo=' + component.codMod + '&componente=' + component.codPro + '&der=' + component.codDer + '&token=' + token)
+          .then((response) => {
+            if (response.data.equivalentes.length) {
+              component.podeTrocar = true
+            }
+          })
+          .catch((err) => console.log(err))
       } else {
         if (node.filhos) {
           node.filhos.forEach(filho => {
