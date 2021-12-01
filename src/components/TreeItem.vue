@@ -36,17 +36,17 @@
               <div v-else>
                 <label>Buscando equivalentes ...</label>
               </div>
-              <div class="mb-3" v-if="item.equivalenteSelecionado">
-                <label>Equivalente selecionado:</label>
-                <br>
-                <label>{{item.equivalenteSelecionado.CODPRO}}</label>
-                <br>
-                <label>{{item.equivalenteSelecionado.CODDER}}</label>
-                <br>
-                <label>{{item.equivalenteSelecionado.DSCEQI}}</label>
-                <br>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="confirmarSubstituicao(item.equivalenteSelecionado)">Confirmar</button>
-              </div>
+            </div>
+            <div class="m-3" v-if="item.equivalenteSelecionado">
+              <label>Equivalente selecionado:</label>
+              <br>
+              <label>{{item.equivalenteSelecionado.CODPRO}}</label>
+              <br>
+              <label>{{item.equivalenteSelecionado.CODDER}}</label>
+              <br>
+              <label>{{item.equivalenteSelecionado.DSCEQI}}</label>
+              <br>
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="confirmarSubstituicao(item.equivalenteSelecionado)">Confirmar</button>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
