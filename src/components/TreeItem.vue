@@ -25,7 +25,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="equivalenteRow in item.equivalentes" :key="equivalenteRow.CODPRO" class="mouseHover" @click="selectEquivalente(equivalenteRow)">
+                    <tr v-for="equivalenteRow in item.equivalentes" :key="equivalenteRow.CODPRO" class="mouseHover" @click="selecionarEquivalente(equivalenteRow)">
                       <th scope="row">{{ equivalenteRow.CODPRO }}</th>
                       <th>{{ equivalenteRow.CODDER }}</th>
                       <th>{{ equivalenteRow.DSCEQI }}</th>
@@ -35,6 +35,17 @@
               </div>
               <div v-else>
                 <label>Buscando equivalentes ...</label>
+              </div>
+              <div class="mb-3" v-if="item.equivalenteSelecionado">
+                <label>Equivalente selecionado:</label>
+                <br>
+                <label>{{item.equivalenteSelecionado.CODPRO}}</label>
+                <br>
+                <label>{{item.equivalenteSelecionado.CODDER}}</label>
+                <br>
+                <label>{{item.equivalenteSelecionado.DSCEQI}}</label>
+                <br>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="confirmarSubstituicao(item.equivalenteSelecionado)">Confirmar</button>
               </div>
             </div>
             <div class="modal-footer">
@@ -74,6 +85,7 @@ export default {
     }
     this.$props.item.hashModal = hash
     this.$props.item.equivalentes = []
+    this.$props.item.equivalenteSelecionado = null
   },
   methods: {
     toggleOpen () {
@@ -82,6 +94,7 @@ export default {
     async buscarOpcoes (item) {
       const token = sessionStorage.getItem('token')
       item.equivalentes = []
+      item.equivalenteSelecionado = null
       if (item.proGen === 'S') {
         await axios.get('http://localhost:8080/equivalentes?modelo=' + item.codMod + '&componente=' + item.codPro + '&token=' + token)
           .then((response) => {
@@ -109,6 +122,13 @@ export default {
           })
           .catch((err) => console.log(err))
       }
+    },
+    selecionarEquivalente (equivalente) {
+      this.$props.item.equivalenteSelecionado = equivalente
+    },
+    confirmarSubstituicao (equivalente) {
+      console.log('Trocando Produto: ' + this.$props.item.codPro + ' - Der: ' + this.$props.item.codDer)
+      console.log('Por Produto: ' + equivalente.CODPRO + ' - Der: ' + equivalente.CODDER)
     }
   }
 }
