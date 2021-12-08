@@ -46,10 +46,10 @@
               <br>
               <label>{{item.equivalenteSelecionado.DSCEQI}}</label>
               <br>
-              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="confirmarSubstituicao(item.equivalenteSelecionado)">Confirmar</button>
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="confirmarTroca(item.equivalenteSelecionado)">Confirmar</button>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="cancelar">Fechar</button>
             </div>
           </div>
         </div>
@@ -60,7 +60,7 @@
         v-for="(child, index) in item.filhos"
         :key="index"
         :item="child"
-        ></TreeItem>
+        @trocar="trocar"/>
     </ul>
   </li>
 </template>
@@ -75,15 +75,9 @@ export default {
       isOpen: false
     }
   },
-  mounted () {
-    const s = this.$props.item.codNiv + this.$props.item.codPro + this.$props.item.codDer
-    let hash = ''
-    for (let i = 0; i < s.length; i++) {
-      const char = s.charCodeAt(i)
-      hash = ((hash << 5) - hash) + char
-      hash = hash & hash
-    }
-    this.$props.item.hashModal = hash
+  created () {
+    const niv = String(this.$props.item.codNiv).replaceAll('.', '')
+    this.$props.item.hashModal = Math.floor(Math.random() * (niv * 1000))
     this.$props.item.equivalentes = []
     this.$props.item.equivalenteSelecionado = null
   },
@@ -94,6 +88,7 @@ export default {
     async buscarOpcoes (item) {
       const token = sessionStorage.getItem('token')
       item.equivalentes = []
+      this.$props.item.equivalenteSelecionado = null
       item.equivalenteSelecionado = null
       if (item.proGen === 'S') {
         await axios.get('http://localhost:8080/equivalentes?modelo=' + item.codMod + '&componente=' + item.codPro + '&token=' + token)
@@ -126,9 +121,24 @@ export default {
     selecionarEquivalente (equivalente) {
       this.$props.item.equivalenteSelecionado = equivalente
     },
-    confirmarSubstituicao (equivalente) {
-      console.log('Trocando Produto: ' + this.$props.item.codPro + ' - Der: ' + this.$props.item.codDer)
-      console.log('Por Produto: ' + equivalente.CODPRO + ' - Der: ' + equivalente.CODDER)
+    confirmarTroca (equivalente) {
+      this.$props.item.equivalenteSelecionado = null
+      const itemTroca = {
+        codMod: this.$props.item.codMod,
+        derMod: this.$props.item.derMod,
+        cmpAnt: this.$props.item.codPro,
+        derAnt: this.$props.item.codDer,
+        cmpAtu: equivalente.CODPRO,
+        derAtu: equivalente.CODDER,
+        dscCmp: equivalente.DSCEQI
+      }
+      this.trocar(itemTroca)
+    },
+    cancelar () {
+      this.$props.item.equivalenteSelecionado = null
+    },
+    trocar (itemTroca) {
+      this.$emit('trocar', itemTroca)
     }
   }
 }

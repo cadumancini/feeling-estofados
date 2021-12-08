@@ -10,7 +10,8 @@
         <ul>
           <TreeItem
             v-if="item.PRODUCTFOUND"
-            :item="item.ACABADO"></TreeItem>
+            :item="item.ACABADO"
+            @trocar="(itemTroca) => efetuarTroca(item, itemTroca)"/>
         </ul>
       </div>
     </li>
@@ -84,6 +85,7 @@ export default {
           node.filhos = [component]
         }
         component.codMod = node.codPro
+        component.derMod = node.codDer
         const token = sessionStorage.getItem('token')
         axios.get('http://localhost:8080/equivalentesAdicionais?modelo=' + component.codMod + '&componente=' + component.codPro + '&der=' + component.codDer + '&token=' + token)
           .then((response) => {
@@ -121,6 +123,22 @@ export default {
       if ((filho.codDer === 'G' || filho.proGen === 'S') && filho.exiCmp !== 'S') {
         pai.temG = true
       }
+    },
+    async efetuarTroca (item, itemTroca) {
+      const token = sessionStorage.getItem('token')
+      const { codMod, derMod, cmpAnt, derAnt, cmpAtu, derAtu, dscCmp } = itemTroca
+      const codEmp = 1
+      const codFil = 1
+      axios.post('http://localhost:8080/equivalente?emp=' + codEmp + '&fil=' + codFil + '&ped=' + this.pedido + '&ipd=' + item.SEQIPD + '&mod=' + codMod + '&derMod=' + derMod +
+      '&cmpAnt=' + cmpAnt + '&derCmpAnt=' + derAnt + '&cmpAtu=' + cmpAtu + '&derCmpAtu=' + derAtu + '&dscCmp=' + dscCmp + '&token=' + token)
+        .then((response) => {
+          const requestResponse = response.data
+          alert(requestResponse)
+          if (requestResponse === 'OK.') {
+            this.manipularItem(item)
+          }
+        })
+        .catch((err) => console.log(err))
     }
   }
 }
