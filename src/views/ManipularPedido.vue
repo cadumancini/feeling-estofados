@@ -1,5 +1,5 @@
 <template>
-  <h1>Feeling Estofados</h1>
+  <Navbar/>
   <label for="pedido">Pedido:</label>
   <input id="pedido" type="number" v-model="pedido">
   <button @click="buscaPedido">Buscar</button>
@@ -19,11 +19,12 @@
 </template>
 
 <script>
+import Navbar from '../components/Navbar.vue'
 import TreeItem from '../components/TreeItem.vue'
 import axios from 'axios'
 export default {
   props: ['numPed'],
-  components: { TreeItem },
+  components: { TreeItem, Navbar },
   data () {
     return {
       pedido: this.numPed,

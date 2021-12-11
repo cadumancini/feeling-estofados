@@ -1,5 +1,5 @@
 <template>
-  <h1>Feeling Estofados</h1>
+  <Navbar/>
   <label for="codCli">Cliente:</label>
   <input id="codCli" type="text" v-model="cliente">
   <button @click="buscaClientes" data-bs-toggle="modal" data-bs-target="#clientesModal">...</button>
@@ -59,11 +59,12 @@
 </template>
 
 <script>
+import Navbar from '../components/Navbar.vue'
 import ProductSelector from '../components/ProductSelector.vue'
 import axios from 'axios'
 export default {
   name: 'GerarPedido',
-  components: { ProductSelector },
+  components: { ProductSelector, Navbar },
   data () {
     return {
       clientes: null,

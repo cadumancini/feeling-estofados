@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <h1>Feeling Estofados</h1>
+    <Navbar/>
     <div id="nav">
       <router-link :to="{ name: 'GerarPedido' }">Gerar Pedido</router-link>
       <br>
@@ -11,8 +11,10 @@
 </template>
 
 <script>
+import Navbar from '../components/Navbar.vue'
 export default {
   name: 'Home',
+  components: { Navbar },
   mounted () {
     if (!sessionStorage.getItem('token')) {
       this.$router.push({ name: 'Login' })
@@ -23,6 +25,24 @@ export default {
 </script>
 
 <style scoped>
+  html, body {
+    height: 100%;
+  }
+  .home {
+    /* display: -ms-flexbox;
+    display: -webkit-box; */
+    /* display: flex; */
+    /* -ms-flex-align: center;
+    -ms-flex-pack: center;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center; */
+    /* padding-top: 40px; */
+    padding-bottom: 40px;
+    height: 100%;
+    background-color: #f5f5f5;
+  }
   ul {
     padding-left: 1em;
     line-height: 1.5em;
