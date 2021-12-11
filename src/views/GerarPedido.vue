@@ -135,7 +135,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .mouseHover {
     cursor: pointer;
   }

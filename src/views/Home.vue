@@ -22,7 +22,7 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
   ul {
     padding-left: 1em;
     line-height: 1.5em;

@@ -145,7 +145,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
  li {
    margin: 10px 10px;
    color: black;
