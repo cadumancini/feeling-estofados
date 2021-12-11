@@ -124,6 +124,7 @@ export default {
     confirmarTroca (equivalente) {
       this.$props.item.equivalenteSelecionado = null
       const itemTroca = {
+        codNiv: this.$props.item.codNiv,
         codMod: this.$props.item.codMod,
         derMod: this.$props.item.derMod,
         cmpAnt: this.$props.item.codPro,

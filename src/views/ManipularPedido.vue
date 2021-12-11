@@ -27,7 +27,8 @@ export default {
   data () {
     return {
       pedido: this.numPed,
-      itens: []
+      itens: [],
+      trocas: []
     }
   },
   methods: {
@@ -124,21 +125,48 @@ export default {
         pai.temG = true
       }
     },
-    async efetuarTroca (item, itemTroca) {
+    efetuarTroca (item, itemTroca) {
+      const seqIpd = item.SEQIPD
+      this.trocas = []
+      this.trocas.push(itemTroca)
+      item.ACABADO.filhos.forEach(filho => this.analisarSeTrocarFilhos(item, filho, itemTroca, seqIpd))
+      console.log(this.trocas)
+      this.requestTroca(this.pedido, seqIpd)
+      this.manipularItem(item)
+    },
+    analisarSeTrocarFilhos (pai, filho, itemTroca, seqIpd) {
+      if (filho.codPro === itemTroca.cmpAnt &&
+        filho.codDer === itemTroca.derAnt &&
+        filho.codNiv !== itemTroca.codNiv &&
+        (filho.codDer === 'G' || filho.proGen === 'S')) {
+        const objTroca = {
+          codNiv: filho.codNiv,
+          codMod: pai.codPro,
+          derMod: pai.codDer,
+          cmpAnt: filho.codPro,
+          derAnt: filho.codDer,
+          cmpAtu: itemTroca.cmpAtu,
+          derAtu: itemTroca.derAtu,
+          dscCmp: itemTroca.dscCmp
+        }
+        this.trocas.push(objTroca)
+      }
+      if (filho.filhos) {
+        filho.filhos.forEach(neto => this.analisarSeTrocarFilhos(filho, neto, itemTroca, seqIpd))
+      }
+    },
+    async requestTroca (numPed, seqIpd) {
       const token = sessionStorage.getItem('token')
-      const { codMod, derMod, cmpAnt, derAnt, cmpAtu, derAtu, dscCmp } = itemTroca
       const codEmp = 1
       const codFil = 1
-      axios.post('http://localhost:8080/equivalente?emp=' + codEmp + '&fil=' + codFil + '&ped=' + this.pedido + '&ipd=' + item.SEQIPD + '&mod=' + codMod + '&derMod=' + derMod +
-      '&cmpAnt=' + cmpAnt + '&derCmpAnt=' + derAnt + '&cmpAtu=' + cmpAtu + '&derCmpAtu=' + derAtu + '&dscCmp=' + dscCmp + '&token=' + token)
+      return axios.post('http://localhost:8080/equivalente?emp=' + codEmp + '&fil=' + codFil + '&ped=' + numPed + '&ipd=' + seqIpd + '&token=' + token, this.trocas)
         .then((response) => {
           const requestResponse = response.data
           alert(requestResponse)
-          if (requestResponse === 'OK.') {
-            this.manipularItem(item)
-          }
         })
-        .catch((err) => console.log(err))
+        .catch((err) => {
+          console.log(err)
+        })
     }
   }
 }
