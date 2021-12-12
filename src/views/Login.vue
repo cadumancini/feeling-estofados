@@ -2,7 +2,7 @@
   <div class="text-center login-page">
     <form class="form-signin" @submit.prevent="handleSubmit">
       <img src="../assets/feeling.png" class="mb-4">
-      <h1 class="h3 mb-3 font-weight-normal">Informe o usuário e a senha para fazer login:</h1>
+      <h1 class="h3 mb-3 font-weight-normal">Pedido Web</h1>
       <input class="form-control" type="text" id="inputUsuario" placeholder="Usuário" required autofocus v-model="user" ref="inputUser">
       <input class="form-control" type="password" id="inputSenha" placeholder="Senha" required v-model="password">
       <button class="btn btn-lg btn-primary btn-block">Login</button>
