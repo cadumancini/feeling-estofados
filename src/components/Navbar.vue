@@ -12,7 +12,7 @@
       <router-link class="nav-link" :to="{ name: 'ManipularPedido' }">Manipular Pedido</router-link>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Logout</a>
+        <a class="nav-link" href="#" @click="logout">Logout</a>
       </li>
     </ul>
   </nav>
@@ -20,6 +20,12 @@
 
 <script>
 export default {
-
+  name: 'Navbar',
+  methods: {
+    logout () {
+      sessionStorage.removeItem('token')
+      this.$router.push({ name: 'Login' })
+    }
+  }
 }
 </script>
