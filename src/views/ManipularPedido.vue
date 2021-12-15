@@ -89,7 +89,7 @@ export default {
         component.codMod = node.codPro
         component.derMod = node.codDer
         const token = sessionStorage.getItem('token')
-        axios.get('http://localhost:8080/equivalentesAdicionais?modelo=' + component.codMod + '&componente=' + component.codPro + '&der=' + component.codDer + '&token=' + token)
+        axios.get('http://localhost:8080/equivalentesAdicionais?emp=1&modelo=' + component.codMod + '&componente=' + component.codPro + '&der=' + component.codDer + '&token=' + token)
           .then((response) => {
             if (response.data.equivalentes.length) {
               component.podeTrocar = true
