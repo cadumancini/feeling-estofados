@@ -91,19 +91,19 @@ export default {
       this.$props.item.equivalenteSelecionado = null
       item.equivalenteSelecionado = null
       if (item.proGen === 'S') {
-        await axios.get('http://localhost:8080/equivalentes?modelo=' + item.codMod + '&componente=' + item.codPro + '&token=' + token)
+        await axios.get('http://localhost:8080/equivalentes?emp=1&modelo=' + item.codMod + '&componente=' + item.codPro + '&token=' + token)
           .then((response) => {
             item.equivalentes = response.data.equivalentes
           })
           .catch((err) => console.log(err))
       } if (item.podeTrocar) {
-        await axios.get('http://localhost:8080/equivalentesAdicionais?modelo=' + item.codMod + '&componente=' + item.codPro + '&der=' + item.codDer + '&token=' + token)
+        await axios.get('http://localhost:8080/equivalentesAdicionais?emp=1&modelo=' + item.codMod + '&componente=' + item.codPro + '&der=' + item.codDer + '&token=' + token)
           .then((response) => {
             item.equivalentes = response.data.equivalentes
           })
           .catch((err) => console.log(err))
       } else {
-        await axios.get('http://localhost:8080/equivalentes?modelo=' + item.codMod + '&componente=' + item.codPro + '&token=' + token)
+        await axios.get('http://localhost:8080/equivalentes?emp=1&modelo=' + item.codMod + '&componente=' + item.codPro + '&token=' + token)
           .then(async (response) => {
             item.equivalentes = response.data.equivalentes
             if (!item.equivalentes.length) {
