@@ -1,36 +1,56 @@
 <template>
   <div>
-    <label>Selecione o estilo:</label>
-    <select v-if="estilos !== null" id="selectEstilos" v-model="selectedEstilo" @change="onSelectEstilo()">
-      <option disabled value="">Selecione um estilo...</option>
-      <option v-for="estilo in estilos" :key="estilo.CODCPR" :value="estilo.CODCPR">{{ estilo.DESCPR }}</option>
-    </select>
-    <br>
-    <label>Selecione o produto:</label>
-    <label v-if="!selectedEstilo">Ainda não selecionou estilo!</label>
-    <label v-else-if="produtos === null">Buscando produtos...</label>
-    <label v-else-if="produtos.length === 0">Não existe produto cadastrado para este estilo!</label>
-    <select v-else id="selectProdutos" v-model="selectedProduto" @change="onSelectProduto()">
-      <option disabled value="">Selecione um produto...</option>
-      <option v-for="produto in produtos" :key="produto.CODPRO" :value="produto.CODPRO">{{ produto.CODPRO }} - {{ produto.DESPRO }}</option>
-    </select>
-    <br>
-    <label>Selecione a derivação:</label>
-    <label v-if="!selectedProduto">Ainda não selecionou produto!</label>
-    <label v-else-if="derivacoes === null">Buscando derivações...</label>
-    <label v-else-if="derivacoes.length === 0">Não existe derivação cadastrada para este produto!</label>
-    <select v-else id="selectedDerivacoes" v-model="selectedDerivacao">
-      <option disabled value="">Selecione uma derivação...</option>
-      <option v-for="derivacao in derivacoes" :key="derivacao.CODDER" :value="derivacao.CODDER">{{ derivacao.CODDER }} - {{ derivacao.DESDER }}</option>
-    </select>
-    <br>
-    <label v-show="selectedDerivacao">Quantidade:</label>
-    <input v-show="selectedDerivacao" type="number" v-model="quantidade">
-    <br>
-    <label v-show="selectedDerivacao">Valor Unitário:</label>
-    <input v-show="selectedDerivacao" type="number" v-model="valorUnitario">
-    <br>
-    <button :disabled="selectedDerivacao ? false : true" @click="addProduto">Adicionar</button>
+    <div class="row mb-2">
+      <label for="selectEstilos" class="col-auto col-form-label">Selecione o estilo:</label>
+      <div class="col-auto">
+        <select class="form-select" v-if="estilos !== null" id="selectEstilos" v-model="selectedEstilo" @change="onSelectEstilo()">
+          <option disabled value="">Selecione um estilo...</option>
+          <option v-for="estilo in estilos" :key="estilo.CODCPR" :value="estilo.CODCPR">{{ estilo.DESCPR }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="row mb-2">
+      <label for="selectProdutos" class="col-auto col-form-label">Selecione o produto:</label>
+      <div class="col-auto">
+        <label class="col-form-label text-secondary fst-italic" v-if="!selectedEstilo">Ainda não selecionou estilo!</label>
+        <label class="col-form-label text-info fst-italic" v-else-if="produtos === null">Buscando produtos...</label>
+        <label class="col-form-label text-danger fst-italic" v-else-if="produtos.length === 0">Não existe produto cadastrado para este estilo!</label>
+        <select v-else class="form-select" id="selectProdutos" v-model="selectedProduto" @change="onSelectProduto()">
+          <option disabled value="">Selecione um produto...</option>
+          <option v-for="produto in produtos" :key="produto.CODPRO" :value="produto.CODPRO">{{ produto.CODPRO }} - {{ produto.DESPRO }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="row mb-2">
+      <label for="selectedDerivacoes" class="col-auto col-form-label">Selecione a derivação:</label>
+      <div class="col-auto">
+        <label class="col-form-label text-secondary fst-italic" v-if="!selectedProduto">Ainda não selecionou produto!</label>
+        <label class="col-form-label text-info fst-italic" v-else-if="derivacoes === null">Buscando derivações...</label>
+        <label class="col-form-label text-danger fst-italic" v-else-if="derivacoes.length === 0">Não existe derivação cadastrada para este produto!</label>
+        <select v-else class="form-select" id="selectedDerivacoes" v-model="selectedDerivacao">
+          <option disabled value="">Selecione uma derivação...</option>
+          <option v-for="derivacao in derivacoes" :key="derivacao.CODDER" :value="derivacao.CODDER">{{ derivacao.CODDER }} - {{ derivacao.DESDER }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="row mb-2">
+      <label for="qtdPed" class="col-auto col-form-label" v-show="selectedDerivacao">Quantidade:</label>
+      <div class="col-auto">
+        <input v-show="selectedDerivacao" class="form-control" onfocus="this.select();" id="qtdPed" type="number" v-model="quantidade">
+      </div>
+    </div>
+    <div class="row mb-2">
+      <label for="vlrUni" class="col-auto col-form-label" v-show="selectedDerivacao">Valor Unitário:</label>
+      <div class="col-auto">
+        <input v-show="selectedDerivacao" class="form-control" onfocus="this.select();" id="vlrUni" type="number" v-model="valorUnitario">
+        <!-- see https://www.npmjs.com/package/maska -->
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-auto">
+        <button class="btn btn-secondary" :disabled="selectedDerivacao ? false : true" @click="addProduto">Adicionar</button>
+      </div>
+    </div>
     <br>
   </div>
 </template>

@@ -32,7 +32,7 @@ export default {
     background-color: #f5f5f5;
   }
   .link-main-menu {
-    color: #8a8a8a;
+    color: #7a7a7a;
   }
   .main-menu {
     height: 75%;

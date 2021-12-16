@@ -10,4 +10,8 @@
   height: 100%;
   color: #2c3e50;
 }
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
 </style>

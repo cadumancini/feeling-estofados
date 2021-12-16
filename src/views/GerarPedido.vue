@@ -1,61 +1,73 @@
 <template>
-  <Navbar/>
-  <label for="codCli">Cliente:</label>
-  <input id="codCli" type="text" v-model="cliente">
-  <button @click="buscaClientes" data-bs-toggle="modal" data-bs-target="#clientesModal">...</button>
-  <br>
-  <label for="pedCli">Número do Pedido no Cliente:</label>
-  <input id="pedCli" type="text" v-model="pedidoCliente">
-
-  <!-- Modal -->
-  <div class="modal fade" id="clientesModal" tabindex="-1" aria-labelledby="clientesModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="clientesModalLabel">Busca de Clientes</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModal"></button>
+  <div class="gerarPedido">
+    <Navbar/>
+    <div class="mx-3">
+      <div class="row mb-3">
+        <label for="codCli" class="form-label">Cliente:</label>
+        <div class="col-auto">
+          <input id="codCli" class="form-control" type="text" autofocus v-model="cliente">
         </div>
-        <div class="modal-body">
-          <div class="mb-3" v-if="clientes != null">
-            <table class="table table-striped table-hover table-bordered table-sm table-responsive">
-              <thead>
-                <tr>
-                  <th scope="col">Código</th>
-                  <th scope="col">Cliente</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="clienteRow in clientes" :key="clienteRow.CODCLI" class="mouseHover" @click="selectCliente(clienteRow)">
-                  <th scope="row">{{ clienteRow.CODCLI }}</th>
-                  <th>{{ clienteRow.NOMCLI }}</th>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div v-else>
-            <label>Buscando clientes ...</label>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        <div class="col-auto">
+          <button class="btn btn-secondary" @click="buscaClientes" data-bs-toggle="modal" data-bs-target="#clientesModal">...</button>
         </div>
       </div>
+      <div class="row mb-3">
+        <label for="pedCli" class="form-label">Número do Pedido no Cliente:</label>
+        <div class="col-auto">
+          <input id="pedCli" class="form-control" type="text" onfocus="this.select();" v-model="pedidoCliente">
+        </div>
+      </div>
+
+      <!-- Modal -->
+      <div class="modal fade" id="clientesModal" tabindex="-1" aria-labelledby="clientesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="clientesModalLabel">Busca de Clientes</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModal"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3" v-if="clientes != null">
+                <table class="table table-striped table-hover table-bordered table-sm table-responsive">
+                  <thead>
+                    <tr>
+                      <th scope="col">Código</th>
+                      <th scope="col">Cliente</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="clienteRow in clientes" :key="clienteRow.CODCLI" class="mouseHover" @click="selectCliente(clienteRow)">
+                      <th scope="row">{{ clienteRow.CODCLI }}</th>
+                      <th>{{ clienteRow.NOMCLI }}</th>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div v-else>
+                <label>Buscando clientes ...</label>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-secondary" v-if="!addingProduct" @click="addingProduct = true">Adicionar Produto</button>
+      <ProductSelector v-if="addingProduct" @addItem="addItem"/>
+
+      <br>
+      <label>Produtos Adicionados</label>
+      <ul v-if="itens.length">
+        <li v-for="item in itens" :key="item.codPro">Produto: {{ item.codPro }} - Der.: {{ item.codDer }} - Qtde: {{ item.qtdPed }} - Valor Unit.: {{ item.preUni }} <a href="#" @click="deleteItem(item)">Excluir</a></li>
+      </ul>
+      <br>
+      <button v-if="itens.length" @click="gerarPedido">Gerar Pedido</button>
+
+      <label v-if="pedidoGerado > 0">Pedido {{ pedidoGerado }} gerado com sucesso! Clique <a href="/">aqui</a> para voltar à página inicial, ou <a :href="'/manipularPedido/' + pedidoGerado">aqui</a> para editar os componentes do pedido.</label>
     </div>
   </div>
-
-  <br>
-  <button v-if="!addingProduct" @click="addingProduct = true">Adicionar Produto</button>
-  <ProductSelector v-if="addingProduct" @addItem="addItem"/>
-
-  <br>
-  <label>Produtos Adicionados</label>
-  <ul v-if="itens.length">
-    <li v-for="item in itens" :key="item.codPro">Produto: {{ item.codPro }} - Der.: {{ item.codDer }} - Qtde: {{ item.qtdPed }} - Valor Unit.: {{ item.preUni }} <a href="#" @click="deleteItem(item)">Excluir</a></li>
-  </ul>
-  <br>
-  <button v-if="itens.length" @click="gerarPedido">Gerar Pedido</button>
-
-  <label v-if="pedidoGerado > 0">Pedido {{ pedidoGerado }} gerado com sucesso! Clique <a href="/">aqui</a> para voltar à página inicial, ou <a :href="'/manipularPedido/' + pedidoGerado">aqui</a> para editar os componentes do pedido.</label>
 </template>
 
 <script>
@@ -137,6 +149,13 @@ export default {
 </script>
 
 <style scoped>
+  html, body {
+      height: 100%;
+    }
+  .gerarPedido {
+    height: 100%;
+    background-color: #f5f5f5;
+  }
   .mouseHover {
     cursor: pointer;
   }

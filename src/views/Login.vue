@@ -5,7 +5,7 @@
       <h1 class="h3 mb-3 font-weight-normal">Pedido Web</h1>
       <input class="form-control" type="text" id="inputUsuario" placeholder="Usuário" required autofocus v-model="user" ref="inputUser">
       <input class="form-control" type="password" id="inputSenha" placeholder="Senha" required v-model="password">
-      <button class="btn btn-lg btn-primary btn-block">Login</button>
+      <button class="btn btn-lg btn-block btn-secondary">Login</button>
     </form>
   </div>
 </template>
@@ -100,37 +100,4 @@ export default {
     display: block;
     width: 100%;
   }
-  /* .formLogin {
-      max-width: 420px;
-      margin: 30px auto;
-      text-align: left;
-      padding: 40px;
-      border-radius: 10px;
-    }
-  .labelLogin {
-    display: inline-block;
-    margin: 25px 0 15px;
-    font-weight: bold;
-  }
-  .inputLogin {
-    display: block;
-    padding: 10px 6px;
-    width: 100%;
-    box-sizing: border-box;
-    border: none;
-    border-bottom: 1px solid #ddd;
-  }
-  .buttonLogin {
-    background: blue;
-    border: 0;
-    padding: 10px 20px;
-    margin: 0 auto;
-    display: block;
-    margin-top: 20px;
-    color: white;
-    border-radius: 20px;
-  }
-  .submit {
-    text-align: center;
-  } */
 </style>
