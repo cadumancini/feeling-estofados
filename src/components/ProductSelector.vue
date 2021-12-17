@@ -42,8 +42,7 @@
     <div class="row mb-2">
       <label for="vlrUni" class="col-auto col-form-label" v-show="selectedDerivacao">Valor Unitário:</label>
       <div class="col-auto">
-        <input v-show="selectedDerivacao" class="form-control" onfocus="this.select();" id="vlrUni" type="number" v-model="valorUnitario">
-        <!-- see https://www.npmjs.com/package/maska -->
+        <currency-input v-show="selectedDerivacao" class="form-control" onfocus="this.select();" id="vlrUni" v-model="valorUnitario" :options="{ currency: 'BRL' }" />
       </div>
     </div>
     <div class="row mb-2">
@@ -51,14 +50,15 @@
         <button class="btn btn-secondary" :disabled="selectedDerivacao ? false : true" @click="addProduto">Adicionar</button>
       </div>
     </div>
-    <br>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import CurrencyInput from './CurrencyInput'
 export default {
   name: 'ProductSelector',
+  components: { CurrencyInput },
   data () {
     return {
       estilos: null,
