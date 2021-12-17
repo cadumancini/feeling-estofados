@@ -1,68 +1,73 @@
 <template>
-  <li id="node" v-if="item.exiCmp !== 'S'" v-bind:class="{ trocar: (item.codDer === 'G' || item.proGen === 'S'), temG: item.temG, atencao: item.trocar }">
-    <div @click="toggleOpen">
-      {{ item.codNiv }} -> {{ item.codPro }} - {{ item.codDer }} - {{ item.desPro }} {{ item.desDer }} - Qtde {{ item.qtdCon }} {{ item.uniMed }}
-      <span v-if="item.filhos">[ {{ isOpen ? '-' : '+' }} ]</span>
-      <span v-if="item.temG || item.trocar">!!!</span>
-      <button v-if="item.codDer === 'G' || item.proGen === 'S' || item.podeTrocar" @click="buscarOpcoes(item)" data-bs-toggle="modal" :data-bs-target="`#modal-`+item.hashModal">Trocar</button>
+  <tr style="padding-left: 10px" id="node" v-if="item.exiCmp !== 'S'" v-bind:class="{ trocar: (item.codDer === 'G' || item.proGen === 'S'), temG: item.temG, atencao: item.trocar }">
+    <th class="fw-normal">{{ item.codNiv }}</th>
+    <th class="fw-normal">{{ item.codPro }}</th>
+    <th class="fw-normal">{{ item.codDer }}</th>
+    <th class="fw-normal">{{ item.desPro }} {{ item.desDer }}</th>
+    <th class="fw-normal">{{ item.qtdCon }}</th>
+    <th class="fw-normal">{{ item.uniMed }}</th>
+    <th class="fw-normal" v-if="item.codDer === 'G' || item.proGen === 'S' || item.podeTrocar">
+      <button @click="buscarOpcoes(item)" data-bs-toggle="modal" :data-bs-target="`#modal-`+item.hashModal">Trocar</button>
+    </th>
+    <th v-else></th>
 
-      <!-- Modal -->
-      <div class="modal fade" :id="`modal-`+item.hashModal" tabindex="-1" aria-labelledby="equivalentesModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="equivalentesModalLabel">Busca de Produtos Equivalentes</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModal"></button>
+    <th class="fw-normal" @click="toggleOpen">{{ item.filhos ? (isOpen ? '[-]' : '[Expandir]') : '' }} {{ (item.temG || item.trocar) ? '!!!' : '' }}</th>
+
+    <!-- Modal -->
+    <div class="modal fade" :id="`modal-`+item.hashModal" tabindex="-1" aria-labelledby="equivalentesModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="equivalentesModalLabel">Busca de Produtos Equivalentes</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3" v-if="item.equivalentes !== []">
+              <table class="table table-striped table-hover table-bordered table-sm table-responsive">
+                <thead>
+                  <tr>
+                    <th scope="col">Produto</th>
+                    <th scope="col">Derivação</th>
+                    <th scope="col">Descrição</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="equivalenteRow in item.equivalentes" :key="equivalenteRow.CODPRO" class="mouseHover" @click="selecionarEquivalente(equivalenteRow)">
+                    <th scope="row">{{ equivalenteRow.CODPRO }}</th>
+                    <th>{{ equivalenteRow.CODDER }}</th>
+                    <th>{{ equivalenteRow.DSCEQI }}</th>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-            <div class="modal-body">
-              <div class="mb-3" v-if="item.equivalentes !== []">
-                <table class="table table-striped table-hover table-bordered table-sm table-responsive">
-                  <thead>
-                    <tr>
-                      <th scope="col">Produto</th>
-                      <th scope="col">Derivação</th>
-                      <th scope="col">Descrição</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="equivalenteRow in item.equivalentes" :key="equivalenteRow.CODPRO" class="mouseHover" @click="selecionarEquivalente(equivalenteRow)">
-                      <th scope="row">{{ equivalenteRow.CODPRO }}</th>
-                      <th>{{ equivalenteRow.CODDER }}</th>
-                      <th>{{ equivalenteRow.DSCEQI }}</th>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div v-else>
-                <label>Buscando equivalentes ...</label>
-              </div>
+            <div v-else>
+              <label>Buscando equivalentes ...</label>
             </div>
-            <div class="m-3" v-if="item.equivalenteSelecionado">
-              <label>Equivalente selecionado:</label>
-              <br>
-              <label>{{item.equivalenteSelecionado.CODPRO}}</label>
-              <br>
-              <label>{{item.equivalenteSelecionado.CODDER}}</label>
-              <br>
-              <label>{{item.equivalenteSelecionado.DSCEQI}}</label>
-              <br>
-              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="confirmarTroca(item.equivalenteSelecionado)">Confirmar</button>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="cancelar">Fechar</button>
-            </div>
+          </div>
+          <div class="m-3" v-if="item.equivalenteSelecionado">
+            <label>Equivalente selecionado:</label>
+            <br>
+            <label>{{item.equivalenteSelecionado.CODPRO}}</label>
+            <br>
+            <label>{{item.equivalenteSelecionado.CODDER}}</label>
+            <br>
+            <label>{{item.equivalenteSelecionado.DSCEQI}}</label>
+            <br>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="confirmarTroca(item.equivalenteSelecionado)">Confirmar</button>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="cancelar">Fechar</button>
           </div>
         </div>
       </div>
     </div>
-    <ul v-show="isOpen">
-      <TreeItem
-        v-for="(child, index) in item.filhos"
-        :key="index"
-        :item="child"
-        @trocar="trocar"/>
-    </ul>
-  </li>
+  </tr>
+  <!-- eslint-disable-next-line vue/no-use-v-if-with-v-for -->
+  <TreeItem v-if="isOpen"
+    v-for="(child, index) in item.filhos"
+    :key="index"
+    :item="child"
+    @trocar="trocar"/>
 </template>
 
 <script>
@@ -146,14 +151,14 @@ export default {
 </script>
 
 <style scoped>
- li {
-   margin: 10px 10px;
+ tr {
+   padding-left: 10px;
    color: black;
  }
  .atencao, .temG {
-   color: green;
+   background-color: #f5ec90;
  }
  .trocar {
-   color: red;
+   background-color: #fcaeae;
  }
 </style>

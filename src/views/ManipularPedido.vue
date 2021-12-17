@@ -19,7 +19,7 @@
       </div>
 
       <div class="row mb-3 mx-0">
-        <table v-if="itens.length" class="table table-striped table-hover table-bordered table-sm table-responsive">
+        <table v-if="itens.length" class="table table-striped table-bordered table-sm table-responsive">
           <thead>
             <tr class="table-dark">
               <th class="fw-normal">Seq</th>
@@ -41,7 +41,7 @@
             </tr>
             <tr v-if="item.MANIPULAR">
               <td colspan="6">
-                <table class="table table-striped table-hover table-bordered table-sm table-responsive">
+                <table class="table table-hover table-bordered table-sm table-responsive">
                   <thead>
                     <tr class="table-secondary">
                       <th class="fw-normal">Nível</th>
@@ -50,8 +50,8 @@
                       <th class="fw-normal">Descrição</th>
                       <th class="fw-normal">Qtde.</th>
                       <th class="fw-normal">U.M.</th>
+                      <th class="fw-normal">Troca</th>
                       <th class="fw-normal">Ação</th>
-                      <th class="fw-normal"></th>
                     </tr>
                   </thead>
                   <tbody>
