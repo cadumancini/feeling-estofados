@@ -17,7 +17,7 @@
         <label class="col-form-label text-danger fst-italic" v-else-if="produtos.length === 0">Não existe produto cadastrado para este estilo!</label>
         <select v-else class="form-select" id="selectProdutos" v-model="selectedProduto" @change="onSelectProduto()">
           <option disabled value="">Selecione um produto...</option>
-          <option v-for="produto in produtos" :key="produto.CODPRO" :value="produto.CODPRO">{{ produto.CODPRO }} - {{ produto.DESPRO }}</option>
+          <option v-for="produto in produtos" :key="produto.CODPRO" :value="{codPro: produto.CODPRO, desPro: produto.DESPRO}">{{ produto.CODPRO }} - {{ produto.DESPRO }}</option>
         </select>
       </div>
     </div>
@@ -29,7 +29,7 @@
         <label class="col-form-label text-danger fst-italic" v-else-if="derivacoes.length === 0">Não existe derivação cadastrada para este produto!</label>
         <select v-else class="form-select" id="selectedDerivacoes" v-model="selectedDerivacao">
           <option disabled value="">Selecione uma derivação...</option>
-          <option v-for="derivacao in derivacoes" :key="derivacao.CODDER" :value="derivacao.CODDER">{{ derivacao.CODDER }} - {{ derivacao.DESDER }}</option>
+          <option v-for="derivacao in derivacoes" :key="derivacao.CODDER" :value="{codDer: derivacao.CODDER, desDer: derivacao.DESDER}">{{ derivacao.CODDER }} - {{ derivacao.DESDER }}</option>
         </select>
       </div>
     </div>
@@ -90,7 +90,7 @@ export default {
     },
     onSelectProduto () {
       const token = sessionStorage.getItem('token')
-      axios.get('http://localhost:8080/derivacoesPorProduto?emp=1&produto=' + this.selectedProduto + '&token=' + token)
+      axios.get('http://localhost:8080/derivacoesPorProduto?emp=1&produto=' + this.selectedProduto.codPro + '&token=' + token)
         .then((response) => {
           this.derivacoes = response.data.derivacoes
         })
@@ -100,7 +100,7 @@ export default {
       if (this.quantidade <= 0 || this.valorUnitario <= 0) {
         alert('Quantidade e/ou Valor Unitário devem ser um valor positivo!')
       } else {
-        this.$emit('addItem', { codPro: this.selectedProduto, codDer: this.selectedDerivacao, seqIpd: 0, qtdPed: this.quantidade, preUni: this.valorUnitario })
+        this.$emit('addItem', { codPro: this.selectedProduto.codPro, desPro: (this.selectedProduto.desPro + ' ' + this.selectedDerivacao.desDer), codDer: this.selectedDerivacao.codDer, seqIpd: 0, qtdPed: this.quantidade, preUni: this.valorUnitario })
         this.selectedEstilo = ''
         this.selectedProduto = ''
         this.selectedDerivacao = ''

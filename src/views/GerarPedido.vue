@@ -3,6 +3,9 @@
     <Navbar/>
     <div class="mx-3">
       <div class="row mb-3">
+        <p class="fw-bold fs-3">Geração de Pedido</p>
+      </div>
+      <div class="row mb-3">
         <label for="codCli" class="form-label">Cliente:</label>
         <div class="col-auto">
           <input id="codCli" class="form-control" type="text" autofocus v-model="cliente">
@@ -37,8 +40,8 @@
                   </thead>
                   <tbody>
                     <tr v-for="clienteRow in clientes" :key="clienteRow.CODCLI" class="mouseHover" @click="selectCliente(clienteRow)">
-                      <th scope="row">{{ clienteRow.CODCLI }}</th>
-                      <th>{{ clienteRow.NOMCLI }}</th>
+                      <th class="fw-normal" scope="row">{{ clienteRow.CODCLI }}</th>
+                      <th class="fw-normal">{{ clienteRow.NOMCLI }}</th>
                     </tr>
                   </tbody>
                 </table>
@@ -54,18 +57,40 @@
         </div>
       </div>
 
-      <button class="btn btn-secondary" v-if="!addingProduct" @click="addingProduct = true">Adicionar Produto</button>
-      <ProductSelector v-if="addingProduct" @addItem="addItem"/>
+      <button class="btn btn-secondary mb-3" v-if="!addingProduct" @click="addingProduct = true; pedidoGerado = 0">Adicionar Produto</button>
+      <ProductSelector class="mb-3" v-if="addingProduct" @addItem="addItem"/>
 
-      <br>
-      <label>Produtos Adicionados</label>
-      <ul v-if="itens.length">
-        <li v-for="item in itens" :key="item.codPro">Produto: {{ item.codPro }} - Der.: {{ item.codDer }} - Qtde: {{ item.qtdPed }} - Valor Unit.: {{ item.preUni }} <a href="#" @click="deleteItem(item)">Excluir</a></li>
-      </ul>
-      <br>
-      <button v-if="itens.length" @click="gerarPedido">Gerar Pedido</button>
+      <div v-if="itens.length" class="row">
+        <p class="fw-bold fs-5">Produtos Adicionados</p>
+      </div>
 
-      <label v-if="pedidoGerado > 0">Pedido {{ pedidoGerado }} gerado com sucesso! Clique <a href="/">aqui</a> para voltar à página inicial, ou <a :href="'/manipularPedido/' + pedidoGerado">aqui</a> para editar os componentes do pedido.</label>
+      <div class="row mb-3 mx-0">
+        <table v-if="itens.length" class="table table-striped table-hover table-bordered table-sm table-responsive">
+          <thead>
+            <tr class="table-dark">
+              <th class="fw-normal">Produto</th>
+              <th class="fw-normal">Der.</th>
+              <th class="fw-normal">Descrição</th>
+              <th class="fw-normal">Qtde.</th>
+              <th class="fw-normal">Valor Unit. (R$)</th>
+              <th class="fw-normal">Ação</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in itens" :key="item.codPro">
+              <th class="fw-normal">{{ item.codPro }}</th>
+              <th class="fw-normal">{{ item.codDer }}</th>
+              <th class="fw-normal">{{ item.desPro }}</th>
+              <th class="fw-normal">{{ item.qtdPed }}</th>
+              <th class="fw-normal">{{ vueNumberFormat(item.preUni, {}) }}</th>
+              <th><button class="btn btn-sm btn-danger" @click="deleteItem(item)">Excluir</button></th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <button class="btn btn-secondary" v-if="itens.length" @click="gerarPedido">Gerar Pedido</button>
+
+      <p class="fw-bold" v-if="pedidoGerado > 0">Pedido {{ pedidoGerado }} gerado com sucesso! Clique <a href="/">aqui</a> para voltar à página inicial, ou <a :href="'/manipularPedido/' + pedidoGerado">aqui</a> para editar os componentes do pedido.</p>
     </div>
   </div>
 </template>
