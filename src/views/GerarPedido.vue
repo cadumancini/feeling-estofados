@@ -78,12 +78,12 @@
           </thead>
           <tbody>
             <tr v-for="item in itens" :key="item.codPro">
-              <th class="fw-normal">{{ item.codPro }}</th>
-              <th class="fw-normal">{{ item.codDer }}</th>
-              <th class="fw-normal">{{ item.desPro }}</th>
-              <th class="fw-normal">{{ item.qtdPed }}</th>
-              <th class="fw-normal">{{ vueNumberFormat(item.preUni, {}) }}</th>
-              <th><button class="btn btn-sm btn-danger" @click="deleteItem(item)">Excluir</button></th>
+              <td class="fw-normal">{{ item.codPro }}</td>
+              <td class="fw-normal">{{ item.codDer }}</td>
+              <td class="fw-normal">{{ item.desPro }}</td>
+              <td class="fw-normal">{{ item.qtdPed }}</td>
+              <td class="fw-normal">{{ vueNumberFormat(item.preUni, {}) }}</td>
+              <td><button class="btn btn-sm btn-danger" @click="deleteItem(item)">Excluir</button></td>
             </tr>
           </tbody>
         </table>

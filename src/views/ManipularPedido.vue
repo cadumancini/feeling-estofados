@@ -1,21 +1,73 @@
 <template>
-  <Navbar/>
-  <label for="pedido">Pedido:</label>
-  <input id="pedido" type="number" v-model="pedido">
-  <button @click="buscaPedido">Buscar</button>
-  <ul v-if="itens.length">
-    <li v-for="item in itens" :key="item.SEQIPD">Seq. {{ item.SEQIPD }} | Prod. {{ item.CODPRO }} | Der. {{ item.CODDER }} | Qtde. {{ item.QTDPED }} | <button @click="manipularItem(item)">Manipular Estrutura</button>
-      <br>
-      <div v-if="item.MANIPULAR">
-        <ul>
-          <TreeItem
-            v-if="item.PRODUCTFOUND"
-            :item="item.ACABADO"
-            @trocar="(itemTroca) => efetuarTroca(item, itemTroca)"/>
-        </ul>
+  <div class="manipularPedido">
+    <Navbar/>
+    <div class="mx-3">
+      <div class="row mb-3">
+        <p class="fw-bold fs-3">Manipulação de Pedido</p>
       </div>
-    </li>
-  </ul>
+      <div class="row mb-3">
+        <label for="pedido" class="form-label">Pedido:</label>
+        <div class="col-auto">
+          <input id="pedido" class="form-control" type="number" v-model="pedido" ref="inputPedido">
+        </div>
+        <div class="col-auto">
+          <button class="btn btn-secondary" @click="buscaPedido">Buscar</button>
+        </div>
+        <div class="col-auto">
+          <button class="btn btn-secondary" @click="limpar">Cancelar</button>
+        </div>
+      </div>
+
+      <div class="row mb-3 mx-0">
+        <table v-if="itens.length" class="table table-striped table-hover table-bordered table-sm table-responsive">
+          <thead>
+            <tr class="table-dark">
+              <th class="fw-normal">Seq</th>
+              <th class="fw-normal">Produto</th>
+              <th class="fw-normal">Der.</th>
+              <th class="fw-normal">Descrição</th>
+              <th class="fw-normal">Qtde.</th>
+              <th class="fw-normal">Ação</th>
+            </tr>
+          </thead>
+          <tbody v-for="item in itens" :key="item.codPro">
+            <tr>
+              <td class="fw-normal">{{ item.SEQIPD }}</td>
+              <td class="fw-normal">{{ item.CODPRO }}</td>
+              <td class="fw-normal">{{ item.CODDER }}</td>
+              <td class="fw-normal">{{ item.DSCPRO }}</td>
+              <td class="fw-normal">{{ item.QTDPED }}</td>
+              <td><button class="btn btn-sm btn-primary" @click="manipularItem(item)">Manipular</button></td>
+            </tr>
+            <tr v-if="item.MANIPULAR">
+              <td colspan="6">
+                <table class="table table-striped table-hover table-bordered table-sm table-responsive">
+                  <thead>
+                    <tr class="table-secondary">
+                      <th class="fw-normal">Nível</th>
+                      <th class="fw-normal">Produto</th>
+                      <th class="fw-normal">Der.</th>
+                      <th class="fw-normal">Descrição</th>
+                      <th class="fw-normal">Qtde.</th>
+                      <th class="fw-normal">U.M.</th>
+                      <th class="fw-normal">Ação</th>
+                      <th class="fw-normal"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <TreeItem
+                      v-if="item.PRODUCTFOUND"
+                      :item="item.ACABADO"
+                      @trocar="(itemTroca) => efetuarTroca(item, itemTroca)"/>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+</div>
 </template>
 
 <script>
@@ -33,6 +85,12 @@ export default {
     }
   },
   methods: {
+    limpar () {
+      console.log('limpando')
+      this.pedido = ''
+      this.itens = []
+      this.$nextTick(() => this.$refs.inputPedido.focus())
+    },
     buscaPedido () {
       if (this.pedido === '' || this.pedido === undefined) {
         alert('Favor preencher o pedido')
@@ -172,3 +230,13 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  html, body {
+      height: 100%;
+    }
+  .manipularPedido {
+    height: 100%;
+    background-color: #f5f5f5;
+  }
+</style>
