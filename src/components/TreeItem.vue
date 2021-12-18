@@ -1,17 +1,24 @@
 <template>
   <tr style="padding-left: 10px" id="node" v-if="item.exiCmp !== 'S'" v-bind:class="{ trocar: (item.codDer === 'G' || item.proGen === 'S'), temG: item.temG, atencao: item.trocar }">
-    <th class="fw-normal">{{ item.codNiv }}</th>
-    <th class="fw-normal">{{ item.codPro }}</th>
+    <th class="fw-normal">
+      <font-awesome-icon v-if="(item.filhos && isOpen)" icon="minus-square" @click="toggleOpen" class="contract pointer"/>
+      <font-awesome-icon v-else-if="(item.filhos && !isOpen)" icon="plus-square" @click="toggleOpen" class="expand pointer"/>
+    </th>
+    <th class="fw-normal indent" :style="cssVars">{{ item.codNiv }}</th>
+    <th class="fw-normal indent" :style="cssVars">{{ item.codPro }}</th>
     <th class="fw-normal">{{ item.codDer }}</th>
-    <th class="fw-normal">{{ item.desPro }} {{ item.desDer }}</th>
+    <th class="fw-normal font-small">{{ item.desPro }} {{ item.desDer }}</th>
     <th class="fw-normal">{{ item.qtdCon }}</th>
     <th class="fw-normal">{{ item.uniMed }}</th>
-    <th class="fw-normal" v-if="item.codDer === 'G' || item.proGen === 'S' || item.podeTrocar">
-      <button @click="buscarOpcoes(item)" data-bs-toggle="modal" :data-bs-target="`#modal-`+item.hashModal">Trocar</button>
+    <th class="fw-normal align-center exchange" v-if="item.codDer === 'G' || item.proGen === 'S' || item.podeTrocar">
+      <font-awesome-icon class="pointer" icon="redo-alt" @click="buscarOpcoes(item)" data-bs-toggle="modal" :data-bs-target="`#modal-`+item.hashModal"/>
     </th>
     <th v-else></th>
 
-    <th class="fw-normal" @click="toggleOpen">{{ item.filhos ? (isOpen ? '[-]' : '[Expandir]') : '' }} {{ (item.temG || item.trocar) ? '!!!' : '' }}</th>
+    <th class="fw-normal align-center">
+      <font-awesome-icon v-if="(item.temG || item.trocar)" icon="exclamation-triangle" class="warning"/>
+      <font-awesome-icon v-else-if="level === 0" icon="check-square" class="success"/>
+    </th>
 
     <!-- Modal -->
     <div class="modal fade" :id="`modal-`+item.hashModal" tabindex="-1" aria-labelledby="equivalentesModalLabel" aria-hidden="true">
@@ -32,10 +39,10 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="equivalenteRow in item.equivalentes" :key="equivalenteRow.CODPRO" class="mouseHover" @click="selecionarEquivalente(equivalenteRow)">
-                    <th scope="row">{{ equivalenteRow.CODPRO }}</th>
-                    <th>{{ equivalenteRow.CODDER }}</th>
-                    <th>{{ equivalenteRow.DSCEQI }}</th>
+                  <tr v-for="equivalenteRow in item.equivalentes" :key="equivalenteRow.CODPRO" class="mouseHover pointer" @click="selecionarEquivalente(equivalenteRow)">
+                    <th class="fw-normal" scope="row">{{ equivalenteRow.CODPRO }}</th>
+                    <th class="fw-normal">{{ equivalenteRow.CODDER }}</th>
+                    <th class="fw-normal">{{ equivalenteRow.DSCEQI }}</th>
                   </tr>
                 </tbody>
               </table>
@@ -45,14 +52,12 @@
             </div>
           </div>
           <div class="m-3" v-if="item.equivalenteSelecionado">
-            <label>Equivalente selecionado:</label>
-            <br>
-            <label>{{item.equivalenteSelecionado.CODPRO}}</label>
-            <br>
-            <label>{{item.equivalenteSelecionado.CODDER}}</label>
-            <br>
-            <label>{{item.equivalenteSelecionado.DSCEQI}}</label>
-            <br>
+            <div class="row mb-3">
+              <label class="fw-bold fs-5">Equivalente selecionado:</label>
+              <label class="fw-bold">Produto: {{item.equivalenteSelecionado.CODPRO}}</label>
+              <label class="fw-bold">Derivação: {{item.equivalenteSelecionado.CODDER}}</label>
+              <label class="fw-bold">Descrição: {{item.equivalenteSelecionado.DSCEQI}}</label>
+            </div>
             <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="confirmarTroca(item.equivalenteSelecionado)">Confirmar</button>
           </div>
           <div class="modal-footer">
@@ -67,6 +72,7 @@
     v-for="(child, index) in item.filhos"
     :key="index"
     :item="child"
+    :level="level + 1"
     @trocar="trocar"/>
 </template>
 
@@ -74,7 +80,7 @@
 import axios from 'axios'
 export default {
   name: 'TreeItem',
-  props: ['item'],
+  props: ['item', 'level'],
   data () {
     return {
       isOpen: false
@@ -85,6 +91,14 @@ export default {
     this.$props.item.hashModal = Math.floor(Math.random() * (niv * 1000))
     this.$props.item.equivalentes = []
     this.$props.item.equivalenteSelecionado = null
+    console.log('level: ' + this.$props.level)
+  },
+  computed: {
+    cssVars () {
+      return {
+        '--padding': (this.$props.level * 20) + 'px'
+      }
+    }
   },
   methods: {
     toggleOpen () {
@@ -151,14 +165,41 @@ export default {
 </script>
 
 <style scoped>
- tr {
-   padding-left: 10px;
-   color: black;
+ /* .atencao, .temG {
+   background-color: #fffac2;
+ } */
+ th {
+   vertical-align: middle;
  }
- .atencao, .temG {
-   background-color: #f5ec90;
+ .align-center {
+   text-align: center;
  }
  .trocar {
-   background-color: #fcaeae;
+   background-color: #ffdede;
+ }
+ .pointer {
+   cursor: pointer;
+ }
+ .expand {
+   color: #28a745;
+ }
+ .success {
+   color: #28a745;
+ }
+ .contract {
+   /* color: #0d6efd; */
+   color: #007bbd;
+ }
+ .exchange {
+   color: #0d6efd;
+ }
+ .warning {
+   color: red;
+ }
+ .indent {
+   padding-left: var(--padding);
+ }
+ .font-small {
+   font-size: small;
  }
 </style>

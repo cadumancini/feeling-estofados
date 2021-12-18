@@ -44,20 +44,22 @@
                 <table class="table table-hover table-bordered table-sm table-responsive">
                   <thead>
                     <tr class="table-secondary">
+                      <th class="fw-normal"></th>
                       <th class="fw-normal">Nível</th>
                       <th class="fw-normal">Produto</th>
                       <th class="fw-normal">Der.</th>
                       <th class="fw-normal">Descrição</th>
                       <th class="fw-normal">Qtde.</th>
                       <th class="fw-normal">U.M.</th>
-                      <th class="fw-normal">Troca</th>
                       <th class="fw-normal">Ação</th>
+                      <th class="fw-normal"></th>
                     </tr>
                   </thead>
                   <tbody>
                     <TreeItem
                       v-if="item.PRODUCTFOUND"
                       :item="item.ACABADO"
+                      :level=0
                       @trocar="(itemTroca) => efetuarTroca(item, itemTroca)"/>
                   </tbody>
                 </table>
