@@ -88,7 +88,6 @@ export default {
   },
   methods: {
     limpar () {
-      console.log('limpando')
       this.pedido = ''
       this.itens = []
       this.$nextTick(() => this.$refs.inputPedido.focus())
@@ -190,8 +189,9 @@ export default {
       const seqIpd = item.SEQIPD
       this.trocas = []
       this.trocas.push(itemTroca)
-      item.ACABADO.filhos.forEach(filho => this.analisarSeTrocarFilhos(item, filho, itemTroca, seqIpd))
-      console.log(this.trocas)
+      if (itemTroca.codFam === '02001') {
+        item.ACABADO.filhos.forEach(filho => this.analisarSeTrocarFilhos(item, filho, itemTroca, seqIpd))
+      }
       this.requestTroca(this.pedido, seqIpd)
       this.manipularItem(item)
     },

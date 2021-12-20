@@ -91,7 +91,6 @@ export default {
     this.$props.item.hashModal = Math.floor(Math.random() * (niv * 1000))
     this.$props.item.equivalentes = []
     this.$props.item.equivalenteSelecionado = null
-    console.log('level: ' + this.$props.level)
   },
   computed: {
     cssVars () {
@@ -150,7 +149,8 @@ export default {
         derAnt: this.$props.item.codDer,
         cmpAtu: equivalente.CODPRO,
         derAtu: equivalente.CODDER,
-        dscCmp: equivalente.DSCEQI
+        dscCmp: equivalente.DSCEQI,
+        codFam: this.$props.item.codFam
       }
       this.trocar(itemTroca)
     },
