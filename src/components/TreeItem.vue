@@ -100,6 +100,13 @@ export default {
     }
   },
   methods: {
+    checkInvalidLoginResponse (response) {
+      if (response === 'Token inválido.') {
+        alert('Seu token de acesso não é mais válido. É necessário fazer login novamente.')
+        sessionStorage.removeItem('token')
+        this.$router.push({ name: 'Login' })
+      }
+    },
     toggleOpen () {
       this.isOpen = !this.isOpen
     },
@@ -111,23 +118,27 @@ export default {
       if (item.proGen === 'S') {
         await axios.get('http://localhost:8080/equivalentes?emp=1&modelo=' + item.codMod + '&componente=' + item.codPro + '&token=' + token)
           .then((response) => {
+            this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
           })
           .catch((err) => console.log(err))
       } if (item.podeTrocar) {
         await axios.get('http://localhost:8080/equivalentesAdicionais?emp=1&modelo=' + item.codMod + '&componente=' + item.codPro + '&der=' + item.codDer + '&token=' + token)
           .then((response) => {
+            this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
           })
           .catch((err) => console.log(err))
       } else {
         await axios.get('http://localhost:8080/equivalentes?emp=1&modelo=' + item.codMod + '&componente=' + item.codPro + '&token=' + token)
           .then(async (response) => {
+            this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
             if (!item.equivalentes.length) {
               item.equivalentes = []
               await axios.get('http://localhost:8080/derivacoesPossiveis?emp=1&pro=' + item.codPro + '&token=' + token)
                 .then((response) => {
+                  this.checkInvalidLoginResponse(response.data)
                   item.equivalentes = response.data.derivacoes
                 })
                 .catch((err) => console.log(err))

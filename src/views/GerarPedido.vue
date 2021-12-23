@@ -118,10 +118,18 @@ export default {
     }
   },
   methods: {
+    checkInvalidLoginResponse (response) {
+      if (response === 'Token inválido.') {
+        alert('Seu token de acesso não é mais válido. É necessário fazer login novamente.')
+        sessionStorage.removeItem('token')
+        this.$router.push({ name: 'Login' })
+      }
+    },
     buscaClientes () {
       const token = sessionStorage.getItem('token')
       axios.get('http://localhost:8080/clientes?token=' + token)
         .then((response) => {
+          this.checkInvalidLoginResponse(response.data)
           this.clientes = response.data.clientes
         })
         .catch((err) => console.log(err))
@@ -151,6 +159,7 @@ export default {
         const headers = { headers: { 'Content-Type': 'application/json' } }
         axios.put('http://localhost:8080/pedido?token=' + token, body, headers)
           .then((response) => {
+            this.checkInvalidLoginResponse(response.data)
             parseString(response.data, { explicitArray: false }, (err, result) => {
               if (err) {
                 console.log(err)

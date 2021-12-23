@@ -75,15 +75,28 @@ export default {
     const token = sessionStorage.getItem('token')
     axios.get('http://localhost:8080/estilos?emp=1&token=' + token)
       .then((response) => {
+        if (response.data === 'Token inválido.') {
+          alert('Seu token de acesso não é mais válido. É necessário fazer login novamente.')
+          sessionStorage.removeItem('token')
+          this.$router.push({ name: 'Login' })
+        }
         this.estilos = response.data.estilos
       })
       .catch((err) => console.log(err))
   },
   methods: {
+    checkInvalidLoginResponse (response) {
+      if (response === 'Token inválido.') {
+        alert('Seu token de acesso não é mais válido. É necessário fazer login novamente.')
+        sessionStorage.removeItem('token')
+        this.$router.push({ name: 'Login' })
+      }
+    },
     onSelectEstilo () {
       const token = sessionStorage.getItem('token')
       axios.get('http://localhost:8080/produtosPorEstilo?emp=1&estilo=' + this.selectedEstilo + '&token=' + token)
         .then((response) => {
+          this.checkInvalidLoginResponse(response.data)
           this.produtos = response.data.produtos
         })
         .catch((err) => console.log(err))
@@ -92,6 +105,7 @@ export default {
       const token = sessionStorage.getItem('token')
       axios.get('http://localhost:8080/derivacoesPorProduto?emp=1&produto=' + this.selectedProduto.codPro + '&token=' + token)
         .then((response) => {
+          this.checkInvalidLoginResponse(response.data)
           this.derivacoes = response.data.derivacoes
         })
         .catch((err) => console.log(err))

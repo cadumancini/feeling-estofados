@@ -92,6 +92,13 @@ export default {
       this.itens = []
       this.$nextTick(() => this.$refs.inputPedido.focus())
     },
+    checkInvalidLoginResponse (response) {
+      if (response === 'Token inválido.') {
+        alert('Seu token de acesso não é mais válido. É necessário fazer login novamente.')
+        sessionStorage.removeItem('token')
+        this.$router.push({ name: 'Login' })
+      }
+    },
     buscaPedido () {
       if (this.pedido === '' || this.pedido === undefined) {
         alert('Favor preencher o pedido')
@@ -99,6 +106,7 @@ export default {
         const token = sessionStorage.getItem('token')
         axios.get('http://localhost:8080/itensPedido?emp=1&fil=1&ped=' + this.pedido + '&token=' + token)
           .then((response) => {
+            this.checkInvalidLoginResponse(response.data)
             this.itens = response.data.itens
           })
           .catch((err) => console.log(err))
@@ -116,6 +124,7 @@ export default {
         var json = null
         const response = await axios.get('http://localhost:8080/estrutura?emp=1&fil=1&pro=' + item.CODPRO +
           '&der=' + item.CODDER + '&ped=' + this.pedido + '&ipd=' + item.SEQIPD + '&token=' + token)
+        this.checkInvalidLoginResponse(response.data)
         parseString(response.data, { explicitArray: false }, (err, result) => {
           if (err) {
             console.log(err)
@@ -150,6 +159,7 @@ export default {
         const token = sessionStorage.getItem('token')
         axios.get('http://localhost:8080/equivalentesAdicionais?emp=1&modelo=' + component.codMod + '&componente=' + component.codPro + '&der=' + component.codDer + '&token=' + token)
           .then((response) => {
+            this.checkInvalidLoginResponse(response.data)
             if (response.data.equivalentes.length) {
               component.podeTrocar = true
             }
@@ -222,6 +232,7 @@ export default {
       const codFil = 1
       return axios.post('http://localhost:8080/equivalente?emp=' + codEmp + '&fil=' + codFil + '&ped=' + numPed + '&ipd=' + seqIpd + '&token=' + token, this.trocas)
         .then((response) => {
+          this.checkInvalidLoginResponse(response.data)
           const requestResponse = response.data
           alert(requestResponse)
         })
