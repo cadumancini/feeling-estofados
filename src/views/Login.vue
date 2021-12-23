@@ -5,7 +5,7 @@
       <h1 class="h3 mb-3 font-weight-normal">Pedido Web</h1>
       <input class="form-control" type="text" id="inputUsuario" placeholder="Usuário" required autofocus v-model="user" ref="inputUser">
       <input class="form-control" type="password" id="inputSenha" placeholder="Senha" required v-model="password">
-      <button class="btn btn-lg btn-block btn-secondary">Login</button>
+      <button id="btnLogin" class="btn btn-lg btn-block btn-secondary">Login</button>
     </form>
   </div>
 </template>
@@ -28,11 +28,15 @@ export default {
   },
   methods: {
     handleSubmit () {
+      document.getElementsByTagName('body')[0].style.cursor = 'wait'
+      document.getElementById('btnLogin').disabled = true
       const formData = new FormData()
       formData.append('user', this.user)
       formData.append('pswd', this.password)
       axios.post('http://localhost:8080/login', formData)
         .then((response) => {
+          document.getElementsByTagName('body')[0].style.cursor = 'auto'
+          document.getElementById('btnLogin').disabled = false
           if (response.data === 'Credenciais inválidas') {
             alert(response.data)
             this.$refs.inputUser.focus()
@@ -41,7 +45,11 @@ export default {
             this.$router.push({ name: 'Home' })
           }
         })
-        .catch((err) => console.log(err))
+        .catch((err) => {
+          document.getElementsByTagName('body')[0].style.cursor = 'wait'
+          document.getElementById('btnLogin').disabled = false
+          console.log(err)
+        })
     }
   }
 }
