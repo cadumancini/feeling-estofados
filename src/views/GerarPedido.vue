@@ -11,7 +11,7 @@
           <input id="codCli" class="form-control" type="text" autofocus v-model="cliente">
         </div>
         <div class="col-auto">
-          <button class="btn btn-secondary" @click="buscaClientes" data-bs-toggle="modal" data-bs-target="#clientesModal">...</button>
+          <button class="btn btn-secondary" id="btnBuscaClientes" @click="buscaClientes" data-bs-toggle="modal" data-bs-target="#clientesModal">...</button>
         </div>
       </div>
       <div class="row mb-3">
@@ -57,7 +57,7 @@
         </div>
       </div>
 
-      <button class="btn btn-secondary mb-3" v-if="!addingProduct" @click="addingProduct = true; pedidoGerado = 0">Adicionar Produto</button>
+      <button class="btn btn-secondary mb-3" v-if="!addingProduct" id="btnAdicionarProduto" @click="addingProduct = true; pedidoGerado = 0">Adicionar Produto</button>
       <ProductSelector class="mb-3" v-if="addingProduct" @addItem="addItem"/>
 
       <div v-if="itens.length" class="row">
@@ -88,7 +88,7 @@
           </tbody>
         </table>
       </div>
-      <button class="btn btn-secondary" v-if="itens.length" @click="gerarPedido">Gerar Pedido</button>
+      <button class="btn btn-secondary" v-if="itens.length" id="btnGerarPedido" @click="gerarPedido">Gerar Pedido</button>
 
       <p class="fw-bold" v-if="pedidoGerado > 0">Pedido {{ pedidoGerado }} gerado com sucesso! Clique <a href="/">aqui</a> para voltar à página inicial, ou <a :href="'/manipularPedido/' + pedidoGerado">aqui</a> para editar os componentes do pedido.</p>
     </div>
@@ -126,13 +126,21 @@ export default {
       }
     },
     buscaClientes () {
+      document.getElementsByTagName('body')[0].style.cursor = 'wait'
+      document.getElementById('btnBuscaClientes').disabled = true
       const token = sessionStorage.getItem('token')
       axios.get('http://localhost:8080/clientes?token=' + token)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           this.clientes = response.data.clientes
+          document.getElementsByTagName('body')[0].style.cursor = 'auto'
+          document.getElementById('btnBuscaClientes').disabled = false
         })
-        .catch((err) => console.log(err))
+        .catch((err) => {
+          document.getElementsByTagName('body')[0].style.cursor = 'auto'
+          document.getElementById('btnBuscaClientes').disabled = false
+          console.log(err)
+        })
     },
     selectCliente (clienteClicked) {
       this.cliente = clienteClicked.CODCLI
@@ -152,6 +160,9 @@ export default {
       if (this.cliente === '') {
         alert('Favor preencher o cliente!')
       } else {
+        document.getElementsByTagName('body')[0].style.cursor = 'wait'
+        document.getElementById('btnGerarPedido').disabled = true
+        document.getElementById('btnAdicionarProduto').disabled = true
         var parseString = require('xml2js').parseString
         var respostaPedido = null
         const token = sessionStorage.getItem('token')
@@ -174,8 +185,16 @@ export default {
                 this.pedidoGerado = respostaPedido.numPed
               }
             })
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
+            document.getElementById('btnGerarPedido').disabled = false
+            document.getElementById('btnAdicionarProduto').disabled = false
           })
-          .catch((err) => console.log(err))
+          .catch((err) => {
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
+            document.getElementById('btnGerarPedido').disabled = false
+            document.getElementById('btnAdicionarProduto').disabled = false
+            console.log(err)
+          })
       }
     }
   }

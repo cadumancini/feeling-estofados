@@ -7,6 +7,7 @@
           <option disabled value="">Selecione um estilo...</option>
           <option v-for="estilo in estilos" :key="estilo.CODCPR" :value="estilo.CODCPR">{{ estilo.DESCPR }}</option>
         </select>
+        <label class="col-form-label text-info fst-italic" v-else>Buscando estilos...</label>
       </div>
     </div>
     <div class="row mb-2">
