@@ -11,7 +11,7 @@
           <input id="pedido" class="form-control" type="number" v-model="pedido" ref="inputPedido">
         </div>
         <div class="col-auto">
-          <button class="btn btn-secondary" @click="buscaPedido">Buscar</button>
+          <button class="btn btn-secondary" id="btnBuscarPedido" @click="buscaPedido">Buscar</button>
         </div>
         <div class="col-auto">
           <button class="btn btn-secondary" @click="limpar">Cancelar</button>
@@ -37,7 +37,7 @@
               <td class="fw-normal">{{ item.CODDER }}</td>
               <td class="fw-normal">{{ item.DSCPRO }}</td>
               <td class="fw-normal">{{ item.QTDPED }}</td>
-              <td><button class="btn btn-sm btn-primary" @click="manipularItem(item)">Manipular</button></td>
+              <td><button class="btn btn-sm btn-primary" :id="`btnManipular` + item.SEQIPD" @click="manipularItem(item)">Manipular</button></td>
             </tr>
             <tr v-if="item.MANIPULAR">
               <td colspan="6">
@@ -103,19 +103,29 @@ export default {
       if (this.pedido === '' || this.pedido === undefined) {
         alert('Favor preencher o pedido')
       } else {
+        document.getElementsByTagName('body')[0].style.cursor = 'wait'
+        document.getElementById('btnBuscarPedido').disabled = true
         const token = sessionStorage.getItem('token')
         axios.get('http://localhost:8080/itensPedido?emp=1&fil=1&ped=' + this.pedido + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             this.itens = response.data.itens
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
+            document.getElementById('btnBuscarPedido').disabled = false
           })
-          .catch((err) => console.log(err))
+          .catch((err) => {
+            console.log(err)
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
+            document.getElementById('btnBuscarPedido').disabled = false
+          })
       }
     },
     async manipularItem (item) {
       if (item.MANIPULAR) {
         item.MANIPULAR = false
       } else {
+        document.getElementsByTagName('body')[0].style.cursor = 'wait'
+        document.getElementById('btnManipular' + item.SEQIPD).disabled = true
         item.MANIPULAR = true
         item.PRODUCTFOUND = false
         const token = sessionStorage.getItem('token')
@@ -135,6 +145,8 @@ export default {
         })
         this.parseAllComponentsIntoFullProduct(item)
         item.PRODUCTFOUND = true
+        document.getElementsByTagName('body')[0].style.cursor = 'auto'
+        document.getElementById('btnManipular' + item.SEQIPD).disabled = false
       }
     },
     async parseAllComponentsIntoFullProduct (item) {
@@ -196,14 +208,14 @@ export default {
       }
     },
     efetuarTroca (item, itemTroca) {
+      document.getElementsByTagName('body')[0].style.cursor = 'wait'
       const seqIpd = item.SEQIPD
       this.trocas = []
       this.trocas.push(itemTroca)
       if (itemTroca.codFam === '02001') {
         item.ACABADO.filhos.forEach(filho => this.analisarSeTrocarFilhos(item, filho, itemTroca, seqIpd))
       }
-      this.requestTroca(this.pedido, seqIpd)
-      this.manipularItem(item)
+      this.requestTroca(this.pedido, seqIpd, item)
     },
     analisarSeTrocarFilhos (pai, filho, itemTroca, seqIpd) {
       if (filho.codPro === itemTroca.cmpAnt &&
@@ -226,7 +238,7 @@ export default {
         filho.filhos.forEach(neto => this.analisarSeTrocarFilhos(filho, neto, itemTroca, seqIpd))
       }
     },
-    async requestTroca (numPed, seqIpd) {
+    async requestTroca (numPed, seqIpd, item) {
       const token = sessionStorage.getItem('token')
       const codEmp = 1
       const codFil = 1
@@ -234,7 +246,13 @@ export default {
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           const requestResponse = response.data
-          alert(requestResponse)
+          if (requestResponse === 'OK') {
+            alert('Troca realizada com sucesso. Pressione OK para recarregar a estrutura')
+          } else {
+            alert(requestResponse)
+          }
+          this.manipularItem(item)
+          this.manipularItem(item)
         })
         .catch((err) => {
           console.log(err)

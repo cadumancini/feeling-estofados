@@ -115,20 +115,29 @@ export default {
       item.equivalentes = []
       this.$props.item.equivalenteSelecionado = null
       item.equivalenteSelecionado = null
+      document.getElementsByTagName('body')[0].style.cursor = 'wait'
       if (item.proGen === 'S') {
         await axios.get('http://localhost:8080/equivalentes?emp=1&modelo=' + item.codMod + '&componente=' + item.codPro + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
           })
-          .catch((err) => console.log(err))
-      } if (item.podeTrocar) {
+          .catch((err) => {
+            console.log(err)
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
+          })
+      } else if (item.podeTrocar) {
         await axios.get('http://localhost:8080/equivalentesAdicionais?emp=1&modelo=' + item.codMod + '&componente=' + item.codPro + '&der=' + item.codDer + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
           })
-          .catch((err) => console.log(err))
+          .catch((err) => {
+            console.log(err)
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
+          })
       } else {
         await axios.get('http://localhost:8080/equivalentes?emp=1&modelo=' + item.codMod + '&componente=' + item.codPro + '&token=' + token)
           .then(async (response) => {
@@ -140,11 +149,19 @@ export default {
                 .then((response) => {
                   this.checkInvalidLoginResponse(response.data)
                   item.equivalentes = response.data.derivacoes
+                  document.getElementsByTagName('body')[0].style.cursor = 'auto'
                 })
-                .catch((err) => console.log(err))
+                .catch((err) => {
+                  console.log(err)
+                  document.getElementsByTagName('body')[0].style.cursor = 'auto'
+                })
             }
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
           })
-          .catch((err) => console.log(err))
+          .catch((err) => {
+            console.log(err)
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
+          })
       }
     },
     selecionarEquivalente (equivalente) {
