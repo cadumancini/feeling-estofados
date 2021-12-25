@@ -207,17 +207,33 @@ export default {
         pai.temG = true
       }
     },
-    efetuarTroca (item, itemTroca) {
+    async efetuarTroca (item, itemTroca) {
       document.getElementsByTagName('body')[0].style.cursor = 'wait'
       const seqIpd = item.SEQIPD
       this.trocas = []
       this.trocas.push(itemTroca)
       if (itemTroca.codFam === '02001') {
-        item.ACABADO.filhos.forEach(filho => this.analisarSeTrocarFilhos(item, filho, itemTroca, seqIpd))
+        const token = sessionStorage.getItem('token')
+        const codEmp = 1
+        let itensMontagem = null
+        await axios.get('http://localhost:8080/itensMontagem?emp=' + codEmp + '&pro=' + itemTroca.cmpAtu + '&der=' + itemTroca.derAtu + '&token=' + token)
+          .then((response) => {
+            this.checkInvalidLoginResponse(response.data)
+            itensMontagem = response.data.itensMontagem
+            item.ACABADO.filhos.forEach(filho => this.analisarSeTrocarFilhos(item, filho, itemTroca, seqIpd, itensMontagem))
+          })
+          .catch((err) => {
+            console.log(err)
+          })
       }
       this.requestTroca(this.pedido, seqIpd, item)
     },
-    analisarSeTrocarFilhos (pai, filho, itemTroca, seqIpd) {
+    analisarSeTrocarFilhos (pai, filho, itemTroca, seqIpd, itensMontagem) {
+      if (pai.ACABADO) {
+        pai.codPro = pai.ACABADO.codPro
+        pai.codDer = pai.ACABADO.codDer
+        pai.numOri = pai.ACABADO.numOri
+      }
       if (filho.codPro === itemTroca.cmpAnt &&
         filho.codDer === itemTroca.derAnt &&
         filho.codNiv !== itemTroca.codNiv &&
@@ -234,8 +250,26 @@ export default {
         }
         this.trocas.push(objTroca)
       }
+      itensMontagem.forEach(itemMontagem => {
+        if (pai.numOri <= 320 &&
+        filho.codPro === itemMontagem.CODCMP &&
+        (filho.codDer === 'G' || filho.proGen === 'S')) {
+          const objTroca = {
+            codNiv: filho.codNiv,
+            codMod: pai.codPro,
+            derMod: pai.codDer,
+            cmpAnt: filho.codPro,
+            derAnt: filho.codDer,
+            cmpAtu: itemMontagem.CODCMP,
+            derAtu: itemMontagem.DERCMP,
+            dscCmp: itemMontagem.DSCCMP
+          }
+          this.trocas.push(objTroca)
+        }
+      })
+
       if (filho.filhos) {
-        filho.filhos.forEach(neto => this.analisarSeTrocarFilhos(filho, neto, itemTroca, seqIpd))
+        filho.filhos.forEach(neto => this.analisarSeTrocarFilhos(filho, neto, itemTroca, seqIpd, itensMontagem))
       }
     },
     async requestTroca (numPed, seqIpd, item) {
