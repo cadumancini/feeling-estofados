@@ -129,7 +129,7 @@ export default {
       document.getElementsByTagName('body')[0].style.cursor = 'wait'
       document.getElementById('btnBuscaClientes').disabled = true
       const token = sessionStorage.getItem('token')
-      axios.get('http://localhost:8080/clientes?token=' + token)
+      axios.get('http://192.168.1.168:8080/clientes?token=' + token)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           this.clientes = response.data.clientes
@@ -168,7 +168,7 @@ export default {
         const token = sessionStorage.getItem('token')
         const body = JSON.stringify({ pedido: { codEmp: 1, codFil: 1, numPed: 0, codCli: this.cliente, pedCli: this.pedidoCliente }, itens: this.itens })
         const headers = { headers: { 'Content-Type': 'application/json' } }
-        axios.put('http://localhost:8080/pedido?token=' + token, body, headers)
+        axios.put('http://192.168.1.168:8080/pedido?token=' + token, body, headers)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             parseString(response.data, { explicitArray: false }, (err, result) => {

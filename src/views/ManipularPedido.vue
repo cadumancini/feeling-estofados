@@ -106,7 +106,7 @@ export default {
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
         document.getElementById('btnBuscarPedido').disabled = true
         const token = sessionStorage.getItem('token')
-        axios.get('http://localhost:8080/itensPedido?emp=1&fil=1&ped=' + this.pedido + '&token=' + token)
+        axios.get('http://192.168.1.168:8080/itensPedido?emp=1&fil=1&ped=' + this.pedido + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             this.itens = response.data.itens
@@ -132,7 +132,7 @@ export default {
 
         var parseString = require('xml2js').parseString
         var json = null
-        const response = await axios.get('http://localhost:8080/estrutura?emp=1&fil=1&pro=' + item.CODPRO +
+        const response = await axios.get('http://192.168.1.168:8080/estrutura?emp=1&fil=1&pro=' + item.CODPRO +
           '&der=' + item.CODDER + '&ped=' + this.pedido + '&ipd=' + item.SEQIPD + '&token=' + token)
         this.checkInvalidLoginResponse(response.data)
         parseString(response.data, { explicitArray: false }, (err, result) => {
@@ -169,7 +169,7 @@ export default {
         component.codMod = node.codPro
         component.derMod = node.codDer
         const token = sessionStorage.getItem('token')
-        axios.get('http://localhost:8080/equivalentesAdicionais?emp=1&modelo=' + component.codMod + '&componente=' + component.codPro + '&der=' + component.codDer + '&token=' + token)
+        axios.get('http://192.168.1.168:8080/equivalentesAdicionais?emp=1&modelo=' + component.codMod + '&componente=' + component.codPro + '&der=' + component.codDer + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             if (response.data.equivalentes.length) {
@@ -216,7 +216,7 @@ export default {
         const token = sessionStorage.getItem('token')
         const codEmp = 1
         let itensMontagem = null
-        await axios.get('http://localhost:8080/itensMontagem?emp=' + codEmp + '&pro=' + itemTroca.cmpAtu + '&der=' + itemTroca.derAtu + '&token=' + token)
+        await axios.get('http://192.168.1.168:8080/itensMontagem?emp=' + codEmp + '&pro=' + itemTroca.cmpAtu + '&der=' + itemTroca.derAtu + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             itensMontagem = response.data.itensMontagem
@@ -276,7 +276,7 @@ export default {
       const token = sessionStorage.getItem('token')
       const codEmp = 1
       const codFil = 1
-      return axios.post('http://localhost:8080/equivalente?emp=' + codEmp + '&fil=' + codFil + '&ped=' + numPed + '&ipd=' + seqIpd + '&token=' + token, this.trocas)
+      return axios.post('http://192.168.1.168:8080/equivalente?emp=' + codEmp + '&fil=' + codFil + '&ped=' + numPed + '&ipd=' + seqIpd + '&token=' + token, this.trocas)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           const requestResponse = response.data
