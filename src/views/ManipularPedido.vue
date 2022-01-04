@@ -45,14 +45,14 @@
                   <thead>
                     <tr class="table-secondary">
                       <th class="fw-normal"></th>
-                      <th class="fw-normal">Nível</th>
-                      <th class="fw-normal">Produto</th>
-                      <th class="fw-normal">Der.</th>
-                      <th class="fw-normal">Descrição</th>
-                      <th class="fw-normal">Qtde.</th>
-                      <th class="fw-normal">U.M.</th>
-                      <th class="fw-normal">Ação</th>
-                      <th class="fw-normal"></th>
+                      <th class="fw-normal font-small">Nível</th>
+                      <th class="fw-normal font-small">Produto</th>
+                      <th class="fw-normal font-small">Der.</th>
+                      <th class="fw-normal font-small">Descrição</th>
+                      <th class="fw-normal font-small">Qtde.</th>
+                      <th class="fw-normal font-small">U.M.</th>
+                      <th class="fw-normal font-small">Ação</th>
+                      <th class="fw-normal font-small"></th>
                     </tr>
                   </thead>
                   <tbody>

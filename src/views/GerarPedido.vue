@@ -90,7 +90,7 @@
       </div>
       <button class="btn btn-secondary" v-if="itens.length" id="btnGerarPedido" @click="gerarPedido">Gerar Pedido</button>
 
-      <p class="fw-bold" v-if="pedidoGerado > 0">Pedido {{ pedidoGerado }} gerado com sucesso! Clique <a href="/">aqui</a> para voltar à página inicial, ou <a :href="'/manipularPedido/' + pedidoGerado">aqui</a> para editar os componentes do pedido.</p>
+      <p class="fw-bold" v-if="pedidoGerado > 0">Pedido {{ pedidoGerado }} gerado com sucesso! Clique <router-link :to="{ name: 'Home' }">aqui</router-link> para voltar à página inicial, ou <router-link :to="{ name: 'ManipularPedidoComItem', params: { numPed: pedidoGerado } }">aqui</router-link> para editar os componentes do pedido.</p>
     </div>
   </div>
 </template>

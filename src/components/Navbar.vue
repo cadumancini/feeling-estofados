@@ -3,7 +3,7 @@
     <a class="navbar-brand" href="/"><img alt="Feeling" src="../assets/feeling.png"></a>
     <ul class="navbar-nav ms-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="/">Home</a>
+        <router-link class="nav-link" :to="{ name: 'Home' }">Home</router-link>
       </li>
       <li class="nav-item">
         <router-link class="nav-link" :to="{ name: 'GerarPedido' }">Gerar Pedido</router-link>

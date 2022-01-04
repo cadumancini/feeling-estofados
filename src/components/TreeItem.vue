@@ -4,12 +4,12 @@
       <font-awesome-icon v-if="(item.filhos && isOpen)" icon="minus-square" @click="toggleOpen" class="contract pointer"/>
       <font-awesome-icon v-else-if="(item.filhos && !isOpen)" icon="plus-square" @click="toggleOpen" class="expand pointer"/>
     </th>
-    <th class="fw-normal indent" :style="cssVars">{{ item.codNiv }}</th>
-    <th class="fw-normal indent" :style="cssVars">{{ item.codPro }}</th>
-    <th class="fw-normal">{{ item.codDer }}</th>
+    <th class="fw-normal indent font-small" :style="cssVars">{{ item.codNiv }}</th>
+    <th class="fw-normal indent font-small" :style="cssVars">{{ item.codPro }}</th>
+    <th class="fw-normal font-small">{{ item.codDer }}</th>
     <th class="fw-normal font-small">{{ item.desPro }} {{ item.desDer }}</th>
-    <th class="fw-normal">{{ item.qtdCon }}</th>
-    <th class="fw-normal">{{ item.uniMed }}</th>
+    <th class="fw-normal font-small">{{ item.qtdCon }}</th>
+    <th class="fw-normal font-small">{{ item.uniMed }}</th>
     <th class="fw-normal align-center exchange" v-if="item.codDer === 'G' || item.proGen === 'S' || item.podeTrocar">
       <font-awesome-icon class="pointer" icon="redo-alt" @click="buscarOpcoes(item)" data-bs-toggle="modal" :data-bs-target="`#modal-`+item.hashModal"/>
     </th>
