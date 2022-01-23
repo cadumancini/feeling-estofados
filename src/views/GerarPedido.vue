@@ -3,7 +3,20 @@
     <Navbar/>
     <div class="mx-3">
       <div class="row mb-3">
-        <p class="fw-bold fs-3">Geração de Pedido</p>
+        <div class="col-md-4">
+          <div class="float-s">
+            <p class="fw-bold fs-3">Geração de Pedido</p>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="float-end">
+            <label for="codEmp" class="mx-2" >Empresa:</label>
+            <input id="codEmp" class="mx-2" type="text" autofocus v-model="empresa">
+            <button class="btn btn-secondary mx-2">...</button>
+            <button class="btn btn-secondary mx-2">Enviar à empresa</button>
+            <button class="btn btn-secondary mx-2">Excluir rascunho</button>
+          </div>
+        </div>
       </div>
       <div class="row mb-3">
         <label for="codCli" class="form-label">Cliente:</label>
