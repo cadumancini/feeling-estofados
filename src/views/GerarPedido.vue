@@ -3,22 +3,132 @@
     <Navbar/>
     <div class="mx-3">
       <div class="row mb-3">
-        <div class="col-md-4">
-          <div class="float-s">
-            <p class="fw-bold fs-3">Geração de Pedido</p>
-          </div>
+        <div class="col-6">
+          <span class="fw-bold fs-4">Geração de Pedido</span>
         </div>
-        <div class="col-md-8">
+        <div class="col-6">
           <div class="float-end">
-            <label for="codEmp" class="mx-2" >Empresa:</label>
-            <input id="codEmp" class="mx-2" type="text" autofocus v-model="empresa">
-            <button class="btn btn-secondary mx-2">...</button>
-            <button class="btn btn-secondary mx-2">Enviar à empresa</button>
-            <button class="btn btn-secondary mx-2">Excluir rascunho</button>
+            <button class="btn btn-sm btn-secondary ms-2">Enviar à empresa</button>
+            <button class="btn btn-sm btn-secondary ms-2">Excluir rascunho</button>
+          </div>
+          <div class="float-end">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text" >Empresa:</span>
+              <input id="codEmp" class="form-control" type="text" autofocus v-model="empresa">
+              <button class="btn btn-secondary input-group-btn">...</button>
+            </div>
           </div>
         </div>
       </div>
-      <div class="row mb-3">
+      <div class="border border-2 rounded-3 px-2 py-2">
+        <div class="row mb-3">
+          <div class="col-6">
+              <span class="fw-bold fs-5">Dados Gerais</span>
+          </div>
+          <div class="col-6">
+            <div class="float-end">
+              <button class="btn btn-secondary btn-sm">Salvar</button>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Nº Pedido</span>
+              <input id="numPed" class="form-control" type="text" disabled v-model="numPed">
+              <button class="btn btn-secondary input-group-btn">...</button>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Transportadora</span>
+              <input id="transportadora" class="form-control" type="text" disabled v-model="transportadora">
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Frete</span>
+              <input id="frete" class="form-control" type="text" disabled v-model="frete">
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Previsão faturamento</span>
+              <input id="prevFaturamento" class="form-control" type="text" disabled v-model="prevFaturamento">
+            </div>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Pedido Cliente</span>
+              <input id="pedCli" class="form-control" type="text" v-model="pedCli">
+              <button class="btn btn-secondary input-group-btn">...</button>
+            </div>
+          </div>
+          <div class="col-5">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Representada</span>
+              <input id="representada" class="form-control" type="text" disabled v-model="representada">
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Condição de pagamento</span>
+              <input id="condPagamento" class="form-control" type="text" disabled v-model="condPagamento">
+            </div>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Cliente</span>
+              <input id="nomCli" class="form-control" type="text" v-model="nomCli">
+              <button class="btn btn-secondary input-group-btn">...</button>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">E-mail</span>
+              <input id="email" class="form-control" type="text" disabled v-model="email">
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Fone</span>
+              <input id="telefone" class="form-control" type="text" disabled v-model="telefone">
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">CNPJ</span>
+              <input id="cnpj" class="form-control" type="text" disabled v-model="cnpj">
+            </div>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-4">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Endereço</span>
+              <input id="endereco" class="form-control" type="text" disabled v-model="endereco">
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Cidade/UF</span>
+              <input id="cidadeUF" class="form-control" type="text" disabled v-model="cidadeUF">
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Insc. Est.</span>
+              <input id="inscrEst" class="form-control" type="text" disabled v-model="inscrEst">
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- aaa -->
+      <!-- <div class="row mb-3">
         <label for="codCli" class="form-label">Cliente:</label>
         <div class="col-auto">
           <input id="codCli" class="form-control" type="text" autofocus v-model="cliente">
@@ -34,7 +144,6 @@
         </div>
       </div>
 
-      <!-- Modal -->
       <div class="modal fade" id="clientesModal" tabindex="-1" aria-labelledby="clientesModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable modal-lg">
           <div class="modal-content">
@@ -103,7 +212,7 @@
       </div>
       <button class="btn btn-secondary" v-if="itens.length" id="btnGerarPedido" @click="gerarPedido">Gerar Pedido</button>
 
-      <p class="fw-bold" v-if="pedidoGerado > 0">Pedido {{ pedidoGerado }} gerado com sucesso! Clique <router-link :to="{ name: 'Home' }">aqui</router-link> para voltar à página inicial, ou <router-link :to="{ name: 'ManipularPedidoComItem', params: { numPed: pedidoGerado } }">aqui</router-link> para editar os componentes do pedido.</p>
+      <p class="fw-bold" v-if="pedidoGerado > 0">Pedido {{ pedidoGerado }} gerado com sucesso! Clique <router-link :to="{ name: 'Home' }">aqui</router-link> para voltar à página inicial, ou <router-link :to="{ name: 'ManipularPedidoComItem', params: { numPed: pedidoGerado } }">aqui</router-link> para editar os componentes do pedido.</p> -->
     </div>
   </div>
 </template>
@@ -224,5 +333,8 @@ export default {
   }
   .mouseHover {
     cursor: pointer;
+  }
+  .input-group-btn {
+    width: 40px !important;
   }
 </style>
