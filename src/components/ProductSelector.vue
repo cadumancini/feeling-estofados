@@ -74,7 +74,7 @@ export default {
   },
   created () {
     const token = sessionStorage.getItem('token')
-    axios.get('http://192.168.1.168:8080/estilos?emp=1&token=' + token)
+    axios.get('http://localhost:8080/estilos?emp=1&token=' + token)
       .then((response) => {
         if (response.data === 'Token inválido.') {
           alert('Seu token de acesso não é mais válido. É necessário fazer login novamente.')
@@ -95,7 +95,7 @@ export default {
     },
     onSelectEstilo () {
       const token = sessionStorage.getItem('token')
-      axios.get('http://192.168.1.168:8080/produtosPorEstilo?emp=1&estilo=' + this.selectedEstilo + '&token=' + token)
+      axios.get('http://localhost:8080/produtosPorEstilo?emp=1&estilo=' + this.selectedEstilo + '&token=' + token)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           this.produtos = response.data.produtos
@@ -104,7 +104,7 @@ export default {
     },
     onSelectProduto () {
       const token = sessionStorage.getItem('token')
-      axios.get('http://192.168.1.168:8080/derivacoesPorProduto?emp=1&produto=' + this.selectedProduto.codPro + '&token=' + token)
+      axios.get('http://localhost:8080/derivacoesPorProduto?emp=1&produto=' + this.selectedProduto.codPro + '&token=' + token)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           this.derivacoes = response.data.derivacoes

@@ -84,7 +84,7 @@
             <div class="input-group input-group-sm">
               <span class="input-group-text">Cliente</span>
               <input id="nomCli" class="form-control" type="text" v-model="nomCli">
-              <button class="btn btn-secondary input-group-btn">...</button>
+              <button id="btnBuscaClientes" class="btn btn-secondary input-group-btn" @click="buscaClientes" data-bs-toggle="modal" data-bs-target="#clientesModal">...</button>
             </div>
           </div>
           <div class="col-3">
@@ -127,6 +127,44 @@
           </div>
         </div>
       </div>
+
+      <!-- Modal Clientes -->
+      <div class="modal fade" id="clientesModal" tabindex="-1" aria-labelledby="clientesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="clientesModalLabel">Busca de Clientes</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModal"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3" v-if="clientes != null">
+                <input type="text" class="form-control mb-3" v-on:keyup="filtrarClientes" v-model="clientesFiltro" placeholder="Digite para buscar na tabela abaixo">
+                <table class="table table-striped table-hover table-bordered table-sm table-responsive">
+                  <thead>
+                    <tr>
+                      <th scope="col">Código</th>
+                      <th scope="col">Cliente</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="clienteRow in clientesFiltrados" :key="clienteRow.CODCLI" class="mouseHover" @click="selectCliente(clienteRow)">
+                      <th class="fw-normal" scope="row">{{ clienteRow.CODCLI }}</th>
+                      <th class="fw-normal">{{ clienteRow.NOMCLI }}</th>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div v-else>
+                <label>Buscando clientes ...</label>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fechar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- aaa -->
       <!-- <div class="row mb-3">
         <label for="codCli" class="form-label">Cliente:</label>
@@ -141,41 +179,6 @@
         <label for="pedCli" class="form-label">Número do Pedido no Cliente:</label>
         <div class="col-auto">
           <input id="pedCli" class="form-control" type="text" onfocus="this.select();" v-model="pedidoCliente">
-        </div>
-      </div>
-
-      <div class="modal fade" id="clientesModal" tabindex="-1" aria-labelledby="clientesModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="clientesModalLabel">Busca de Clientes</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModal"></button>
-            </div>
-            <div class="modal-body">
-              <div class="mb-3" v-if="clientes != null">
-                <table class="table table-striped table-hover table-bordered table-sm table-responsive">
-                  <thead>
-                    <tr>
-                      <th scope="col">Código</th>
-                      <th scope="col">Cliente</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="clienteRow in clientes" :key="clienteRow.CODCLI" class="mouseHover" @click="selectCliente(clienteRow)">
-                      <th class="fw-normal" scope="row">{{ clienteRow.CODCLI }}</th>
-                      <th class="fw-normal">{{ clienteRow.NOMCLI }}</th>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div v-else>
-                <label>Buscando clientes ...</label>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -221,17 +224,28 @@
 import Navbar from '../components/Navbar.vue'
 import ProductSelector from '../components/ProductSelector.vue'
 import axios from 'axios'
+import StringMask from 'string-mask'
 export default {
   name: 'GerarPedido',
   components: { ProductSelector, Navbar },
   data () {
     return {
       clientes: null,
+      clientesFiltrados: null,
       cliente: '',
+      nomCli: '',
+      email: '',
+      telefone: '',
+      cnpj: '',
+      endereco: '',
+      cidadeUF: '',
+      inscrEst: '',
+      frete: '',
       pedidoCliente: 0,
       addingProduct: false,
       itens: [],
-      pedidoGerado: 0
+      pedidoGerado: 0,
+      clientesFiltro: ''
     }
   },
   mounted () {
@@ -251,10 +265,11 @@ export default {
       document.getElementsByTagName('body')[0].style.cursor = 'wait'
       document.getElementById('btnBuscaClientes').disabled = true
       const token = sessionStorage.getItem('token')
-      axios.get('http://192.168.1.168:8080/clientes?token=' + token)
+      axios.get('http://localhost:8080/clientes?token=' + token)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           this.clientes = response.data.clientes
+          this.clientesFiltrados = response.data.clientes
           document.getElementsByTagName('body')[0].style.cursor = 'auto'
           document.getElementById('btnBuscaClientes').disabled = false
         })
@@ -265,7 +280,16 @@ export default {
         })
     },
     selectCliente (clienteClicked) {
+      const formatter = new StringMask('99.999.999/0000-00')
       this.cliente = clienteClicked.CODCLI
+      this.nomCli = clienteClicked.NOMCLI
+      this.email = clienteClicked.INTNET
+      this.telefone = clienteClicked.FONCLI
+      this.cnpj = formatter.apply(clienteClicked.CGCCPF)
+      this.endereco = clienteClicked.ENDCLI
+      this.cidadeUF = clienteClicked.CIDEST
+      this.inscrEst = clienteClicked.INSEST
+      this.frete = 'FOB'
       document.getElementById('closeModal').click()
     },
     addItem (item) {
@@ -290,7 +314,7 @@ export default {
         const token = sessionStorage.getItem('token')
         const body = JSON.stringify({ pedido: { codEmp: 1, codFil: 1, numPed: 0, codCli: this.cliente, pedCli: this.pedidoCliente }, itens: this.itens })
         const headers = { headers: { 'Content-Type': 'application/json' } }
-        axios.put('http://192.168.1.168:8080/pedido?token=' + token, body, headers)
+        axios.put('http://localhost:8080/pedido?token=' + token, body, headers)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             parseString(response.data, { explicitArray: false }, (err, result) => {
@@ -318,6 +342,9 @@ export default {
             console.log(err)
           })
       }
+    },
+    filtrarClientes () {
+      this.clientesFiltrados = this.clientes.filter(cliente => cliente.NOMCLI.toUpperCase().startsWith(this.clientesFiltro.toUpperCase()))
     }
   }
 }
