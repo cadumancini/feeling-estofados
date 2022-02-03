@@ -13,9 +13,14 @@
           </div>
           <div class="float-end">
             <div class="input-group input-group-sm">
-              <span class="input-group-text" >Empresa:</span>
-              <input id="codEmp" class="form-control" type="text" autofocus v-model="empresa">
-              <button class="btn btn-secondary input-group-btn">...</button>
+              <span class="input-group-text" >Empresa</span>
+              <select v-if="empresasCliente.length" id="inputGroupSelectEmpresa" class="form-select" v-model="empresa">
+                  <option selected disabled value="">Selecione uma empresa</option>
+                  <option :value="empresaCliente.CODEMP" v-for="empresaCliente in empresasCliente" :key="empresaCliente.CODEMP">{{empresaCliente.CODEMP}} - {{empresaCliente.NOMEMP}}</option>
+              </select>
+              <select v-else id="inputGroupSelectEmpresa" class="form-select">
+                  <option selected disabled>Selecione o cliente para escolher a empresa</option>
+              </select>
             </div>
           </div>
         </div>
@@ -83,7 +88,7 @@
           <div class="col-3">
             <div class="input-group input-group-sm">
               <span class="input-group-text">Cliente</span>
-              <input id="nomCli" class="form-control" type="text" v-model="nomCli">
+              <input id="nomCli" class="form-control" type="text" v-model="nomCli" placeholder="Clique ao lado para selecionar o cliente">
               <button id="btnBuscaClientes" class="btn btn-secondary input-group-btn" @click="buscaClientes" data-bs-toggle="modal" data-bs-target="#clientesModal">...</button>
             </div>
           </div>
@@ -241,6 +246,12 @@ export default {
       cidadeUF: '',
       inscrEst: '',
       frete: '',
+      codTransportadora: '',
+      transportadora: '',
+      codRepresentada: '',
+      representada: '',
+      empresa: '',
+      empresasCliente: [],
       pedidoCliente: 0,
       addingProduct: false,
       itens: [],
@@ -262,6 +273,7 @@ export default {
       }
     },
     buscaClientes () {
+      this.clientes = null
       document.getElementsByTagName('body')[0].style.cursor = 'wait'
       document.getElementById('btnBuscaClientes').disabled = true
       const token = sessionStorage.getItem('token')
@@ -286,11 +298,41 @@ export default {
       this.email = clienteClicked.INTNET
       this.telefone = clienteClicked.FONCLI
       this.cnpj = formatter.apply(clienteClicked.CGCCPF)
-      this.endereco = clienteClicked.ENDCLI
+      this.endereco = clienteClicked.ENDCPL
       this.cidadeUF = clienteClicked.CIDEST
       this.inscrEst = clienteClicked.INSEST
       this.frete = 'FOB'
+      this.empresasCliente = []
       document.getElementById('closeModal').click()
+      this.buscarDadosCliente(this.cliente)
+    },
+    buscarDadosCliente (codCli) {
+      const token = sessionStorage.getItem('token')
+      axios.get('http://localhost:8080/dadosCliente?token=' + token + '&codCli=' + codCli)
+        .then((response) => {
+          this.checkInvalidLoginResponse(response.data)
+          console.log(response.data)
+          this.dadosCliente = response.data.dadosCliente
+          if (this.dadosCliente.length > 0) {
+            this.codTransportadora = this.dadosCliente[0].CODTRA
+            this.transportadora = this.dadosCliente[0].NOMTRA
+            this.codRepresentada = this.dadosCliente[0].CODREP
+            this.representada = this.dadosCliente[0].NOMREP
+            this.dadosCliente.forEach(empresa => {
+              this.empresasCliente.push({
+                CODEMP: empresa.CODEMP, NOMEMP: empresa.NOMEMP
+              })
+            })
+            console.log(this.empresasCliente)
+            console.log('codTra: ' + this.codTransportadora)
+            console.log('codRep: ' + this.codRepresentada)
+          } else {
+
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
     addItem (item) {
       this.itens.push(item)
