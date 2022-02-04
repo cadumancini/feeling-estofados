@@ -32,7 +32,7 @@
           </div>
           <div class="col-6">
             <div class="float-end">
-              <button class="btn btn-secondary btn-sm">Salvar</button>
+              <button id="btnSalvar" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#confirmaPedidoModal">Salvar</button>
             </div>
           </div>
         </div>
@@ -139,7 +139,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="clientesModalLabel">Busca de Clientes</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModal"></button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalClientes"></button>
             </div>
             <div class="modal-body">
               <div class="mb-3" v-if="clientes != null">
@@ -165,6 +165,25 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fechar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Gerar Pedido -->
+      <div class="modal fade" id="confirmaPedidoModal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Confirma geração de pedido</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalConfirmaPedido"></button>
+            </div>
+            <div class="modal-body">
+              <p>Ao salvar, as informações dos dados gerais serão gravadas no rascunho e não poderão ser alteradas mais tarde. Deseja continuar?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" @click="gerarPedido">Sim</button>
+              <button type="button" class="btn btn-dismiss" data-bs-dismiss="modal">Não</button>
             </div>
           </div>
         </div>
@@ -303,7 +322,7 @@ export default {
       this.inscrEst = clienteClicked.INSEST
       this.frete = 'FOB'
       this.empresasCliente = []
-      document.getElementById('closeModal').click()
+      document.getElementById('closeModalClientes').click()
       this.buscarDadosCliente(this.cliente)
     },
     buscarDadosCliente (codCli) {
@@ -311,7 +330,6 @@ export default {
       axios.get('http://localhost:8080/dadosCliente?token=' + token + '&codCli=' + codCli)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
-          console.log(response.data)
           this.dadosCliente = response.data.dadosCliente
           if (this.dadosCliente.length > 0) {
             this.codTransportadora = this.dadosCliente[0].CODTRA
@@ -323,9 +341,6 @@ export default {
                 CODEMP: empresa.CODEMP, NOMEMP: empresa.NOMEMP
               })
             })
-            console.log(this.empresasCliente)
-            console.log('codTra: ' + this.codTransportadora)
-            console.log('codRep: ' + this.codRepresentada)
           } else {
 
           }
@@ -345,16 +360,32 @@ export default {
       }
     },
     gerarPedido () {
+      document.getElementById('closeModalConfirmaPedido').click()
       if (this.cliente === '') {
         alert('Favor preencher o cliente!')
+      } else if (this.empresa === '') {
+        alert('Favor escolher uma empresa!')
       } else {
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
-        document.getElementById('btnGerarPedido').disabled = true
-        document.getElementById('btnAdicionarProduto').disabled = true
+        document.getElementById('btnSalvar').disabled = true
         var parseString = require('xml2js').parseString
         var respostaPedido = null
         const token = sessionStorage.getItem('token')
-        const body = JSON.stringify({ pedido: { codEmp: 1, codFil: 1, numPed: 0, codCli: this.cliente, pedCli: this.pedidoCliente }, itens: this.itens })
+        const body = JSON.stringify(
+          {
+            pedido: {
+              codEmp: this.codEmp,
+              codFil: 1,
+              numPed: 0,
+              codCli: this.cliente,
+              pedCli: this.pedidoCliente,
+              codRep: this.codRepresentada,
+              codTra: this.codTransportadora,
+              cifFob: 'F'
+            },
+            itens: this.itens
+          }
+        )
         const headers = { headers: { 'Content-Type': 'application/json' } }
         axios.put('http://localhost:8080/pedido?token=' + token, body, headers)
           .then((response) => {
@@ -367,6 +398,7 @@ export default {
               if (parseInt(respostaPedido.numPed) === 0) {
                 alert(respostaPedido.retorno)
               } else {
+                console.log(respostaPedido)
                 this.itens = []
                 this.cliente = ''
                 this.pedidoCliente = 0
@@ -374,13 +406,11 @@ export default {
               }
             })
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
-            document.getElementById('btnGerarPedido').disabled = false
-            document.getElementById('btnAdicionarProduto').disabled = false
+            document.getElementById('btnSalvar').disabled = false
           })
           .catch((err) => {
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
-            document.getElementById('btnGerarPedido').disabled = false
-            document.getElementById('btnAdicionarProduto').disabled = false
+            document.getElementById('btnSalvar').disabled = false
             console.log(err)
           })
       }
@@ -405,5 +435,13 @@ export default {
   }
   .input-group-btn {
     width: 40px !important;
+  }
+  .btn-dismiss {
+    color: #fff;
+    background-color: #aab4bd;
+  }
+  .btn-dismiss:hover {
+    color: #fff;
+    background-color: #93999e;
   }
 </style>
