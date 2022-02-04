@@ -374,7 +374,7 @@ export default {
         const body = JSON.stringify(
           {
             pedido: {
-              codEmp: this.codEmp,
+              codEmp: this.empresa,
               codFil: 1,
               numPed: 0,
               codCli: this.cliente,
