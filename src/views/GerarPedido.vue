@@ -9,7 +9,7 @@
         <div class="col-6">
           <div class="float-end">
             <button class="btn btn-sm btn-secondary ms-2">Enviar à empresa</button>
-            <button class="btn btn-sm btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmaExclusaoRascunhoModal">Excluir rascunho</button>
+            <button class="btn btn-sm btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmaExclusaoRascunhoModal">Limpar</button>
           </div>
           <div class="float-end">
             <div class="input-group input-group-sm">
@@ -210,7 +210,17 @@
 
       <!-- Itens do Pedido -->
       <div v-if="numPed" class="border border-2 mt-2 rounded-3 px-2 py-2">
-        <span class="fw-bold fs-5">Itens do pedido</span>
+        <div class="row mb-2">
+          <div class="col-6">
+            <span class="fw-bold fs-5">Itens do pedido</span>
+          </div>
+          <div class="col-6">
+            <div class="float-end">
+              <button class="btn btn-secondary btn-sm" @click="addItemVazio">Adicionar item</button>
+              <button id="btnSalvarItens" class="btn btn-secondary btn-sm ms-2" @click="salvarItens">Salvar itens</button>
+            </div>
+          </div>
+        </div>
         <div class="row mb-3 mx-0">
           <table class="table table-striped table-hover table-bordered table-sm table-responsive">
             <thead>
@@ -234,23 +244,23 @@
                 <td class="fw-normal"><button class="btn btn-sm btn-secondary"><font-awesome-icon icon="edit"/></button></td>
                 <td class="fw-normal"><input class="form-control form-control-sm"
                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                  maxlength="2" type="number" :value="item.cnj"></td>
+                  maxlength="2" type="number" v-model="item.cnj"></td>
                 <td class="fw-normal">
                   <div class="input-group input-group-sm">
                     <input class="form-control" type="text" disabled v-model="item.estilo">
-                    <button id="btnBuscaEstilos" class="btn btn-secondary input-group-btn" @click="buscaEstilos(item)" data-bs-toggle="modal" data-bs-target="#estilosModal">...</button>
+                    <button :id="`btnBuscaEstilos`+item.hash" class="btn btn-secondary input-group-btn" @click="buscaEstilos(item)" data-bs-toggle="modal" data-bs-target="#estilosModal">...</button>
                   </div>
                 </td>
                 <td class="fw-normal">
                   <div class="input-group input-group-sm">
                     <input class="form-control" type="text" disabled v-model="item.config">
-                    <button id="btnBuscaConfigs" disabled class="btn btn-secondary input-group-btn" @click="buscaConfigs(item, item.codEstilo)" data-bs-toggle="modal" data-bs-target="#configsModal">...</button>
+                    <button :id="`btnBuscaConfigs`+item.hash" disabled class="btn btn-secondary input-group-btn" @click="buscaConfigs(item, item.codEstilo)" data-bs-toggle="modal" data-bs-target="#configsModal">...</button>
                   </div>
                 </td>
                 <td class="fw-normal">
                   <div class="input-group input-group-sm">
                     <input id="inputComp" class="form-control" type="text" disabled v-model="item.comp">
-                    <button id="btnBuscaComps" disabled class="btn btn-secondary input-group-btn" @click="buscaComps(item, item.codConfig)" data-bs-toggle="modal" data-bs-target="#compsModal">...</button>
+                    <button :id="`btnBuscaComps`+item.hash" disabled class="btn btn-secondary input-group-btn" @click="buscaComps(item, item.codConfig)" data-bs-toggle="modal" data-bs-target="#compsModal">...</button>
                   </div>
                 </td>
                 <td class="fw-normal"><input class="form-control form-control-sm"
@@ -268,15 +278,13 @@
                     <option value="O">Outras</option>
                   </select>
                 </td>
-                <td class="fw-normal"><small><input class="form-control form-control-sm" type="text" :value="item.obs"></small></td>
+                <td class="fw-normal"><small><input class="form-control form-control-sm" type="text" v-model="item.obs"></small></td>
                 <td class="fw-normal"><small>{{item.vlrUnit}}</small></td>
                 <td><button class="btn btn-sm btn-danger" @click="deleteItem(item)">Excluir</button></td>
               </tr>
             </tbody>
           </table>
         </div>
-        <button class="btn btn-secondary btn-sm" @click="addItemVazio">Adicionar item</button>
-        <button id="btnSalvarItens" class="btn btn-secondary btn-sm ms-2" @click="salvarItens">Salvar itens</button>
       </div>
 
       <!-- Modal Estilos -->
@@ -478,9 +486,9 @@ export default {
       this.estilos = null
       this.estilosFiltro = ''
       document.getElementsByTagName('body')[0].style.cursor = 'wait'
-      document.getElementById('btnBuscaEstilos').disabled = true
-      document.getElementById('btnBuscaConfigs').disabled = true
-      document.getElementById('btnBuscaComps').disabled = true
+      document.getElementById('btnBuscaEstilos' + item.hash).disabled = true
+      document.getElementById('btnBuscaConfigs' + item.hash).disabled = true
+      document.getElementById('btnBuscaComps' + item.hash).disabled = true
       const token = sessionStorage.getItem('token')
       axios.get('http://localhost:8080/estilos?emp=1&token=' + token)
         .then((response) => {
@@ -488,11 +496,11 @@ export default {
           this.estilos = response.data.estilos
           this.estilosFiltrados = response.data.estilos
           document.getElementsByTagName('body')[0].style.cursor = 'auto'
-          document.getElementById('btnBuscaEstilos').disabled = false
+          document.getElementById('btnBuscaEstilos' + item.hash).disabled = false
         })
         .catch((err) => {
           document.getElementsByTagName('body')[0].style.cursor = 'auto'
-          document.getElementById('btnBuscaEstilos').disabled = false
+          document.getElementById('btnBuscaEstilos' + item.hash).disabled = false
           console.log(err)
         })
     },
@@ -502,8 +510,8 @@ export default {
         this.configs = null
         this.configsFiltro = ''
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
-        document.getElementById('btnBuscaConfigs').disabled = true
-        document.getElementById('btnBuscaComps').disabled = true
+        document.getElementById('btnBuscaConfigs' + item.hash).disabled = true
+        document.getElementById('btnBuscaComps' + item.hash).disabled = true
         const token = sessionStorage.getItem('token')
         axios.get('http://localhost:8080/produtosPorEstilo?emp=1&estilo=' + estilo + '&token=' + token)
           .then((response) => {
@@ -511,11 +519,11 @@ export default {
             this.configs = response.data.produtos
             this.configsFiltrados = response.data.produtos
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
-            document.getElementById('btnBuscaConfigs').disabled = false
+            document.getElementById('btnBuscaConfigs' + item.hash).disabled = false
           })
           .catch((err) => {
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
-            document.getElementById('btnBuscaConfigs').disabled = false
+            document.getElementById('btnBuscaConfigs' + item.hash).disabled = false
             console.log(err)
           })
       } else {
@@ -528,7 +536,7 @@ export default {
         this.comps = null
         this.compsFiltro = ''
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
-        document.getElementById('btnBuscaComps').disabled = true
+        document.getElementById('btnBuscaComps' + item.hash).disabled = true
         const token = sessionStorage.getItem('token')
         axios.get('http://localhost:8080/derivacoesPorProduto?emp=1&produto=' + config + '&token=' + token)
           .then((response) => {
@@ -536,11 +544,11 @@ export default {
             this.comps = response.data.derivacoes
             this.compsFiltrados = response.data.derivacoes
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
-            document.getElementById('btnBuscaComps').disabled = false
+            document.getElementById('btnBuscaComps' + item.hash).disabled = false
           })
           .catch((err) => {
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
-            document.getElementById('btnBuscaComps').disabled = false
+            document.getElementById('btnBuscaComps' + item.hash).disabled = false
             console.log(err)
           })
       } else {
@@ -566,8 +574,8 @@ export default {
       this.itemSelecionado.estilo = estiloClicked.DESCPR
       this.itemSelecionado.codEstilo = estiloClicked.CODCPR
       document.getElementById('closeModalEstilos').click()
-      document.getElementById('btnBuscaConfigs').disabled = false
-      document.getElementById('btnBuscaComps').disabled = true
+      document.getElementById('btnBuscaConfigs' + this.itemSelecionado.hash).disabled = false
+      document.getElementById('btnBuscaComps' + this.itemSelecionado.hash).disabled = true
       this.itemSelecionado.config = ''
       this.itemSelecionado.codConfig = ''
       this.itemSelecionado.comp = ''
@@ -578,7 +586,7 @@ export default {
       this.itemSelecionado.config = configClicked.DESPRO
       this.itemSelecionado.codConfig = configClicked.CODPRO
       document.getElementById('closeModalConfigs').click()
-      document.getElementById('btnBuscaComps').disabled = false
+      document.getElementById('btnBuscaComps' + this.itemSelecionado.hash).disabled = false
       this.itemSelecionado.comp = ''
       this.itemSelecionado.codComp = ''
       this.itemSelecionado = null
@@ -624,12 +632,13 @@ export default {
         config: '',
         posicao: '',
         comp: '',
-        un: '',
+        un: 1,
         descr: '',
         comiss: '',
         condEsp: '',
         obs: '',
-        vlrUnit: ''
+        vlrUnit: '',
+        hash: Math.floor(Math.random() * ((this.itens.length + 1) * 1000))
       }
       this.itens.push(item)
     },
@@ -739,55 +748,114 @@ export default {
     },
     salvarItens () {
       const itensPedido = []
+      let temErro = false
       this.itens.forEach(item => {
-        itensPedido.push(
+        if (item.un < 1 || item.un > 99) {
+          alert('Erro: Existe(m) produto(s) com quantidade menor que zero ou maior que 99. Verifique!')
+          temErro = true
+        }
+        if (!item.cnj || !item.codEstilo || !item.codConfig || !item.codComp) {
+          alert('Erro: Existe(m) produto(s) faltando definir conjunto, estilo, configuração ou comprimento. Verifique!')
+          temErro = true
+        }
+        if (item.cnj < 1) {
+          alert('Erro: Existe(m) produto(s) com número de conjunto menor que 1. Verifique!')
+          temErro = true
+        }
+      })
+      const itensChecarCnj = [...this.itens]
+      itensChecarCnj.sort(this.compare)
+      let cnjIni = itensChecarCnj[0].cnj
+      let estiloIni = itensChecarCnj[0].codEstilo
+      itensChecarCnj.forEach(item => {
+        if (item.cnj === cnjIni && item.codEstilo !== estiloIni) {
+          alert('Erro: Existe(m) produto(s) com o mesmo número do conjunto (conj. ' + item.cnj + ') mas com estilos diferentes. Verifique!')
+          temErro = true
+        }
+        if (item.cnj !== cnjIni) {
+          cnjIni = item.cnj
+          estiloIni = item.codEstilo
+        }
+      })
+      if (!temErro) {
+        this.itens.forEach(item => {
+          itensPedido.push(
+            {
+              numCnj: item.cnj,
+              codPro: item.codConfig,
+              desPro: (item.config + ' ' + item.comp),
+              codDer: item.codComp,
+              seqIpd: 0,
+              qtdPed: item.un,
+              preUni: 1000
+            }
+          )
+        })
+        document.getElementsByTagName('body')[0].style.cursor = 'wait'
+        document.getElementById('btnSalvarItens').disabled = true
+        var parseString = require('xml2js').parseString
+        var respostaPedido = null
+        const token = sessionStorage.getItem('token')
+        const body = JSON.stringify(
           {
-            codPro: item.codConfig,
-            desPro: (item.config + ' ' + item.comp),
-            codDer: item.codComp,
-            seqIpd: 0,
-            qtdPed: item.un,
-            preUni: 1000
+            pedido: {
+              codEmp: this.empresa,
+              codFil: 1,
+              numPed: this.numPed
+            },
+            itens: itensPedido
           }
         )
-      })
-      document.getElementsByTagName('body')[0].style.cursor = 'wait'
-      document.getElementById('btnSalvarItens').disabled = true
-      var parseString = require('xml2js').parseString
-      var respostaPedido = null
+        const headers = { headers: { 'Content-Type': 'application/json' } }
+        axios.post('http://localhost:8080/pedido/itens?token=' + token, body, headers)
+          .then((response) => {
+            this.checkInvalidLoginResponse(response.data)
+            parseString(response.data, { explicitArray: false }, (err, result) => {
+              if (err) {
+                console.log(err)
+              }
+              respostaPedido = result['S:Envelope']['S:Body']['ns2:GravarPedidosResponse'].result.respostaPedido
+              if (parseInt(respostaPedido.retorno) === 'OK') {
+                alert('Itens salvos com sucesso!')
+                this.carregarItens()
+              } else {
+                alert(respostaPedido.retorno)
+              }
+            })
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
+            document.getElementById('btnSalvarItens').disabled = false
+          })
+          .catch((err) => {
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
+            document.getElementById('btnSalvarItens').disabled = false
+            console.log(err)
+          })
+      }
+    },
+    compare (a, b) {
+      if (a.cnj < b.cnj) {
+        return -1
+      }
+      if (a.cnj > b.cnj) {
+        return 1
+      }
+      return 0
+    },
+    carregarItens () {
       const token = sessionStorage.getItem('token')
-      const body = JSON.stringify(
-        {
-          pedido: {
-            codEmp: this.empresa,
-            codFil: 1,
-            numPed: this.numPed
-          },
-          itens: itensPedido
-        }
-      )
-      console.log(body)
-      const headers = { headers: { 'Content-Type': 'application/json' } }
-      axios.post('http://localhost:8080/pedido/itens?token=' + token, body, headers)
+      this.itens = []
+      axios.get('http://localhost:8080/itensPedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + token)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
-          parseString(response.data, { explicitArray: false }, (err, result) => {
-            if (err) {
-              console.log(err)
-            }
-            respostaPedido = result['S:Envelope']['S:Body']['ns2:GravarPedidosResponse'].result.respostaPedido
-            if (parseInt(respostaPedido.numPed) === 0) {
-              alert(respostaPedido.retorno)
-            } else {
-              console.log(respostaPedido)
-            }
+          response.data.itens.forEach(item => {
+            this.itens.push(
+              {
+                cnj: item.SEQPCL
+              }
+            )
           })
-          document.getElementsByTagName('body')[0].style.cursor = 'auto'
-          document.getElementById('btnSalvarItens').disabled = false
         })
         .catch((err) => {
-          document.getElementsByTagName('body')[0].style.cursor = 'auto'
-          document.getElementById('btnSalvarItens').disabled = false
           console.log(err)
         })
     }
