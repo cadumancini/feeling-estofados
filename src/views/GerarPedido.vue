@@ -9,7 +9,7 @@
         <div class="col-6">
           <div class="float-end">
             <button class="btn btn-sm btn-secondary ms-2">Enviar à empresa</button>
-            <button class="btn btn-sm btn-secondary ms-2">Excluir rascunho</button>
+            <button class="btn btn-sm btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmaExclusaoRascunhoModal">Excluir rascunho</button>
           </div>
           <div class="float-end">
             <div class="input-group input-group-sm">
@@ -19,7 +19,7 @@
                   <option :value="empresaCliente.CODEMP" v-for="empresaCliente in empresasCliente" :key="empresaCliente.CODEMP">{{empresaCliente.CODEMP}} - {{empresaCliente.NOMEMP}}</option>
               </select>
               <select v-else id="inputGroupSelectEmpresa" class="form-select">
-                  <option selected disabled>Selecione o cliente para escolher a empresa</option>
+                  <option selected disabled>Selecione um cliente</option>
               </select>
             </div>
           </div>
@@ -28,7 +28,7 @@
       <div class="border border-2 rounded-3 px-2 py-2">
         <div class="row mb-3">
           <div class="col-6">
-              <span class="fw-bold fs-5">Dados Gerais</span>
+            <span class="fw-bold fs-5">Dados Gerais</span>
           </div>
           <div class="col-6">
             <div class="float-end">
@@ -68,7 +68,7 @@
             <div class="input-group input-group-sm">
               <span class="input-group-text">Pedido Cliente</span>
               <input id="pedCli" class="form-control" type="text" v-model="pedCli">
-              <button class="btn btn-secondary input-group-btn">...</button>
+              <button id="btnBuscaPedidosCliente" class="btn btn-secondary input-group-btn">...</button>
             </div>
           </div>
           <div class="col-5">
@@ -189,57 +189,208 @@
         </div>
       </div>
 
-      <!-- aaa -->
-      <!-- <div class="row mb-3">
-        <label for="codCli" class="form-label">Cliente:</label>
-        <div class="col-auto">
-          <input id="codCli" class="form-control" type="text" autofocus v-model="cliente">
+      <!-- Modal Excluir rascunho -->
+      <div class="modal fade" id="confirmaExclusaoRascunhoModal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Confirma exclusão de rascunho</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalExclusaoRascunho"></button>
+            </div>
+            <div class="modal-body">
+              <p>Ao excluir, todas as informações inseridas no pedido serão apagadas. Deseja continuar?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" @click="excluirRascunho">Sim</button>
+              <button type="button" class="btn btn-dismiss" data-bs-dismiss="modal">Não</button>
+            </div>
+          </div>
         </div>
-        <div class="col-auto">
-          <button class="btn btn-secondary" id="btnBuscaClientes" @click="buscaClientes" data-bs-toggle="modal" data-bs-target="#clientesModal">...</button>
+      </div>
+
+      <!-- Itens do Pedido -->
+      <div v-if="numPed" class="border border-2 mt-2 rounded-3 px-2 py-2">
+        <span class="fw-bold fs-5">Itens do pedido</span>
+        <div class="row mb-3 mx-0">
+          <table class="table table-striped table-hover table-bordered table-sm table-responsive">
+            <thead>
+              <tr class="table-dark">
+                <th class="fw-normal"><small><font-awesome-icon icon="edit"/></small></th>
+                <th class="fw-normal" style="width: 60px;"><small>Cnj.</small></th>
+                <th class="fw-normal"><small>Estilo</small></th>
+                <th class="fw-normal"><small>Configuração</small></th>
+                <th class="fw-normal" style="width: 140px;"><small>Comp.</small></th>
+                <th class="fw-normal" style="width: 80px;"><small>UN</small></th>
+                <th class="fw-normal" style="width: 80px;"><small>Desc.</small></th>
+                <th class="fw-normal" style="width: 80px;"><small>Comiss.</small></th>
+                <th class="fw-normal"><small>Cond. Especial?</small></th>
+                <th class="fw-normal"><small>Observações</small></th>
+                <th class="fw-normal" style="width: 80px;"><small>R$</small></th>
+                <th class="fw-normal"><small>Ação</small></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in itens" :key="item.codPro">
+                <td class="fw-normal"><button class="btn btn-sm btn-secondary"><font-awesome-icon icon="edit"/></button></td>
+                <td class="fw-normal"><input class="form-control form-control-sm"
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  maxlength="2" type="number" :value="item.cnj"></td>
+                <td class="fw-normal">
+                  <div class="input-group input-group-sm">
+                    <input class="form-control" type="text" disabled v-model="item.estilo">
+                    <button id="btnBuscaEstilos" class="btn btn-secondary input-group-btn" @click="buscaEstilos(item)" data-bs-toggle="modal" data-bs-target="#estilosModal">...</button>
+                  </div>
+                </td>
+                <td class="fw-normal">
+                  <div class="input-group input-group-sm">
+                    <input class="form-control" type="text" disabled v-model="item.config">
+                    <button id="btnBuscaConfigs" disabled class="btn btn-secondary input-group-btn" @click="buscaConfigs(item, item.codEstilo)" data-bs-toggle="modal" data-bs-target="#configsModal">...</button>
+                  </div>
+                </td>
+                <td class="fw-normal">
+                  <div class="input-group input-group-sm">
+                    <input id="inputComp" class="form-control" type="text" disabled v-model="item.comp">
+                    <button id="btnBuscaComps" disabled class="btn btn-secondary input-group-btn" @click="buscaComps(item, item.codConfig)" data-bs-toggle="modal" data-bs-target="#compsModal">...</button>
+                  </div>
+                </td>
+                <td class="fw-normal"><input class="form-control form-control-sm"
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  maxlength="2" type="number" v-model="item.un"></td>
+                <td class="fw-normal"><small>{{item.desc}}</small></td>
+                <td class="fw-normal"><small>{{item.comiss}}</small></td>
+                <td class="fw-normal">
+                  <select id="inputGroupSelectCondEsp" class="form-select form-select-sm" @change="handleCondicao(item)" v-model="item.condEsp">
+                    <option value=""></option>
+                    <option value="M">Medida Especial</option>
+                    <option value="D">Desconto Especial</option>
+                    <option value="C">Condição de Pagto</option>
+                    <option value="P">Prazo Especial</option>
+                    <option value="O">Outras</option>
+                  </select>
+                </td>
+                <td class="fw-normal"><small><input class="form-control form-control-sm" type="text" :value="item.obs"></small></td>
+                <td class="fw-normal"><small>{{item.vlrUnit}}</small></td>
+                <td><button class="btn btn-sm btn-danger" @click="deleteItem(item)">Excluir</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <button class="btn btn-secondary btn-sm" @click="addItemVazio">Adicionar item</button>
+        <button id="btnSalvarItens" class="btn btn-secondary btn-sm ms-2" @click="salvarItens">Salvar itens</button>
+      </div>
+
+      <!-- Modal Estilos -->
+      <div class="modal fade" id="estilosModal" tabindex="-1" aria-labelledby="estilosModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="clientesModalLabel">Busca de Estilos</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalEstilos"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3" v-if="estilos != null">
+                <input type="text" class="form-control mb-3" v-on:keyup="filtrarEstilos" v-model="estilosFiltro" placeholder="Digite para buscar na tabela abaixo">
+                <table class="table table-striped table-hover table-bordered table-sm table-responsive">
+                  <thead>
+                    <tr>
+                      <th scope="col">Código</th>
+                      <th scope="col">Descrição</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="estiloRow in estilosFiltrados" :key="estiloRow.CODCPR" class="mouseHover" @click="selectEstilo(estiloRow)">
+                      <th class="fw-normal" scope="row">{{ estiloRow.CODCPR }}</th>
+                      <th class="fw-normal">{{ estiloRow.DESCPR }}</th>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div v-else>
+                <label>Buscando estilos ...</label>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fechar</button>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="row mb-3">
-        <label for="pedCli" class="form-label">Número do Pedido no Cliente:</label>
-        <div class="col-auto">
-          <input id="pedCli" class="form-control" type="text" onfocus="this.select();" v-model="pedidoCliente">
+
+      <!-- Modal Configs -->
+      <div class="modal fade" id="configsModal" tabindex="-1" aria-labelledby="configsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="clientesModalLabel">Busca de Configurações</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalConfigs"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3" v-if="configs != null">
+                <input type="text" class="form-control mb-3" v-on:keyup="filtrarConfigs" v-model="configsFiltro" placeholder="Digite para buscar na tabela abaixo">
+                <table class="table table-striped table-hover table-bordered table-sm table-responsive">
+                  <thead>
+                    <tr>
+                      <th scope="col">Código</th>
+                      <th scope="col">Descrição</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="configRow in configsFiltrados" :key="configRow.CODPRO" class="mouseHover" @click="selectConfig(configRow)">
+                      <th class="fw-normal" scope="row">{{ configRow.CODPRO }}</th>
+                      <th class="fw-normal">{{ configRow.DESPRO }}</th>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div v-else>
+                <label>Buscando configurações ...</label>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fechar</button>
+            </div>
+          </div>
         </div>
       </div>
 
-      <button class="btn btn-secondary mb-3" v-if="!addingProduct" id="btnAdicionarProduto" @click="addingProduct = true; pedidoGerado = 0">Adicionar Produto</button>
-      <ProductSelector class="mb-3" v-if="addingProduct" @addItem="addItem"/>
-
-      <div v-if="itens.length" class="row">
-        <p class="fw-bold fs-5">Produtos Adicionados</p>
+      <!-- Modal Comps -->
+      <div class="modal fade" id="compsModal" tabindex="-1" aria-labelledby="compsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="clientesModalLabel">Busca de Comprimentos (derivação)</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalComps"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3" v-if="comps != null">
+                <input type="text" class="form-control mb-3" v-on:keyup="filtrarComps" v-model="compsFiltro" placeholder="Digite para buscar na tabela abaixo">
+                <table class="table table-striped table-hover table-bordered table-sm table-responsive">
+                  <thead>
+                    <tr>
+                      <th scope="col">Código</th>
+                      <th scope="col">Descrição</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="compRow in compsFiltrados" :key="compRow.CODDER" class="mouseHover" @click="selectComp(compRow)">
+                      <th class="fw-normal" scope="row">{{ compRow.CODDER }}</th>
+                      <th class="fw-normal">{{ compRow.DESDER }}</th>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div v-else>
+                <label>Buscando comprimentos ...</label>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fechar</button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="row mb-3 mx-0">
-        <table v-if="itens.length" class="table table-striped table-hover table-bordered table-sm table-responsive">
-          <thead>
-            <tr class="table-dark">
-              <th class="fw-normal">Produto</th>
-              <th class="fw-normal">Der.</th>
-              <th class="fw-normal">Descrição</th>
-              <th class="fw-normal">Qtde.</th>
-              <th class="fw-normal">Valor Unit. (R$)</th>
-              <th class="fw-normal">Ação</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="item in itens" :key="item.codPro">
-              <td class="fw-normal">{{ item.codPro }}</td>
-              <td class="fw-normal">{{ item.codDer }}</td>
-              <td class="fw-normal">{{ item.desPro }}</td>
-              <td class="fw-normal">{{ item.qtdPed }}</td>
-              <td class="fw-normal">{{ vueNumberFormat(item.preUni, {}) }}</td>
-              <td><button class="btn btn-sm btn-danger" @click="deleteItem(item)">Excluir</button></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <button class="btn btn-secondary" v-if="itens.length" id="btnGerarPedido" @click="gerarPedido">Gerar Pedido</button>
-
-      <p class="fw-bold" v-if="pedidoGerado > 0">Pedido {{ pedidoGerado }} gerado com sucesso! Clique <router-link :to="{ name: 'Home' }">aqui</router-link> para voltar à página inicial, ou <router-link :to="{ name: 'ManipularPedidoComItem', params: { numPed: pedidoGerado } }">aqui</router-link> para editar os componentes do pedido.</p> -->
+      <!-- <ProductSelector class="mb-3" v-if="addingProduct" @addItem="addItem"/> -->
     </div>
   </div>
 </template>
@@ -255,8 +406,18 @@ export default {
   data () {
     return {
       clientes: null,
+      estilos: null,
+      configs: null,
+      comps: null,
       clientesFiltrados: null,
+      estilosFiltrados: null,
+      configsFiltrados: null,
+      compsFiltrados: null,
       cliente: '',
+      clientesFiltro: '',
+      estilosFiltro: '',
+      configsFiltro: '',
+      compsFiltro: '',
       nomCli: '',
       email: '',
       telefone: '',
@@ -274,8 +435,9 @@ export default {
       pedidoCliente: 0,
       addingProduct: false,
       itens: [],
-      pedidoGerado: 0,
-      clientesFiltro: ''
+      itemSelecionado: null,
+      numPed: '',
+      pedCli: ''
     }
   },
   mounted () {
@@ -293,6 +455,7 @@ export default {
     },
     buscaClientes () {
       this.clientes = null
+      this.clientesFiltro = ''
       document.getElementsByTagName('body')[0].style.cursor = 'wait'
       document.getElementById('btnBuscaClientes').disabled = true
       const token = sessionStorage.getItem('token')
@@ -310,6 +473,80 @@ export default {
           console.log(err)
         })
     },
+    buscaEstilos (item) {
+      this.itemSelecionado = item
+      this.estilos = null
+      this.estilosFiltro = ''
+      document.getElementsByTagName('body')[0].style.cursor = 'wait'
+      document.getElementById('btnBuscaEstilos').disabled = true
+      document.getElementById('btnBuscaConfigs').disabled = true
+      document.getElementById('btnBuscaComps').disabled = true
+      const token = sessionStorage.getItem('token')
+      axios.get('http://localhost:8080/estilos?emp=1&token=' + token)
+        .then((response) => {
+          this.checkInvalidLoginResponse(response.data)
+          this.estilos = response.data.estilos
+          this.estilosFiltrados = response.data.estilos
+          document.getElementsByTagName('body')[0].style.cursor = 'auto'
+          document.getElementById('btnBuscaEstilos').disabled = false
+        })
+        .catch((err) => {
+          document.getElementsByTagName('body')[0].style.cursor = 'auto'
+          document.getElementById('btnBuscaEstilos').disabled = false
+          console.log(err)
+        })
+    },
+    buscaConfigs (item, estilo) {
+      if (estilo) {
+        this.itemSelecionado = item
+        this.configs = null
+        this.configsFiltro = ''
+        document.getElementsByTagName('body')[0].style.cursor = 'wait'
+        document.getElementById('btnBuscaConfigs').disabled = true
+        document.getElementById('btnBuscaComps').disabled = true
+        const token = sessionStorage.getItem('token')
+        axios.get('http://localhost:8080/produtosPorEstilo?emp=1&estilo=' + estilo + '&token=' + token)
+          .then((response) => {
+            this.checkInvalidLoginResponse(response.data)
+            this.configs = response.data.produtos
+            this.configsFiltrados = response.data.produtos
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
+            document.getElementById('btnBuscaConfigs').disabled = false
+          })
+          .catch((err) => {
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
+            document.getElementById('btnBuscaConfigs').disabled = false
+            console.log(err)
+          })
+      } else {
+        alert('Favor escolher um estilo!')
+      }
+    },
+    buscaComps (item, config) {
+      if (config) {
+        this.itemSelecionado = item
+        this.comps = null
+        this.compsFiltro = ''
+        document.getElementsByTagName('body')[0].style.cursor = 'wait'
+        document.getElementById('btnBuscaComps').disabled = true
+        const token = sessionStorage.getItem('token')
+        axios.get('http://localhost:8080/derivacoesPorProduto?emp=1&produto=' + config + '&token=' + token)
+          .then((response) => {
+            this.checkInvalidLoginResponse(response.data)
+            this.comps = response.data.derivacoes
+            this.compsFiltrados = response.data.derivacoes
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
+            document.getElementById('btnBuscaComps').disabled = false
+          })
+          .catch((err) => {
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
+            document.getElementById('btnBuscaComps').disabled = false
+            console.log(err)
+          })
+      } else {
+        alert('Favor escolher uma configuração!')
+      }
+    },
     selectCliente (clienteClicked) {
       const formatter = new StringMask('99.999.999/0000-00')
       this.cliente = clienteClicked.CODCLI
@@ -324,6 +561,33 @@ export default {
       this.empresasCliente = []
       document.getElementById('closeModalClientes').click()
       this.buscarDadosCliente(this.cliente)
+    },
+    selectEstilo (estiloClicked) {
+      this.itemSelecionado.estilo = estiloClicked.DESCPR
+      this.itemSelecionado.codEstilo = estiloClicked.CODCPR
+      document.getElementById('closeModalEstilos').click()
+      document.getElementById('btnBuscaConfigs').disabled = false
+      document.getElementById('btnBuscaComps').disabled = true
+      this.itemSelecionado.config = ''
+      this.itemSelecionado.codConfig = ''
+      this.itemSelecionado.comp = ''
+      this.itemSelecionado.codComp = ''
+      this.itemSelecionado = null
+    },
+    selectConfig (configClicked) {
+      this.itemSelecionado.config = configClicked.DESPRO
+      this.itemSelecionado.codConfig = configClicked.CODPRO
+      document.getElementById('closeModalConfigs').click()
+      document.getElementById('btnBuscaComps').disabled = false
+      this.itemSelecionado.comp = ''
+      this.itemSelecionado.codComp = ''
+      this.itemSelecionado = null
+    },
+    selectComp (compClicked) {
+      this.itemSelecionado.comp = compClicked.DESDER
+      this.itemSelecionado.codComp = compClicked.CODDER
+      document.getElementById('closeModalComps').click()
+      this.itemSelecionado = null
     },
     buscarDadosCliente (codCli) {
       const token = sessionStorage.getItem('token')
@@ -352,6 +616,22 @@ export default {
     addItem (item) {
       this.itens.push(item)
       this.addingProduct = false
+    },
+    addItemVazio () {
+      const item = {
+        cnj: '',
+        estilo: '',
+        config: '',
+        posicao: '',
+        comp: '',
+        un: '',
+        descr: '',
+        comiss: '',
+        condEsp: '',
+        obs: '',
+        vlrUnit: ''
+      }
+      this.itens.push(item)
     },
     deleteItem (item) {
       const index = this.itens.indexOf(item)
@@ -398,11 +678,13 @@ export default {
               if (parseInt(respostaPedido.numPed) === 0) {
                 alert(respostaPedido.retorno)
               } else {
-                console.log(respostaPedido)
+                this.numPed = respostaPedido.numPed
+                document.getElementById('pedCli').disabled = true
+                document.getElementById('nomCli').disabled = true
+                document.getElementById('btnBuscaPedidosCliente').disabled = true
+                document.getElementById('btnBuscaClientes').disabled = true
+                alert('Pedido ' + this.numPed + ' gerado com sucesso!')
                 this.itens = []
-                this.cliente = ''
-                this.pedidoCliente = 0
-                this.pedidoGerado = respostaPedido.numPed
               }
             })
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
@@ -417,6 +699,97 @@ export default {
     },
     filtrarClientes () {
       this.clientesFiltrados = this.clientes.filter(cliente => cliente.NOMCLI.toUpperCase().startsWith(this.clientesFiltro.toUpperCase()))
+    },
+    filtrarEstilos () {
+      this.estilosFiltrados = this.estilos.filter(estilo => estilo.DESCPR.toUpperCase().startsWith(this.estilosFiltro.toUpperCase()))
+    },
+    filtrarConfigs () {
+      this.configsFiltrados = this.configs.filter(config => config.DESPRO.toUpperCase().startsWith(this.configsFiltro.toUpperCase()))
+    },
+    filtrarComps () {
+      this.compsFiltrados = this.comps.filter(comp => comp.DESDER.toUpperCase().startsWith(this.compsFiltro.toUpperCase()))
+    },
+    excluirRascunho () {
+      document.getElementById('closeModalExclusaoRascunho').click()
+      this.cliente = ''
+      this.nomCli = ''
+      this.email = ''
+      this.telefone = ''
+      this.cnpj = ''
+      this.endereco = ''
+      this.cidadeUF = ''
+      this.inscrEst = ''
+      this.frete = ''
+      this.codTransportadora = ''
+      this.transportadora = ''
+      this.codRepresentada = ''
+      this.representada = ''
+      this.empresa = ''
+      this.empresasCliente = []
+      this.numPed = ''
+      this.itens = []
+      this.pedCli = ''
+    },
+    handleCondicao (item) {
+      if (item.condEsp === 'M') {
+        document.getElementById('inputComp').disabled = false
+      } else {
+        document.getElementById('inputComp').disabled = true
+      }
+    },
+    salvarItens () {
+      const itensPedido = []
+      this.itens.forEach(item => {
+        itensPedido.push(
+          {
+            codPro: item.codConfig,
+            desPro: (item.config + ' ' + item.comp),
+            codDer: item.codComp,
+            seqIpd: 0,
+            qtdPed: item.un,
+            preUni: 1000
+          }
+        )
+      })
+      document.getElementsByTagName('body')[0].style.cursor = 'wait'
+      document.getElementById('btnSalvarItens').disabled = true
+      var parseString = require('xml2js').parseString
+      var respostaPedido = null
+      const token = sessionStorage.getItem('token')
+      const body = JSON.stringify(
+        {
+          pedido: {
+            codEmp: this.empresa,
+            codFil: 1,
+            numPed: this.numPed
+          },
+          itens: itensPedido
+        }
+      )
+      console.log(body)
+      const headers = { headers: { 'Content-Type': 'application/json' } }
+      axios.post('http://localhost:8080/pedido/itens?token=' + token, body, headers)
+        .then((response) => {
+          this.checkInvalidLoginResponse(response.data)
+          parseString(response.data, { explicitArray: false }, (err, result) => {
+            if (err) {
+              console.log(err)
+            }
+            respostaPedido = result['S:Envelope']['S:Body']['ns2:GravarPedidosResponse'].result.respostaPedido
+            if (parseInt(respostaPedido.numPed) === 0) {
+              alert(respostaPedido.retorno)
+            } else {
+              console.log(respostaPedido)
+            }
+          })
+          document.getElementsByTagName('body')[0].style.cursor = 'auto'
+          document.getElementById('btnSalvarItens').disabled = false
+        })
+        .catch((err) => {
+          document.getElementsByTagName('body')[0].style.cursor = 'auto'
+          document.getElementById('btnSalvarItens').disabled = false
+          console.log(err)
+        })
     }
   }
 }
@@ -424,8 +797,8 @@ export default {
 
 <style scoped>
   html, body {
-      height: 100%;
-    }
+    height: 100%;
+  }
   .gerarPedido {
     height: 100%;
     background-color: #f5f5f5;
