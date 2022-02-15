@@ -111,7 +111,7 @@
             </div>
           </div>
         </div>
-        <div class="row mb-3">
+        <div class="row">
           <div class="col-4">
             <div class="input-group input-group-sm">
               <span class="input-group-text">Endereço</span>
@@ -209,7 +209,7 @@
       </div>
 
       <!-- Itens do Pedido -->
-      <div v-if="numPed" class="border border-2 mt-2 rounded-3 px-2 py-2">
+      <div v-if="numPed" class="border border-2 mt-3 rounded-3 px-2 py-2">
         <div class="row mb-2">
           <div class="col-6">
             <span class="fw-bold fs-5">Itens do pedido</span>
@@ -221,55 +221,59 @@
             </div>
           </div>
         </div>
-        <div class="row mb-3 mx-0">
+        <div class="row mx-0">
           <table class="table table-striped table-hover table-bordered table-sm table-responsive">
             <thead>
               <tr class="table-dark">
-                <th class="fw-normal"><small><font-awesome-icon icon="edit"/></small></th>
-                <th class="fw-normal" style="width: 60px;"><small>Cnj.</small></th>
-                <th class="fw-normal"><small>Estilo</small></th>
-                <th class="fw-normal"><small>Configuração</small></th>
-                <th class="fw-normal" style="width: 140px;"><small>Comp.</small></th>
-                <th class="fw-normal" style="width: 80px;"><small>UN</small></th>
-                <th class="fw-normal" style="width: 80px;"><small>Desc.</small></th>
-                <th class="fw-normal" style="width: 80px;"><small>Comiss.</small></th>
-                <th class="fw-normal"><small>Cond. Especial?</small></th>
-                <th class="fw-normal"><small>Observações</small></th>
-                <th class="fw-normal" style="width: 80px;"><small>R$</small></th>
-                <th class="fw-normal"><small>Ação</small></th>
+                <th class="fw-normal sm-header" style="width: 2%;"><small><font-awesome-icon icon="edit"/></small></th>
+                <th class="fw-normal sm-header" style="width: 4%;"><small>Cnj.</small></th>
+                <th class="fw-normal sm-header" style="width: 14%;"><small>Estilo</small></th>
+                <th class="fw-normal sm-header" style="width: 18%;"><small>Configuração</small></th>
+                <th class="fw-normal sm-header" style="width: 9%;"><small>Comp.</small></th>
+                <th class="fw-normal sm-header" style="width: 4%"><small>UN</small></th>
+                <th class="fw-normal sm-header" style="width: 5%;"><small>Desc.</small></th>
+                <th class="fw-normal sm-header" style="width: 5%;"><small>Comiss.</small></th>
+                <th class="fw-normal sm-header" style="width: 14%;"><small>Cond. Especial</small></th>
+                <th class="fw-normal sm-header" style="width: 18%;"><small>Observações</small></th>
+                <th class="fw-normal sm-header" style="width: 5%;"><small>R$</small></th>
+                <th class="fw-normal sm-header" style="width: 4%;"><small>Ação</small></th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="item in itens" :key="item.codPro">
-                <td class="fw-normal"><button class="btn btn-sm btn-secondary"><font-awesome-icon icon="edit"/></button></td>
-                <td class="fw-normal"><input class="form-control form-control-sm"
-                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                  maxlength="2" type="number" v-model="item.cnj"></td>
+                <td class="fw-normal"><button class="btn btn-sm btn-secondary sm" :disabled="!item.seqIpd"><font-awesome-icon icon="edit"/></button></td>
                 <td class="fw-normal">
                   <div class="input-group input-group-sm">
-                    <input class="form-control" type="text" disabled v-model="item.estilo">
-                    <button :id="`btnBuscaEstilos`+item.hash" class="btn btn-secondary input-group-btn" @click="buscaEstilos(item)" data-bs-toggle="modal" data-bs-target="#estilosModal">...</button>
+                    <input class="form-control sm"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    maxlength="2" type="number" v-model="item.cnj">
                   </div>
                 </td>
                 <td class="fw-normal">
                   <div class="input-group input-group-sm">
-                    <input class="form-control" type="text" disabled v-model="item.config">
-                    <button :id="`btnBuscaConfigs`+item.hash" disabled class="btn btn-secondary input-group-btn" @click="buscaConfigs(item, item.codEstilo)" data-bs-toggle="modal" data-bs-target="#configsModal">...</button>
+                    <input class="form-control sm" type="text" disabled v-model="item.estilo">
+                    <button :id="`btnBuscaEstilos`+item.hash" class="btn btn-secondary input-group-btn sm" @click="buscaEstilos(item)" data-bs-toggle="modal" data-bs-target="#estilosModal">...</button>
                   </div>
                 </td>
                 <td class="fw-normal">
                   <div class="input-group input-group-sm">
-                    <input id="inputComp" class="form-control" type="text" disabled v-model="item.comp">
-                    <button :id="`btnBuscaComps`+item.hash" disabled class="btn btn-secondary input-group-btn" @click="buscaComps(item, item.codConfig)" data-bs-toggle="modal" data-bs-target="#compsModal">...</button>
+                    <input class="form-control sm" type="text" disabled v-model="item.config">
+                    <button :id="`btnBuscaConfigs`+item.hash" disabled class="btn btn-secondary input-group-btn sm" @click="buscaConfigs(item, item.codEstilo)" data-bs-toggle="modal" data-bs-target="#configsModal">...</button>
                   </div>
                 </td>
-                <td class="fw-normal"><input class="form-control form-control-sm"
+                <td class="fw-normal">
+                  <div class="input-group input-group-sm">
+                    <input id="inputComp" class="form-control sm" type="text" disabled v-model="item.comp">
+                    <button :id="`btnBuscaComps`+item.hash" disabled class="btn btn-secondary input-group-btn sm" @click="buscaComps(item, item.codConfig)" data-bs-toggle="modal" data-bs-target="#compsModal">...</button>
+                  </div>
+                </td>
+                <td class="fw-normal"><input class="form-control form-control-sm sm"
                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   maxlength="2" type="number" v-model="item.un"></td>
-                <td class="fw-normal"><small>{{item.desc}}</small></td>
-                <td class="fw-normal"><small>{{item.comiss}}</small></td>
+                <td class="fw-normal"><small class="sm">{{item.desc}}</small></td>
+                <td class="fw-normal"><small class="sm">{{item.comiss}}</small></td>
                 <td class="fw-normal">
-                  <select id="inputGroupSelectCondEsp" class="form-select form-select-sm" @change="handleCondicao(item)" v-model="item.condEsp">
+                  <select id="inputGroupSelectCondEsp" class="form-select form-select-sm sm" @change="handleCondicao(item)" v-model="item.condEsp">
                     <option value=""></option>
                     <option value="M">Medida Especial</option>
                     <option value="D">Desconto Especial</option>
@@ -278,9 +282,9 @@
                     <option value="O">Outras</option>
                   </select>
                 </td>
-                <td class="fw-normal"><small><input class="form-control form-control-sm" type="text" v-model="item.obs"></small></td>
-                <td class="fw-normal"><small>{{item.vlrUnit}}</small></td>
-                <td><button class="btn btn-sm btn-danger" @click="deleteItem(item)">Excluir</button></td>
+                <td class="fw-normal"><small><input class="form-control form-control-sm sm" type="text" v-model="item.obs"></small></td>
+                <td class="fw-normal"><small class="sm">{{item.vlrUnit}}</small></td>
+                <td><button class="btn btn-sm btn-danger sm" @click="deleteItem(item)">Excluir</button></td>
               </tr>
             </tbody>
           </table>
@@ -405,12 +409,11 @@
 
 <script>
 import Navbar from '../components/Navbar.vue'
-import ProductSelector from '../components/ProductSelector.vue'
 import axios from 'axios'
 import StringMask from 'string-mask'
 export default {
   name: 'GerarPedido',
-  components: { ProductSelector, Navbar },
+  components: { Navbar },
   data () {
     return {
       clientes: null,
@@ -630,10 +633,9 @@ export default {
         cnj: '',
         estilo: '',
         config: '',
-        posicao: '',
         comp: '',
         un: 1,
-        descr: '',
+        desc: '',
         comiss: '',
         condEsp: '',
         obs: '',
@@ -683,7 +685,7 @@ export default {
               if (err) {
                 console.log(err)
               }
-              respostaPedido = result['S:Envelope']['S:Body']['ns2:GravarPedidosResponse'].result.respostaPedido
+              respostaPedido = result['S:Envelope']['S:Body']['ns2:GravarPedidos_13Response'].result.respostaPedido
               if (parseInt(respostaPedido.numPed) === 0) {
                 alert(respostaPedido.retorno)
               } else {
@@ -738,12 +740,24 @@ export default {
       this.numPed = ''
       this.itens = []
       this.pedCli = ''
+      document.getElementById('btnBuscaPedidosCliente').disabled = false
+      document.getElementById('btnBuscaClientes').disabled = false
     },
     handleCondicao (item) {
       if (item.condEsp === 'M') {
+        alert('Informe o novo comprimento, em centímetros, para o produto. Produtos de medida especial tem acréscimo no valor de tabela.')
         document.getElementById('inputComp').disabled = false
       } else {
         document.getElementById('inputComp').disabled = true
+        if (item.condEsp === 'D') {
+          alert('Descreva o critério e desconto aplicado para a condição especial nas observações do item.')
+        } else if (item.condEsp === 'C') {
+          alert('Descreva o critério e a condição de pagamento aplicado para a condição especial nas observações do item.')
+        } else if (item.condEsp === 'P') {
+          alert('Em dias corridos, descreva o prazo especial desejado nas observações do item.')
+        } else if (item.condEsp === 'O') {
+          alert('Descreva a condição especial nas observações do item.')
+        }
       }
     },
     salvarItens () {
@@ -762,6 +776,10 @@ export default {
           alert('Erro: Existe(m) produto(s) com número de conjunto menor que 1. Verifique!')
           temErro = true
         }
+        if ((item.condEsp === 'D' || item.condEsp === 'C' || item.condEsp === 'P' || item.condEsp === 'O') && (!item.obs)) {
+          alert('Erro: Existe(m) produto(s) com condição especial que requer preenchimento de observação. Verifique!')
+          temErro = true
+        }
       })
       const itensChecarCnj = [...this.itens]
       itensChecarCnj.sort(this.compare)
@@ -778,6 +796,12 @@ export default {
         }
       })
       if (!temErro) {
+        var hoje = new Date()
+        var datEnt = hoje.setDate(hoje.getDate() + 75)
+        var dia = new Date(datEnt).getDate().toString().padStart(2, '0')
+        var mes = (new Date(datEnt).getMonth() + 1).toString().padStart(2, '0') // +1 pois no getMonth Janeiro começa com zero.
+        var ano = new Date(datEnt).getFullYear()
+        var datEntFmt = dia + '/' + mes + '/' + ano
         this.itens.forEach(item => {
           itensPedido.push(
             {
@@ -787,7 +811,10 @@ export default {
               codDer: item.codComp,
               seqIpd: 0,
               qtdPed: item.un,
-              preUni: 1000
+              preUni: 1000,
+              datEnt: datEntFmt,
+              conEsp: item.condEsp,
+              obsIpd: item.obs
             }
           )
         })
@@ -814,9 +841,10 @@ export default {
               if (err) {
                 console.log(err)
               }
-              respostaPedido = result['S:Envelope']['S:Body']['ns2:GravarPedidosResponse'].result.respostaPedido
-              if (parseInt(respostaPedido.retorno) === 'OK') {
+              respostaPedido = result['S:Envelope']['S:Body']['ns2:GravarPedidos_13Response'].result.respostaPedido
+              if (respostaPedido.retorno === 'OK') {
                 alert('Itens salvos com sucesso!')
+                this.carregarCabecalho()
                 this.carregarItens()
               } else {
                 alert(respostaPedido.retorno)
@@ -841,6 +869,18 @@ export default {
       }
       return 0
     },
+    carregarCabecalho () {
+      const token = sessionStorage.getItem('token')
+      axios.get('http://localhost:8080/pedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + token)
+        .then((response) => {
+          this.checkInvalidLoginResponse(response.data.pedido)
+          this.prevFaturamento = response.data.pedido[0].DATENT
+          this.condPagamento = response.data.pedido[0].DESCPG
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
     carregarItens () {
       const token = sessionStorage.getItem('token')
       this.itens = []
@@ -850,7 +890,22 @@ export default {
           response.data.itens.forEach(item => {
             this.itens.push(
               {
-                cnj: item.SEQPCL
+                seqIpd: item.SEQIPD,
+                cnj: item.SEQPCL,
+                codEstilo: item.CODCPR,
+                estilo: item.DESCPR,
+                codConfig: item.CODPRO,
+                config: item.DESPRO,
+                codComp: item.CODDER,
+                comp: item.DESDER,
+                un: item.QTDPED,
+                desc: Number(item.PERDSC).toFixed(2).toLocaleString() + ' %',
+                comiss: Number(item.PERCOM).toFixed(2).toLocaleString() + ' %',
+                condEsp: item.CNDESP,
+                datEnt: item.DATENT,
+                obs: item.OBSIPD,
+                vlrUnit: Number(item.VLRIPD).toFixed(2).toLocaleString(),
+                hash: Math.floor(Math.random() * ((this.itens.length + 1) * 1000))
               }
             )
           })
@@ -884,5 +939,11 @@ export default {
   .btn-dismiss:hover {
     color: #fff;
     background-color: #93999e;
+  }
+  .sm {
+    font-size: 0.8rem !important;
+  }
+  .sm-header {
+    font-size: 0.9rem !important;
   }
 </style>
