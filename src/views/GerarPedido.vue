@@ -8,13 +8,13 @@
         </div>
         <div class="col-6">
           <div class="float-end">
-            <button class="btn btn-sm btn-secondary ms-2">Enviar à empresa</button>
+            <button class="btn btn-sm btn-secondary ms-2" :disabled="numPed == '' || (numPed != '' && enviadoEmpresa)" data-bs-toggle="modal" data-bs-target="#confirmaEnviarEmpresaModal">Enviar à empresa</button>
             <button class="btn btn-sm btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmaExclusaoRascunhoModal">Limpar</button>
           </div>
           <div class="float-end">
             <div class="input-group input-group-sm">
               <span class="input-group-text" >Empresa</span>
-              <select v-if="empresasCliente.length" id="inputGroupSelectEmpresa" class="form-select" v-model="empresa">
+              <select v-if="empresasCliente.length" :disabled="enviadoEmpresa" id="inputGroupSelectEmpresa" class="form-select" v-model="empresa">
                   <option selected disabled value="">Selecione uma empresa</option>
                   <option :value="empresaCliente.CODEMP" v-for="empresaCliente in empresasCliente" :key="empresaCliente.CODEMP">{{empresaCliente.CODEMP}} - {{empresaCliente.NOMEMP}}</option>
               </select>
@@ -29,10 +29,11 @@
         <div class="row mb-3">
           <div class="col-6">
             <span class="fw-bold fs-5">Dados Gerais</span>
+            <span v-if="enviadoEmpresa" class="ms-3 fs-6 fst-italic text-danger">O pedido encontra-se bloqueado para alteração.</span>
           </div>
           <div class="col-6">
             <div class="float-end">
-              <button id="btnSalvar" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#confirmaPedidoModal">Salvar</button>
+              <button id="btnSalvar" class="btn btn-secondary btn-sm" :disabled="enviadoEmpresa" data-bs-toggle="modal" data-bs-target="#confirmaPedidoModal">Salvar</button>
             </div>
           </div>
         </div>
@@ -88,8 +89,8 @@
           <div class="col-3">
             <div class="input-group input-group-sm">
               <span class="input-group-text">Cliente</span>
-              <input id="nomCli" class="form-control" type="text" v-model="nomCli" placeholder="Clique ao lado para selecionar o cliente">
-              <button id="btnBuscaClientes" class="btn btn-secondary input-group-btn" @click="buscaClientes" data-bs-toggle="modal" data-bs-target="#clientesModal">...</button>
+              <input id="nomCli" class="form-control" type="text" :disabled="numPed != '' && enviadoEmpresa" v-model="nomCli" placeholder="Clique ao lado para selecionar o cliente">
+              <button id="btnBuscaClientes" class="btn btn-secondary input-group-btn" :disabled="numPed != '' && enviadoEmpresa" @click="buscaClientes" data-bs-toggle="modal" data-bs-target="#clientesModal">...</button>
             </div>
           </div>
           <div class="col-3">
@@ -128,6 +129,25 @@
             <div class="input-group input-group-sm">
               <span class="input-group-text">Insc. Est.</span>
               <input id="inscrEst" class="form-control" type="text" disabled v-model="inscrEst">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Enviar a Empresa -->
+      <div class="modal fade" id="confirmaEnviarEmpresaModal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Confirma envio à empresa</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalEnviarEmpresa"></button>
+            </div>
+            <div class="modal-body">
+              <p>Ao enviar à empresa, o pedido será gerado no sistema da Feeling e não constará mais para alteração ou consulta. Para realizar quaisquer alterações, será preciso entrar em contato com o comercial Feeling. Deseja continuar?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" @click="enviarEmpresa">Sim</button>
+              <button type="button" class="btn btn-dismiss" data-bs-dismiss="modal">Não</button>
             </div>
           </div>
         </div>
@@ -216,8 +236,8 @@
           </div>
           <div class="col-6">
             <div class="float-end">
-              <button class="btn btn-secondary btn-sm" @click="addItemVazio">Adicionar item</button>
-              <button id="btnSalvarItens" class="btn btn-secondary btn-sm ms-2" @click="salvarItens">Salvar itens</button>
+              <button class="btn btn-secondary btn-sm" :disabled="enviadoEmpresa" @click="addItemVazio">Adicionar item</button>
+              <button id="btnSalvarItens" class="btn btn-secondary btn-sm ms-2" :disabled="enviadoEmpresa" data-bs-toggle="modal" data-bs-target="#confirmaSalvarItensModal">Salvar itens</button>
             </div>
           </div>
         </div>
@@ -241,10 +261,10 @@
             </thead>
             <tbody>
               <tr v-for="item in itens" :key="item.codPro">
-                <td class="fw-normal"><button class="btn btn-sm btn-secondary sm" :disabled="!item.seqIpd"><font-awesome-icon icon="edit"/></button></td>
+                <td class="fw-normal"><button class="btn btn-sm btn-secondary sm" :disabled="!item.seqIpd || enviadoEmpresa"><font-awesome-icon icon="edit"/></button></td>
                 <td class="fw-normal">
                   <div class="input-group input-group-sm">
-                    <input class="form-control sm"
+                    <input class="form-control sm" :disabled="enviadoEmpresa"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     maxlength="2" type="number" v-model="item.cnj">
                   </div>
@@ -252,7 +272,7 @@
                 <td class="fw-normal">
                   <div class="input-group input-group-sm">
                     <input class="form-control sm" type="text" disabled v-model="item.estilo">
-                    <button :id="`btnBuscaEstilos`+item.hash" class="btn btn-secondary input-group-btn sm" @click="buscaEstilos(item)" data-bs-toggle="modal" data-bs-target="#estilosModal">...</button>
+                    <button :id="`btnBuscaEstilos`+item.hash" :disabled="enviadoEmpresa" class="btn btn-secondary input-group-btn sm" @click="buscaEstilos(item)" data-bs-toggle="modal" data-bs-target="#estilosModal">...</button>
                   </div>
                 </td>
                 <td class="fw-normal">
@@ -273,8 +293,8 @@
                 <td class="fw-normal"><small class="sm">{{item.desc}}</small></td>
                 <td class="fw-normal"><small class="sm">{{item.comiss}}</small></td>
                 <td class="fw-normal">
-                  <select id="inputGroupSelectCondEsp" class="form-select form-select-sm sm" @change="handleCondicao(item)" v-model="item.condEsp">
-                    <option value=""></option>
+                  <select id="inputGroupSelectCondEsp" :disabled="enviadoEmpresa" class="form-select form-select-sm sm" @change="handleCondicao(item)" v-model="item.condEsp">
+                    <option value=" "></option>
                     <option value="M">Medida Especial</option>
                     <option value="D">Desconto Especial</option>
                     <option value="C">Condição de Pagto</option>
@@ -282,9 +302,9 @@
                     <option value="O">Outras</option>
                   </select>
                 </td>
-                <td class="fw-normal"><small><input class="form-control form-control-sm sm" type="text" v-model="item.obs"></small></td>
+                <td class="fw-normal"><small><input class="form-control form-control-sm sm" :disabled="enviadoEmpresa" type="text" v-model="item.obs"></small></td>
                 <td class="fw-normal"><small class="sm">{{item.vlrUnit}}</small></td>
-                <td><button class="btn btn-sm btn-danger sm" @click="deleteItem(item)">Excluir</button></td>
+                <td><button class="btn btn-sm btn-danger sm" :disabled="enviadoEmpresa" @click="deleteItem(item)">Excluir</button></td>
               </tr>
             </tbody>
           </table>
@@ -402,7 +422,24 @@
         </div>
       </div>
 
-      <!-- <ProductSelector class="mb-3" v-if="addingProduct" @addItem="addItem"/> -->
+      <!-- Modal Salvar Itens -->
+      <div class="modal fade" id="confirmaSalvarItensModal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Confirma itens</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalSalvarItens"></button>
+            </div>
+            <div class="modal-body">
+              <p>Este processo adiciona os produtos ao pedido, permitindo a manipulação da estrutura. Tem certeza que deseja salvar os itens?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" @click="salvarItens">Sim</button>
+              <button type="button" class="btn btn-dismiss" data-bs-dismiss="modal">Não</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -448,7 +485,8 @@ export default {
       itens: [],
       itemSelecionado: null,
       numPed: '',
-      pedCli: ''
+      pedCli: '',
+      enviadoEmpresa: false
     }
   },
   mounted () {
@@ -637,7 +675,7 @@ export default {
         un: 1,
         desc: '',
         comiss: '',
-        condEsp: '',
+        condEsp: ' ',
         obs: '',
         vlrUnit: '',
         hash: Math.floor(Math.random() * ((this.itens.length + 1) * 1000))
@@ -740,6 +778,7 @@ export default {
       this.numPed = ''
       this.itens = []
       this.pedCli = ''
+      this.enviadoEmpresa = false
       document.getElementById('btnBuscaPedidosCliente').disabled = false
       document.getElementById('btnBuscaClientes').disabled = false
     },
@@ -761,6 +800,7 @@ export default {
       }
     },
     salvarItens () {
+      document.getElementById('closeModalSalvarItens').click()
       const itensPedido = []
       let temErro = false
       this.itens.forEach(item => {
@@ -876,6 +916,7 @@ export default {
           this.checkInvalidLoginResponse(response.data.pedido)
           this.prevFaturamento = response.data.pedido[0].DATENT
           this.condPagamento = response.data.pedido[0].DESCPG
+          this.enviadoEmpresa = (response.data.pedido[0].SITPED === 3 || response.data.pedido[0].SITPED === 4 || response.data.pedido[0].SITPED === 5)
         })
         .catch((err) => {
           console.log(err)
@@ -913,6 +954,30 @@ export default {
         .catch((err) => {
           console.log(err)
         })
+    },
+    enviarEmpresa () {
+      document.getElementById('closeModalEnviarEmpresa').click()
+      if (!this.itens.length) {
+        alert('O pedido não possui itens. Verifique!')
+      } else {
+        document.getElementsByTagName('body')[0].style.cursor = 'wait'
+        const token = sessionStorage.getItem('token')
+        axios.post('http://localhost:8080/enviarPedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + token)
+          .then((response) => {
+            this.checkInvalidLoginResponse(response.data)
+            if (response.data === 'OK') {
+              alert('Pedido enviado à empresa com sucesso!')
+              this.enviadoEmpresa = true
+            } else {
+              alert(response.data)
+            }
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
+          })
+          .catch((err) => {
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
+            console.log(err)
+          })
+      }
     }
   }
 }
