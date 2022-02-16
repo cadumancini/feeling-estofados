@@ -42,7 +42,7 @@
             <div class="input-group input-group-sm">
               <span class="input-group-text">Nº Pedido</span>
               <input id="numPed" class="form-control" type="text" disabled v-model="numPed">
-              <button class="btn btn-secondary input-group-btn">...</button>
+              <button id="btnBuscaPedidos" class="btn btn-secondary input-group-btn" @click="buscaPedidos" data-bs-toggle="modal" data-bs-target="#pedidosModal">...</button>
             </div>
           </div>
           <div class="col-3">
@@ -181,6 +181,51 @@
               </div>
               <div v-else>
                 <label>Buscando clientes ...</label>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fechar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Pedidos -->
+      <div class="modal fade" id="pedidosModal" tabindex="-1" aria-labelledby="pedidosModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-xl">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="pedidosModalLabel">Busca de Pedidos do Usuário</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalPedidos"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3" v-if="pedidos != null">
+                <input type="text" class="form-control mb-3" v-on:keyup="filtrarPedidos" v-model="pedidosFiltro" placeholder="Digite para buscar o pedido na tabela abaixo">
+                <table class="table table-striped table-hover table-bordered table-sm table-responsive">
+                  <thead>
+                    <tr>
+                      <th class="sm-header" scope="col">Empresa</th>
+                      <th class="sm-header" scope="col">Pedido Cliente</th>
+                      <th class="sm-header" scope="col">Pedido Feeling</th>
+                      <th class="sm-header" scope="col">Emissão</th>
+                      <th class="sm-header" scope="col">Cliente</th>
+                      <th class="sm-header" scope="col">Representada</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="pedidoRow in pedidosFiltrados" :key="pedidoRow.NUMPED" class="mouseHover" @click="selectPedido(pedidoRow)">
+                      <th class="fw-normal sm" scope="row">{{ pedidoRow.CODEMP }}</th>
+                      <th class="fw-normal sm">{{ pedidoRow.PEDCLI }}</th>
+                      <th class="fw-normal sm">{{ pedidoRow.NUMPED }}</th>
+                      <th class="fw-normal sm">{{ pedidoRow.DATEMI }}</th>
+                      <th class="fw-normal sm">{{ pedidoRow.NOMCLI }}</th>
+                      <th class="fw-normal sm">{{ pedidoRow.NOMREP }}</th>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div v-else>
+                <label>Buscando pedidos ...</label>
               </div>
             </div>
             <div class="modal-footer">
@@ -509,13 +554,16 @@ export default {
       comps: null,
       clientesFiltrados: null,
       pedidosClienteFiltrados: null,
+      pedidosFiltrados: null,
       estilosFiltrados: null,
       configsFiltrados: null,
       compsFiltrados: null,
       cliente: '',
+      pedidos: null,
       pedidosCliente: null,
       clientesFiltro: '',
       pedidosClienteFiltro: '',
+      pedidosFiltro: '',
       estilosFiltro: '',
       configsFiltro: '',
       compsFiltro: '',
@@ -596,6 +644,26 @@ export default {
             console.log(err)
           })
       }
+    },
+    buscaPedidos () {
+      this.pedidos = null
+      this.pedidosFiltro = ''
+      document.getElementsByTagName('body')[0].style.cursor = 'wait'
+      document.getElementById('btnBuscaPedidos').disabled = true
+      const token = sessionStorage.getItem('token')
+      axios.get('http://localhost:8080/pedidos?token=' + token)
+        .then((response) => {
+          this.checkInvalidLoginResponse(response.data)
+          this.pedidos = response.data.pedidos
+          this.pedidosFiltrados = response.data.pedidos
+          document.getElementsByTagName('body')[0].style.cursor = 'auto'
+          document.getElementById('btnBuscaPedidos').disabled = false
+        })
+        .catch((err) => {
+          document.getElementsByTagName('body')[0].style.cursor = 'auto'
+          document.getElementById('btnBuscaPedidos').disabled = false
+          console.log(err)
+        })
     },
     buscaEstilos (item) {
       this.itemSelecionado = item
@@ -684,7 +752,7 @@ export default {
       this.frete = 'FOB'
       this.empresasCliente = []
       document.getElementById('closeModalClientes').click()
-      this.buscarDadosCliente(this.cliente)
+      this.buscarDadosCliente(this.cliente, false)
     },
     selectPedidoCliente (pedidoClienteClicked) {
       this.numPed = pedidoClienteClicked.NUMPED
@@ -693,6 +761,26 @@ export default {
       this.carregarCabecalho()
       this.carregarItens()
       document.getElementById('closeModalPedidosCliente').click()
+    },
+    selectPedido (pedidoClicked) {
+      const formatter = new StringMask('99.999.999/0000-00')
+      this.numPed = pedidoClicked.NUMPED
+      this.pedCli = pedidoClicked.PEDCLI
+      this.empresa = pedidoClicked.CODEMP
+      this.cliente = pedidoClicked.CODCLI
+      this.nomCli = pedidoClicked.NOMCLI
+      this.email = pedidoClicked.INTNET
+      this.telefone = pedidoClicked.FONCLI
+      this.cnpj = formatter.apply(pedidoClicked.CGCCPF)
+      this.endereco = pedidoClicked.ENDCPL
+      this.cidadeUF = pedidoClicked.CIDEST
+      this.inscrEst = pedidoClicked.INSEST
+      this.transportadora = pedidoClicked.NOMTRA
+      this.representada = pedidoClicked.NOMREP
+      this.buscarDadosCliente(this.cliente, true)
+      this.carregarCabecalho()
+      this.carregarItens()
+      document.getElementById('closeModalPedidos').click()
     },
     selectEstilo (estiloClicked) {
       this.itemSelecionado.estilo = estiloClicked.DESCPR
@@ -721,17 +809,19 @@ export default {
       document.getElementById('closeModalComps').click()
       this.itemSelecionado = null
     },
-    buscarDadosCliente (codCli) {
+    buscarDadosCliente (codCli, apenasEmpresas) {
       const token = sessionStorage.getItem('token')
       axios.get('http://localhost:8080/dadosCliente?token=' + token + '&codCli=' + codCli)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           this.dadosCliente = response.data.dadosCliente
           if (this.dadosCliente.length > 0) {
-            this.codTransportadora = this.dadosCliente[0].CODTRA
-            this.transportadora = this.dadosCliente[0].NOMTRA
-            this.codRepresentada = this.dadosCliente[0].CODREP
-            this.representada = this.dadosCliente[0].NOMREP
+            if (!apenasEmpresas) {
+              this.codTransportadora = this.dadosCliente[0].CODTRA
+              this.transportadora = this.dadosCliente[0].NOMTRA
+              this.codRepresentada = this.dadosCliente[0].CODREP
+              this.representada = this.dadosCliente[0].NOMREP
+            }
             this.dadosCliente.forEach(empresa => {
               this.empresasCliente.push({
                 CODEMP: empresa.CODEMP, NOMEMP: empresa.NOMEMP
@@ -834,6 +924,9 @@ export default {
     },
     filtrarPedidosCliente () {
       this.pedidosClienteFiltrados = this.pedidosCliente.filter(pedido => pedido.PEDCLI.toUpperCase().startsWith(this.pedidosClienteFiltro.toUpperCase()))
+    },
+    filtrarPedidos () {
+      this.pedidosFiltrados = this.pedidos.filter(pedido => pedido.NUMPED.toUpperCase().startsWith(this.pedidosFiltro.toUpperCase()))
     },
     filtrarEstilos () {
       this.estilosFiltrados = this.estilos.filter(estilo => estilo.DESCPR.toUpperCase().startsWith(this.estilosFiltro.toUpperCase()))
@@ -1004,6 +1097,9 @@ export default {
           this.checkInvalidLoginResponse(response.data.pedido)
           this.prevFaturamento = response.data.pedido[0].DATENT
           this.condPagamento = response.data.pedido[0].DESCPG
+          this.frete = response.data.pedido[0].CIFFOB === 'F' ? 'FOB' : 'CIF'
+          this.codTransportadora = response.data.pedido[0].CODTRA
+          this.codRepresentada = response.data.pedido[0].CODREP
           this.enviadoEmpresa = (response.data.pedido[0].SITPED === '3' || response.data.pedido[0].SITPED === '4' || response.data.pedido[0].SITPED === '5')
         })
         .catch((err) => {
