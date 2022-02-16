@@ -68,8 +68,8 @@
           <div class="col-3">
             <div class="input-group input-group-sm">
               <span class="input-group-text">Pedido Cliente</span>
-              <input id="pedCli" class="form-control" type="text" v-model="pedCli">
-              <button id="btnBuscaPedidosCliente" class="btn btn-secondary input-group-btn">...</button>
+              <input id="pedCli" class="form-control" :disabled="enviadoEmpresa" type="text" v-model="pedCli">
+              <button id="btnBuscaPedidosCliente" :disabled="enviadoEmpresa" class="btn btn-secondary input-group-btn" @click="buscaPedidosCliente" data-bs-toggle="modal" data-bs-target="#pedidosClienteModal">...</button>
             </div>
           </div>
           <div class="col-5">
@@ -181,6 +181,56 @@
               </div>
               <div v-else>
                 <label>Buscando clientes ...</label>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fechar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Pedidos Clientes -->
+      <div class="modal fade" id="pedidosClienteModal" tabindex="-1" aria-labelledby="pedidosClientesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-xl">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="pedidosClientesModalLabel">Busca de Pedidos de Clientes</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalPedidosCliente"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3" v-if="cliente !== ''">
+                <div class="mb-3" v-if="pedidosCliente != null">
+                  <input type="text" class="form-control mb-3" v-on:keyup="filtrarPedidosCliente" v-model="pedidosClienteFiltro" placeholder="Digite para buscar o pedido do cliente na tabela abaixo">
+                  <table class="table table-striped table-hover table-bordered table-sm table-responsive">
+                    <thead>
+                      <tr>
+                        <th class="sm-header" scope="col">Empresa</th>
+                        <th class="sm-header" scope="col">Pedido Cliente</th>
+                        <th class="sm-header" scope="col">Pedido Feeling</th>
+                        <th class="sm-header" scope="col">Emissão</th>
+                        <th class="sm-header" scope="col">Cliente</th>
+                        <th class="sm-header" scope="col">Representada</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="pedidoClienteRow in pedidosClienteFiltrados" :key="pedidoClienteRow.NUMPED" class="mouseHover" @click="selectPedidoCliente(pedidoClienteRow)">
+                        <th class="fw-normal sm" scope="row">{{ pedidoClienteRow.CODEMP }}</th>
+                        <th class="fw-normal sm">{{ pedidoClienteRow.PEDCLI }}</th>
+                        <th class="fw-normal sm">{{ pedidoClienteRow.NUMPED }}</th>
+                        <th class="fw-normal sm">{{ pedidoClienteRow.DATEMI }}</th>
+                        <th class="fw-normal sm">{{ pedidoClienteRow.NOMCLI }}</th>
+                        <th class="fw-normal sm">{{ pedidoClienteRow.NOMREP }}</th>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div v-else>
+                  <label>Buscando pedidos ...</label>
+                </div>
+              </div>
+              <div v-else>
+                <label>Favor selecionar um cliente!</label>
               </div>
             </div>
             <div class="modal-footer">
@@ -458,11 +508,14 @@ export default {
       configs: null,
       comps: null,
       clientesFiltrados: null,
+      pedidosClienteFiltrados: null,
       estilosFiltrados: null,
       configsFiltrados: null,
       compsFiltrados: null,
       cliente: '',
+      pedidosCliente: null,
       clientesFiltro: '',
+      pedidosClienteFiltro: '',
       estilosFiltro: '',
       configsFiltro: '',
       compsFiltro: '',
@@ -480,7 +533,6 @@ export default {
       representada: '',
       empresa: '',
       empresasCliente: [],
-      pedidoCliente: 0,
       addingProduct: false,
       itens: [],
       itemSelecionado: null,
@@ -503,24 +555,47 @@ export default {
       }
     },
     buscaClientes () {
-      this.clientes = null
       this.clientesFiltro = ''
-      document.getElementsByTagName('body')[0].style.cursor = 'wait'
-      document.getElementById('btnBuscaClientes').disabled = true
-      const token = sessionStorage.getItem('token')
-      axios.get('http://localhost:8080/clientes?token=' + token)
-        .then((response) => {
-          this.checkInvalidLoginResponse(response.data)
-          this.clientes = response.data.clientes
-          this.clientesFiltrados = response.data.clientes
-          document.getElementsByTagName('body')[0].style.cursor = 'auto'
-          document.getElementById('btnBuscaClientes').disabled = false
-        })
-        .catch((err) => {
-          document.getElementsByTagName('body')[0].style.cursor = 'auto'
-          document.getElementById('btnBuscaClientes').disabled = false
-          console.log(err)
-        })
+      if (this.clientes === null) {
+        document.getElementsByTagName('body')[0].style.cursor = 'wait'
+        document.getElementById('btnBuscaClientes').disabled = true
+        const token = sessionStorage.getItem('token')
+        axios.get('http://localhost:8080/clientes?token=' + token)
+          .then((response) => {
+            this.checkInvalidLoginResponse(response.data)
+            this.clientes = response.data.clientes
+            this.clientesFiltrados = response.data.clientes
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
+            document.getElementById('btnBuscaClientes').disabled = false
+          })
+          .catch((err) => {
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
+            document.getElementById('btnBuscaClientes').disabled = false
+            console.log(err)
+          })
+      }
+    },
+    buscaPedidosCliente () {
+      if (this.cliente !== '') {
+        this.pedidosCliente = null
+        this.pedidosClienteFiltro = ''
+        document.getElementsByTagName('body')[0].style.cursor = 'wait'
+        document.getElementById('btnBuscaPedidosCliente').disabled = true
+        const token = sessionStorage.getItem('token')
+        axios.get('http://localhost:8080/pedidosCliente?cli=' + this.cliente + '&token=' + token)
+          .then((response) => {
+            this.checkInvalidLoginResponse(response.data)
+            this.pedidosCliente = response.data.pedidos
+            this.pedidosClienteFiltrados = response.data.pedidos
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
+            document.getElementById('btnBuscaPedidosCliente').disabled = false
+          })
+          .catch((err) => {
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
+            document.getElementById('btnBuscaPedidosCliente').disabled = false
+            console.log(err)
+          })
+      }
     },
     buscaEstilos (item) {
       this.itemSelecionado = item
@@ -610,6 +685,14 @@ export default {
       this.empresasCliente = []
       document.getElementById('closeModalClientes').click()
       this.buscarDadosCliente(this.cliente)
+    },
+    selectPedidoCliente (pedidoClienteClicked) {
+      this.numPed = pedidoClienteClicked.NUMPED
+      this.pedCli = pedidoClienteClicked.PEDCLI
+      this.empresa = pedidoClienteClicked.CODEMP
+      this.carregarCabecalho()
+      this.carregarItens()
+      document.getElementById('closeModalPedidosCliente').click()
     },
     selectEstilo (estiloClicked) {
       this.itemSelecionado.estilo = estiloClicked.DESCPR
@@ -707,7 +790,7 @@ export default {
               codFil: 1,
               numPed: 0,
               codCli: this.cliente,
-              pedCli: this.pedidoCliente,
+              pedCli: this.pedCli !== '' ? this.pedCli : 0,
               codRep: this.codRepresentada,
               codTra: this.codTransportadora,
               cifFob: 'F'
@@ -749,6 +832,9 @@ export default {
     filtrarClientes () {
       this.clientesFiltrados = this.clientes.filter(cliente => cliente.NOMCLI.toUpperCase().startsWith(this.clientesFiltro.toUpperCase()))
     },
+    filtrarPedidosCliente () {
+      this.pedidosClienteFiltrados = this.pedidosCliente.filter(pedido => pedido.PEDCLI.toUpperCase().startsWith(this.pedidosClienteFiltro.toUpperCase()))
+    },
     filtrarEstilos () {
       this.estilosFiltrados = this.estilos.filter(estilo => estilo.DESCPR.toUpperCase().startsWith(this.estilosFiltro.toUpperCase()))
     },
@@ -779,6 +865,8 @@ export default {
       this.itens = []
       this.pedCli = ''
       this.enviadoEmpresa = false
+      this.prevFaturamento = ''
+      this.condPagamento = ''
       document.getElementById('btnBuscaPedidosCliente').disabled = false
       document.getElementById('btnBuscaClientes').disabled = false
     },
@@ -916,7 +1004,7 @@ export default {
           this.checkInvalidLoginResponse(response.data.pedido)
           this.prevFaturamento = response.data.pedido[0].DATENT
           this.condPagamento = response.data.pedido[0].DESCPG
-          this.enviadoEmpresa = (response.data.pedido[0].SITPED === 3 || response.data.pedido[0].SITPED === 4 || response.data.pedido[0].SITPED === 5)
+          this.enviadoEmpresa = (response.data.pedido[0].SITPED === '3' || response.data.pedido[0].SITPED === '4' || response.data.pedido[0].SITPED === '5')
         })
         .catch((err) => {
           console.log(err)
