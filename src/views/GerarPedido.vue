@@ -33,7 +33,7 @@
           </div>
           <div class="col-6">
             <div class="float-end">
-              <button id="btnSalvar" class="btn btn-secondary btn-sm" :disabled="enviadoEmpresa" data-bs-toggle="modal" data-bs-target="#confirmaPedidoModal">Salvar</button>
+              <button id="btnSalvar" class="btn btn-secondary btn-sm" :disabled="numPed !== ''" data-bs-toggle="modal" data-bs-target="#confirmaPedidoModal">Salvar</button>
             </div>
           </div>
         </div>
@@ -68,8 +68,8 @@
           <div class="col-3">
             <div class="input-group input-group-sm">
               <span class="input-group-text">Pedido Cliente</span>
-              <input id="pedCli" class="form-control" :disabled="enviadoEmpresa" type="text" v-model="pedCli">
-              <button id="btnBuscaPedidosCliente" :disabled="enviadoEmpresa" class="btn btn-secondary input-group-btn" @click="buscaPedidosCliente" data-bs-toggle="modal" data-bs-target="#pedidosClienteModal">...</button>
+              <input id="pedCli" class="form-control" :disabled="numPed !== ''" type="text" v-model="pedCli">
+              <button id="btnBuscaPedidosCliente" :disabled="numPed !== ''" class="btn btn-secondary input-group-btn" @click="buscaPedidosCliente" data-bs-toggle="modal" data-bs-target="#pedidosClienteModal">...</button>
             </div>
           </div>
           <div class="col-5">
@@ -89,8 +89,8 @@
           <div class="col-3">
             <div class="input-group input-group-sm">
               <span class="input-group-text">Cliente</span>
-              <input id="nomCli" class="form-control" type="text" :disabled="numPed != '' && enviadoEmpresa" v-model="nomCli" placeholder="Clique ao lado para selecionar o cliente">
-              <button id="btnBuscaClientes" class="btn btn-secondary input-group-btn" :disabled="numPed != '' && enviadoEmpresa" @click="buscaClientes" data-bs-toggle="modal" data-bs-target="#clientesModal">...</button>
+              <input id="nomCli" class="form-control" type="text" :disabled="numPed !== ''" v-model="nomCli" placeholder="Clique ao lado para selecionar o cliente">
+              <button id="btnBuscaClientes" class="btn btn-secondary input-group-btn" :disabled="numPed !== ''" @click="buscaClientes" data-bs-toggle="modal" data-bs-target="#clientesModal">...</button>
             </div>
           </div>
           <div class="col-3">
@@ -344,7 +344,7 @@
                 <th class="fw-normal sm-header" style="width: 4%;"><small>Cnj.</small></th>
                 <th class="fw-normal sm-header" style="width: 14%;"><small>Estilo</small></th>
                 <th class="fw-normal sm-header" style="width: 18%;"><small>Configuração</small></th>
-                <th class="fw-normal sm-header" style="width: 9%;"><small>Comp.</small></th>
+                <th class="fw-normal sm-header" style="width: 9%;"><small>Comp. (cm)</small></th>
                 <th class="fw-normal sm-header" style="width: 4%"><small>UN</small></th>
                 <th class="fw-normal sm-header" style="width: 5%;"><small>Desc.</small></th>
                 <th class="fw-normal sm-header" style="width: 5%;"><small>Comiss.</small></th>
@@ -378,7 +378,7 @@
                 </td>
                 <td class="fw-normal">
                   <div class="input-group input-group-sm">
-                    <input id="inputComp" class="form-control sm" type="text" disabled v-model="item.comp">
+                    <input :id="'inputComp'+item.hash" class="form-control sm" type="text" :disabled="!item.condEsp === 'M'" v-model="item.comp">
                     <button :id="`btnBuscaComps`+item.hash" disabled class="btn btn-secondary input-group-btn sm" @click="buscaComps(item, item.codConfig)" data-bs-toggle="modal" data-bs-target="#compsModal">...</button>
                   </div>
                 </td>
@@ -801,10 +801,14 @@ export default {
       document.getElementById('btnBuscaComps' + this.itemSelecionado.hash).disabled = false
       this.itemSelecionado.comp = ''
       this.itemSelecionado.codComp = ''
-      this.itemSelecionado = null
+      this.buscarDerivacoes(configClicked.CODPRO)
+        .then((response) => {
+          this.itemSelecionado.derivacoesPossiveis = response.data.derivacoes
+          this.itemSelecionado = null
+        })
     },
     selectComp (compClicked) {
-      this.itemSelecionado.comp = compClicked.DESDER
+      this.itemSelecionado.comp = compClicked.CODDER
       this.itemSelecionado.codComp = compClicked.CODDER
       document.getElementById('closeModalComps').click()
       this.itemSelecionado = null
@@ -966,9 +970,13 @@ export default {
     handleCondicao (item) {
       if (item.condEsp === 'M') {
         alert('Informe o novo comprimento, em centímetros, para o produto. Produtos de medida especial tem acréscimo no valor de tabela.')
-        document.getElementById('inputComp').disabled = false
+        this.buscarDerivacoes(item.codConfig)
+          .then(response => {
+            item.derivacoesPossiveis = response.data.derivacoes
+          })
+        document.getElementById('inputComp' + item.hash).disabled = false
       } else {
-        document.getElementById('inputComp').disabled = true
+        document.getElementById('inputComp' + item.hash).disabled = true
         if (item.condEsp === 'D') {
           alert('Descreva o critério e desconto aplicado para a condição especial nas observações do item.')
         } else if (item.condEsp === 'C') {
@@ -982,14 +990,13 @@ export default {
     },
     salvarItens () {
       document.getElementById('closeModalSalvarItens').click()
-      const itensPedido = []
       let temErro = false
       this.itens.forEach(item => {
         if (item.un < 1 || item.un > 99) {
           alert('Erro: Existe(m) produto(s) com quantidade menor que zero ou maior que 99. Verifique!')
           temErro = true
         }
-        if (!item.cnj || !item.codEstilo || !item.codConfig || !item.codComp) {
+        if (!item.cnj || !item.codEstilo || !item.codConfig || (item.condEsp !== 'M' && !item.codComp)) {
           alert('Erro: Existe(m) produto(s) faltando definir conjunto, estilo, configuração ou comprimento. Verifique!')
           temErro = true
         }
@@ -1001,11 +1008,41 @@ export default {
           alert('Erro: Existe(m) produto(s) com condição especial que requer preenchimento de observação. Verifique!')
           temErro = true
         }
+        if (item.condEsp === 'M') {
+          if (!item.comp) {
+            alert('Erro: Existe(m) produto(s) com medida especial sem o comprimento preenchido. Verifique!')
+            temErro = true
+          } else {
+            let compMaisProximo = ''
+            let menorDistancia = 1000000
+            console.log(item.derivacoesPossiveis)
+            compMaisProximo = item.derivacoesPossiveis[0].CODDER
+            item.derivacoesPossiveis.forEach(comp => {
+              if (comp.CODDER !== compMaisProximo) {
+                let distancia = Number(comp.CODDER) - Number(item.comp)
+                if (distancia < 0) distancia *= -1
+                if (distancia <= menorDistancia) {
+                  menorDistancia = distancia
+                  compMaisProximo = comp.CODDER
+                }
+              }
+            })
+            item.codComp = compMaisProximo
+            console.log('Tem LARDER')
+          }
+        }
       })
+      if (!temErro) {
+        this.enviarItens()
+      }
+    },
+    enviarItens () {
+      const itensPedido = []
       const itensChecarCnj = [...this.itens]
       itensChecarCnj.sort(this.compare)
       let cnjIni = itensChecarCnj[0].cnj
       let estiloIni = itensChecarCnj[0].codEstilo
+      let temErro = false
       itensChecarCnj.forEach(item => {
         if (item.cnj === cnjIni && item.codEstilo !== estiloIni) {
           alert('Erro: Existe(m) produto(s) com o mesmo número do conjunto (conj. ' + item.cnj + ') mas com estilos diferentes. Verifique!')
@@ -1030,6 +1067,7 @@ export default {
               codPro: item.codConfig,
               desPro: (item.config + ' ' + item.comp),
               codDer: item.codComp,
+              derEsp: item.condEsp === 'M' ? item.comp : '',
               seqIpd: 0,
               qtdPed: item.un,
               preUni: 1000,
@@ -1055,6 +1093,7 @@ export default {
           }
         )
         const headers = { headers: { 'Content-Type': 'application/json' } }
+        console.log('INSERINDO ITENS')
         axios.post('http://localhost:8080/pedido/itens?token=' + token, body, headers)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
@@ -1080,6 +1119,10 @@ export default {
             console.log(err)
           })
       }
+    },
+    buscarDerivacoes (config) {
+      const token = sessionStorage.getItem('token')
+      return axios.get('http://localhost:8080/derivacoesPorProduto?emp=1&produto=' + config + '&token=' + token)
     },
     compare (a, b) {
       if (a.cnj < b.cnj) {
@@ -1122,7 +1165,7 @@ export default {
                 codConfig: item.CODPRO,
                 config: item.DESPRO,
                 codComp: item.CODDER,
-                comp: item.DESDER,
+                comp: item.CNDESP === 'M' ? item.LARDER : item.CODDER,
                 un: item.QTDPED,
                 desc: Number(item.PERDSC).toFixed(2).toLocaleString() + ' %',
                 comiss: Number(item.PERCOM).toFixed(2).toLocaleString() + ' %',
