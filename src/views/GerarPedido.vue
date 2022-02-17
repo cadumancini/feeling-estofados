@@ -404,6 +404,44 @@
             </tbody>
           </table>
         </div>
+        <div class="row">
+          <div class="col-2">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Total (Kg)</span>
+              <input id="totalKg" class="form-control" type="text" disabled v-model="totalKg">
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Total (m³)</span>
+              <input id="totalM3" class="form-control" type="text" disabled v-model="totalM3">
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Total (R$)</span>
+              <input id="totalValor" class="form-control" type="text" disabled v-model="totalValor">
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">IPI (R$)</span>
+              <input id="ipiValor" class="form-control" type="text" disabled v-model="ipiValor">
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">ICMS (R$)</span>
+              <input id="icmsValor" class="form-control" type="text" disabled v-model="icmsValor">
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">NF (R$)</span>
+              <input id="nfValor" class="form-control" type="text" disabled v-model="nfValor">
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Modal Estilos -->
@@ -586,7 +624,13 @@ export default {
       itemSelecionado: null,
       numPed: '',
       pedCli: '',
-      enviadoEmpresa: false
+      enviadoEmpresa: false,
+      totalKg: 0,
+      totalM3: 0,
+      totalValor: 0,
+      ipiValor: 0,
+      icmsValor: 0,
+      nfValor: 0
     }
   },
   mounted () {
@@ -1152,6 +1196,12 @@ export default {
     carregarItens () {
       const token = sessionStorage.getItem('token')
       this.itens = []
+      this.totalKg = parseFloat(0)
+      this.totalM3 = parseFloat(0)
+      this.totalValor = parseFloat(0)
+      this.ipiValor = parseFloat(0)
+      this.icmsValor = parseFloat(0)
+      this.nfValor = parseFloat(0)
       axios.get('http://localhost:8080/itensPedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + token)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
@@ -1176,7 +1226,19 @@ export default {
                 hash: Math.floor(Math.random() * ((this.itens.length + 1) * 1000))
               }
             )
+            this.totalKg = parseFloat(this.totalKg) + parseFloat(item.PESIPD)
+            this.totalM3 = parseFloat(this.totalM3) + parseFloat(item.VOLIPD)
+            this.totalValor = parseFloat(this.totalValor) + parseFloat(parseInt(item.QTDPED) * parseFloat(item.VLRIPD))
+            this.ipiValor = parseFloat(this.ipiValor) + parseFloat(item.IPIIPD)
+            this.icmsValor = parseFloat(this.icmsValor) + parseFloat(item.ICMIPD)
+            this.nfValor = parseFloat(this.nfValor) + parseFloat(item.NFVIPD)
           })
+          this.totalKg = parseFloat(this.totalKg).toFixed(2)
+          this.totalM3 = parseFloat(this.totalM3).toFixed(2)
+          this.totalValor = parseFloat(this.totalValor).toFixed(2)
+          this.ipiValor = parseFloat(this.ipiValor).toFixed(2)
+          this.icmsValor = parseFloat(this.icmsValor).toFixed(2)
+          this.nfValor = parseFloat(this.nfValor).toFixed(2)
         })
         .catch((err) => {
           console.log(err)
