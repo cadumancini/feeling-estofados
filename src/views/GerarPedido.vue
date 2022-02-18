@@ -356,7 +356,9 @@
             </thead>
             <tbody>
               <tr v-for="item in itens" :key="item.codPro">
-                <td class="fw-normal"><button class="btn btn-sm btn-secondary sm" :disabled="!item.seqIpd || enviadoEmpresa"><font-awesome-icon icon="edit"/></button></td>
+                <td class="fw-normal">
+                  <button class="btn btn-sm btn-secondary sm" @click="setIpdModal(item)" data-bs-toggle="modal" data-bs-target="#manipulacaoModal" :disabled="!item.seqIpd || enviadoEmpresa"><font-awesome-icon icon="edit"/></button>
+                </td>
                 <td class="fw-normal">
                   <div class="input-group input-group-sm">
                     <input class="form-control sm" :disabled="enviadoEmpresa"
@@ -444,12 +446,30 @@
         </div>
       </div>
 
+      <!-- Modal Manipulação -->
+      <div class="modal fade" id="manipulacaoModal" tabindex="-1" aria-labelledby="manipulacaoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-xl">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="manipulacaoModalLabel">Manipulação de Estrutura</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalManipulacao"></button>
+            </div>
+            <div class="modal-body">
+              <ManipularPedido ref="manipularPedido" :numPed="numPed"/>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fechar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Modal Estilos -->
       <div class="modal fade" id="estilosModal" tabindex="-1" aria-labelledby="estilosModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable modal-lg">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="clientesModalLabel">Busca de Estilos</h5>
+              <h5 class="modal-title" id="estilosModalLabel">Busca de Estilos</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalEstilos"></button>
             </div>
             <div class="modal-body">
@@ -579,11 +599,12 @@
 
 <script>
 import Navbar from '../components/Navbar.vue'
+import ManipularPedido from './ManipularPedido.vue'
 import axios from 'axios'
 import StringMask from 'string-mask'
 export default {
   name: 'GerarPedido',
-  components: { Navbar },
+  components: { Navbar, ManipularPedido },
   data () {
     return {
       clientes: null,
@@ -1267,6 +1288,16 @@ export default {
             console.log(err)
           })
       }
+    },
+    setIpdModal (item) {
+      const itemManipular = {
+        CODEMP: this.empresa,
+        SEQIPD: item.seqIpd,
+        CODPRO: item.codConfig,
+        CODDER: item.codComp,
+        MANIPULAR: false
+      }
+      this.$refs.manipularPedido.setarItem(itemManipular)
     }
   }
 }
