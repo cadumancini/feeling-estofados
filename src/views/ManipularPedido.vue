@@ -1,11 +1,6 @@
 <template>
   <div class="mx-3">
     <div class="row mb-1">
-      <button id="btnManipular" class="btn btn-secondary btn-sm" @click="manipularItem" v-bind:class="{ 'btn-dismiss': item.MANIPULAR }">
-        {{item.MANIPULAR ? 'Esconder estrutura' : 'Carregar estrutura'}}
-      </button>
-    </div>
-    <div class="row mb-1">
       <table v-if="item.MANIPULAR" class="table table-hover table-bordered table-sm table-responsive">
         <thead>
           <tr class="table-secondary">
@@ -36,20 +31,21 @@
 import TreeItem from '../components/TreeItem.vue'
 import axios from 'axios'
 export default {
-  props: ['numPed'],
   components: { TreeItem },
+  props: ['seqIpd', 'numPed'],
   data () {
     return {
-      pedido: this.numPed,
+      pedido: 0,
       item: {},
       trocas: []
     }
   },
+  created () {
+    this.pedido = this.numPed
+    this.item = this.seqIpd
+    this.manipularItem()
+  },
   methods: {
-    setarItem (item) {
-      this.item = item
-      console.log(this.item)
-    },
     checkInvalidLoginResponse (response) {
       if (response === 'Token inválido.') {
         alert('Seu token de acesso não é mais válido. É necessário fazer login novamente.')
@@ -58,7 +54,6 @@ export default {
       }
     },
     async manipularItem () {
-      console.log(this.item)
       if (this.item.MANIPULAR) {
         this.item.MANIPULAR = false
       } else {

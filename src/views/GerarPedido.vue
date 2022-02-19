@@ -26,7 +26,7 @@
         </div>
       </div>
       <div class="border border-2 rounded-3 px-2 py-2">
-        <div class="row mb-3">
+        <div class="row mb-2">
           <div class="col-6">
             <span class="fw-bold fs-5">Dados Gerais</span>
             <span v-if="enviadoEmpresa" class="ms-3 fs-6 fst-italic text-danger">O pedido encontra-se bloqueado para alteração.</span>
@@ -37,98 +37,100 @@
             </div>
           </div>
         </div>
-        <div class="row mb-3">
-          <div class="col-3">
-            <div class="input-group input-group-sm">
-              <span class="input-group-text">Nº Pedido</span>
-              <input id="numPed" class="form-control" type="text" disabled v-model="numPed">
-              <button id="btnBuscaPedidos" class="btn btn-secondary input-group-btn" @click="buscaPedidos" data-bs-toggle="modal" data-bs-target="#pedidosModal">...</button>
+        <div v-if="!manipulando">
+          <div class="row mb-3">
+            <div class="col-3">
+              <div class="input-group input-group-sm">
+                <span class="input-group-text">Nº Pedido</span>
+                <input id="numPed" class="form-control" type="text" disabled v-model="numPed">
+                <button id="btnBuscaPedidos" class="btn btn-secondary input-group-btn" @click="buscaPedidos" data-bs-toggle="modal" data-bs-target="#pedidosModal">...</button>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="input-group input-group-sm">
+                <span class="input-group-text">Transportadora</span>
+                <input id="transportadora" class="form-control" type="text" disabled v-model="transportadora">
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="input-group input-group-sm">
+                <span class="input-group-text">Frete</span>
+                <input id="frete" class="form-control" type="text" disabled v-model="frete">
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="input-group input-group-sm">
+                <span class="input-group-text">Previsão faturamento</span>
+                <input id="prevFaturamento" class="form-control" type="text" disabled v-model="prevFaturamento">
+              </div>
             </div>
           </div>
-          <div class="col-3">
-            <div class="input-group input-group-sm">
-              <span class="input-group-text">Transportadora</span>
-              <input id="transportadora" class="form-control" type="text" disabled v-model="transportadora">
+          <div class="row mb-3">
+            <div class="col-3">
+              <div class="input-group input-group-sm">
+                <span class="input-group-text">Pedido Cliente</span>
+                <input id="pedCli" class="form-control" :disabled="numPed !== ''" type="text" v-model="pedCli">
+                <button id="btnBuscaPedidosCliente" :disabled="numPed !== ''" class="btn btn-secondary input-group-btn" @click="buscaPedidosCliente" data-bs-toggle="modal" data-bs-target="#pedidosClienteModal">...</button>
+              </div>
+            </div>
+            <div class="col-5">
+              <div class="input-group input-group-sm">
+                <span class="input-group-text">Representada</span>
+                <input id="representada" class="form-control" type="text" disabled v-model="representada">
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="input-group input-group-sm">
+                <span class="input-group-text">Condição de pagamento</span>
+                <input id="condPagamento" class="form-control" type="text" disabled v-model="condPagamento">
+              </div>
             </div>
           </div>
-          <div class="col-3">
-            <div class="input-group input-group-sm">
-              <span class="input-group-text">Frete</span>
-              <input id="frete" class="form-control" type="text" disabled v-model="frete">
+          <div class="row mb-3">
+            <div class="col-3">
+              <div class="input-group input-group-sm">
+                <span class="input-group-text">Cliente</span>
+                <input id="nomCli" class="form-control" type="text" :disabled="numPed !== ''" v-model="nomCli" placeholder="Clique ao lado para selecionar o cliente">
+                <button id="btnBuscaClientes" class="btn btn-secondary input-group-btn" :disabled="numPed !== ''" @click="buscaClientes" data-bs-toggle="modal" data-bs-target="#clientesModal">...</button>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="input-group input-group-sm">
+                <span class="input-group-text">E-mail</span>
+                <input id="email" class="form-control" type="text" disabled v-model="email">
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="input-group input-group-sm">
+                <span class="input-group-text">Fone</span>
+                <input id="telefone" class="form-control" type="text" disabled v-model="telefone">
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="input-group input-group-sm">
+                <span class="input-group-text">CNPJ</span>
+                <input id="cnpj" class="form-control" type="text" disabled v-model="cnpj">
+              </div>
             </div>
           </div>
-          <div class="col-3">
-            <div class="input-group input-group-sm">
-              <span class="input-group-text">Previsão faturamento</span>
-              <input id="prevFaturamento" class="form-control" type="text" disabled v-model="prevFaturamento">
+          <div class="row">
+            <div class="col-4">
+              <div class="input-group input-group-sm">
+                <span class="input-group-text">Endereço</span>
+                <input id="endereco" class="form-control" type="text" disabled v-model="endereco">
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-3">
-            <div class="input-group input-group-sm">
-              <span class="input-group-text">Pedido Cliente</span>
-              <input id="pedCli" class="form-control" :disabled="numPed !== ''" type="text" v-model="pedCli">
-              <button id="btnBuscaPedidosCliente" :disabled="numPed !== ''" class="btn btn-secondary input-group-btn" @click="buscaPedidosCliente" data-bs-toggle="modal" data-bs-target="#pedidosClienteModal">...</button>
+            <div class="col-4">
+              <div class="input-group input-group-sm">
+                <span class="input-group-text">Cidade/UF</span>
+                <input id="cidadeUF" class="form-control" type="text" disabled v-model="cidadeUF">
+              </div>
             </div>
-          </div>
-          <div class="col-5">
-            <div class="input-group input-group-sm">
-              <span class="input-group-text">Representada</span>
-              <input id="representada" class="form-control" type="text" disabled v-model="representada">
-            </div>
-          </div>
-          <div class="col-4">
-            <div class="input-group input-group-sm">
-              <span class="input-group-text">Condição de pagamento</span>
-              <input id="condPagamento" class="form-control" type="text" disabled v-model="condPagamento">
-            </div>
-          </div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-3">
-            <div class="input-group input-group-sm">
-              <span class="input-group-text">Cliente</span>
-              <input id="nomCli" class="form-control" type="text" :disabled="numPed !== ''" v-model="nomCli" placeholder="Clique ao lado para selecionar o cliente">
-              <button id="btnBuscaClientes" class="btn btn-secondary input-group-btn" :disabled="numPed !== ''" @click="buscaClientes" data-bs-toggle="modal" data-bs-target="#clientesModal">...</button>
-            </div>
-          </div>
-          <div class="col-3">
-            <div class="input-group input-group-sm">
-              <span class="input-group-text">E-mail</span>
-              <input id="email" class="form-control" type="text" disabled v-model="email">
-            </div>
-          </div>
-          <div class="col-3">
-            <div class="input-group input-group-sm">
-              <span class="input-group-text">Fone</span>
-              <input id="telefone" class="form-control" type="text" disabled v-model="telefone">
-            </div>
-          </div>
-          <div class="col-3">
-            <div class="input-group input-group-sm">
-              <span class="input-group-text">CNPJ</span>
-              <input id="cnpj" class="form-control" type="text" disabled v-model="cnpj">
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-4">
-            <div class="input-group input-group-sm">
-              <span class="input-group-text">Endereço</span>
-              <input id="endereco" class="form-control" type="text" disabled v-model="endereco">
-            </div>
-          </div>
-          <div class="col-4">
-            <div class="input-group input-group-sm">
-              <span class="input-group-text">Cidade/UF</span>
-              <input id="cidadeUF" class="form-control" type="text" disabled v-model="cidadeUF">
-            </div>
-          </div>
-          <div class="col-4">
-            <div class="input-group input-group-sm">
-              <span class="input-group-text">Insc. Est.</span>
-              <input id="inscrEst" class="form-control" type="text" disabled v-model="inscrEst">
+            <div class="col-4">
+              <div class="input-group input-group-sm">
+                <span class="input-group-text">Insc. Est.</span>
+                <input id="inscrEst" class="form-control" type="text" disabled v-model="inscrEst">
+              </div>
             </div>
           </div>
         </div>
@@ -337,7 +339,7 @@
           </div>
         </div>
         <div class="row mx-0">
-          <table class="table table-striped table-hover table-bordered table-sm table-responsive">
+          <table class="table table-striped table-bordered table-sm table-responsive">
             <thead>
               <tr class="table-dark">
                 <th class="fw-normal sm-header" style="width: 2%;"><small><font-awesome-icon icon="edit"/></small></th>
@@ -354,10 +356,10 @@
                 <th class="fw-normal sm-header" style="width: 4%;"><small>Ação</small></th>
               </tr>
             </thead>
-            <tbody>
-              <tr v-for="item in itens" :key="item.codPro">
+            <tbody v-for="item in itens" :key="item.codPro">
+              <tr>
                 <td class="fw-normal">
-                  <button class="btn btn-sm btn-secondary sm" @click="setIpdModal(item)" data-bs-toggle="modal" data-bs-target="#manipulacaoModal" :disabled="!item.seqIpd || enviadoEmpresa"><font-awesome-icon icon="edit"/></button>
+                  <button class="btn btn-sm btn-secondary sm" @click="setManipular(item)" :disabled="!item.seqIpd || enviadoEmpresa"><font-awesome-icon icon="edit"/></button>
                 </td>
                 <td class="fw-normal">
                   <div class="input-group input-group-sm">
@@ -403,6 +405,18 @@
                 <td class="fw-normal"><small class="sm">{{item.vlrUnit}}</small></td>
                 <td><button class="btn btn-sm btn-danger sm" :disabled="enviadoEmpresa" @click="deleteItem(item)">Excluir</button></td>
               </tr>
+              <tr v-if="item.MANIPULAR">
+                <td colspan="12">
+                  <ManipularPedido ref="manipularPedido" :numPed="numPed" :seqIpd="{
+                                                                              CODEMP: empresa,
+                                                                              NUMPED: numPed,
+                                                                              SEQIPD: item.seqIpd,
+                                                                              CODPRO: item.codConfig,
+                                                                              CODDER: item.codComp,
+                                                                              MANIPULAR: false
+                                                                            }"/>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -441,24 +455,6 @@
             <div class="input-group input-group-sm">
               <span class="input-group-text">NF (R$)</span>
               <input id="nfValor" class="form-control" type="text" disabled v-model="nfValor">
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Modal Manipulação -->
-      <div class="modal fade" id="manipulacaoModal" tabindex="-1" aria-labelledby="manipulacaoModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable modal-xl">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="manipulacaoModalLabel">Manipulação de Estrutura</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalManipulacao"></button>
-            </div>
-            <div class="modal-body">
-              <ManipularPedido ref="manipularPedido" :numPed="numPed"/>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fechar</button>
             </div>
           </div>
         </div>
@@ -651,7 +647,8 @@ export default {
       totalValor: 0,
       ipiValor: 0,
       icmsValor: 0,
-      nfValor: 0
+      nfValor: 0,
+      manipulando: false
     }
   },
   mounted () {
@@ -1227,43 +1224,54 @@ export default {
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           response.data.itens.forEach(item => {
-            this.itens.push(
-              {
-                seqIpd: item.SEQIPD,
-                cnj: item.SEQPCL,
-                codEstilo: item.CODCPR,
-                estilo: item.DESCPR,
-                codConfig: item.CODPRO,
-                config: item.DESPRO,
-                codComp: item.CODDER,
-                comp: item.CNDESP === 'M' ? item.LARDER : item.CODDER,
-                un: item.QTDPED,
-                desc: Number(item.PERDSC).toFixed(2).toLocaleString() + ' %',
-                comiss: Number(item.PERCOM).toFixed(2).toLocaleString() + ' %',
-                condEsp: item.CNDESP,
-                datEnt: item.DATENT,
-                obs: item.OBSIPD,
-                vlrUnit: Number(item.VLRIPD).toFixed(2).toLocaleString(),
-                hash: Math.floor(Math.random() * ((this.itens.length + 1) * 1000))
-              }
-            )
-            this.totalKg = parseFloat(this.totalKg) + parseFloat(item.PESIPD)
-            this.totalM3 = parseFloat(this.totalM3) + parseFloat(item.VOLIPD)
-            this.totalValor = parseFloat(this.totalValor) + parseFloat(parseInt(item.QTDPED) * parseFloat(item.VLRIPD))
-            this.ipiValor = parseFloat(this.ipiValor) + parseFloat(item.IPIIPD)
-            this.icmsValor = parseFloat(this.icmsValor) + parseFloat(item.ICMIPD)
-            this.nfValor = parseFloat(this.nfValor) + parseFloat(item.NFVIPD)
+            this.buscarDerivacoes(item.CODPRO)
+              .then((response) => {
+                const derivacoesPossiveis = response.data.derivacoes
+                this.itemSelecionado = null
+                this.itens.push(
+                  {
+                    MANIPULAR: false,
+                    seqIpd: item.SEQIPD,
+                    cnj: item.SEQPCL,
+                    codEstilo: item.CODCPR,
+                    estilo: item.DESCPR,
+                    codConfig: item.CODPRO,
+                    config: item.DESPRO,
+                    codComp: item.CODDER,
+                    comp: item.CNDESP === 'M' ? item.LARDER : item.CODDER,
+                    un: item.QTDPED,
+                    desc: Number(item.PERDSC).toFixed(2).toLocaleString() + ' %',
+                    comiss: Number(item.PERCOM).toFixed(2).toLocaleString() + ' %',
+                    condEsp: item.CNDESP,
+                    datEnt: item.DATENT,
+                    obs: item.OBSIPD,
+                    vlrUnit: Number(item.VLRIPD).toFixed(2).toLocaleString(),
+                    hash: Math.floor(Math.random() * ((this.itens.length + 1) * 1000)),
+                    derivacoesPossiveis: derivacoesPossiveis
+                  }
+                )
+                this.itens.sort(this.compareSeqIpd)
+                this.totalKg = parseFloat(parseFloat(this.totalKg) + parseFloat(item.PESIPD)).toFixed(2)
+                this.totalM3 = parseFloat(parseFloat(this.totalM3) + parseFloat(item.VOLIPD)).toFixed(2)
+                this.totalValor = parseFloat(parseFloat(this.totalValor) + parseFloat(parseInt(item.QTDPED) * parseFloat(item.VLRIPD))).toFixed(2)
+                this.ipiValor = parseFloat(parseFloat(this.ipiValor) + parseFloat(item.IPIIPD)).toFixed(2)
+                this.icmsValor = parseFloat(parseFloat(this.icmsValor) + parseFloat(item.ICMIPD)).toFixed(2)
+                this.nfValor = parseFloat(parseFloat(this.nfValor) + parseFloat(item.NFVIPD)).toFixed(2)
+              })
           })
-          this.totalKg = parseFloat(this.totalKg).toFixed(2)
-          this.totalM3 = parseFloat(this.totalM3).toFixed(2)
-          this.totalValor = parseFloat(this.totalValor).toFixed(2)
-          this.ipiValor = parseFloat(this.ipiValor).toFixed(2)
-          this.icmsValor = parseFloat(this.icmsValor).toFixed(2)
-          this.nfValor = parseFloat(this.nfValor).toFixed(2)
         })
         .catch((err) => {
           console.log(err)
         })
+    },
+    compareSeqIpd (a, b) {
+      if (a.seqIpd < b.seqIpd) {
+        return -1
+      }
+      if (a.seqIpd > b.seqIpd) {
+        return 1
+      }
+      return 0
     },
     enviarEmpresa () {
       document.getElementById('closeModalEnviarEmpresa').click()
@@ -1289,15 +1297,15 @@ export default {
           })
       }
     },
-    setIpdModal (item) {
-      const itemManipular = {
-        CODEMP: this.empresa,
-        SEQIPD: item.seqIpd,
-        CODPRO: item.codConfig,
-        CODDER: item.codComp,
-        MANIPULAR: false
-      }
-      this.$refs.manipularPedido.setarItem(itemManipular)
+    setManipular (item) {
+      item.MANIPULAR = !item.MANIPULAR
+
+      this.manipulando = false
+      this.itens.forEach(item => {
+        if (item.MANIPULAR) {
+          this.manipulando = true
+        }
+      })
     }
   }
 }
@@ -1330,5 +1338,11 @@ export default {
   }
   .sm-header {
     font-size: 0.9rem !important;
+  }
+  .modal:nth-of-type(even) {
+    z-index: 1062 !important;
+  }
+  .modal-backdrop.show:nth-of-type(even) {
+    z-index: 1061 !important;
   }
 </style>

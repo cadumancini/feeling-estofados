@@ -25,8 +25,8 @@
       <div class="modal-dialog modal-dialog-scrollable modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="equivalentesModalLabel">Busca de Produtos Equivalentes</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModal"></button>
+            <h5 class="modal-title">Busca de Produtos Equivalentes</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" id="closeModal"></button>
           </div>
           <div class="modal-body">
             <div class="mb-3" v-if="item.equivalentes !== []">
@@ -193,41 +193,38 @@ export default {
 </script>
 
 <style scoped>
- /* .atencao, .temG {
-   background-color: #fffac2;
- } */
- th {
-   vertical-align: middle;
- }
- .align-center {
-   text-align: center;
- }
- .trocar {
-   background-color: #ffdede;
- }
- .pointer {
-   cursor: pointer;
- }
- .expand {
-   color: #28a745;
- }
- .success {
-   color: #28a745;
- }
- .contract {
-   /* color: #0d6efd; */
-   color: #007bbd;
- }
- .exchange {
-   color: #0d6efd;
- }
- .warning {
-   color: red;
- }
- .indent {
-   padding-left: var(--padding);
- }
- .font-small {
-   font-size: small;
- }
+  th {
+    vertical-align: middle;
+  }
+  .align-center {
+    text-align: center;
+  }
+  .trocar {
+    background-color: #ffdede;
+  }
+  .pointer {
+    cursor: pointer;
+  }
+  .expand {
+    color: #28a745;
+  }
+  .success {
+    color: #28a745;
+  }
+  .contract {
+    /* color: #0d6efd; */
+    color: #007bbd;
+  }
+  .exchange {
+    color: #0d6efd;
+  }
+  .warning {
+    color: red;
+  }
+  .indent {
+    padding-left: var(--padding);
+  }
+  .font-small {
+    font-size: small;
+  }
 </style>
