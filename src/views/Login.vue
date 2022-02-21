@@ -42,7 +42,7 @@ export default {
             this.$refs.inputUser.focus()
           } else {
             sessionStorage.setItem('token', response.data)
-            this.$router.push({ name: 'Home' })
+            this.$router.push({ name: 'GerarPedido' })
           }
         })
         .catch((err) => {

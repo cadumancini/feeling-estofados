@@ -73,6 +73,7 @@
     v-for="(child, index) in item.filhos"
     :key="index"
     :item="child"
+    :codEmp="codEmp"
     :level="(child.exiCmp !== 'S' && ((child.codDer === 'G' || child.proGen === 'S' || child.podeTrocar) || child.temG || child.filhoPodeTrocar)) ? level + 1 : level"
     @trocar="trocar"/>
 </template>
@@ -81,7 +82,7 @@
 import axios from 'axios'
 export default {
   name: 'TreeItem',
-  props: ['item', 'level'],
+  props: ['item', 'level', 'codEmp'],
   data () {
     return {
       isOpen: true
@@ -123,7 +124,7 @@ export default {
       item.equivalenteSelecionado = null
       document.getElementsByTagName('body')[0].style.cursor = 'wait'
       if (item.proGen === 'S') {
-        await axios.get('http://localhost:8080/equivalentes?emp=1&modelo=' + item.codMod + '&componente=' + item.codPro + '&token=' + token)
+        await axios.get('http://localhost:8080/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
@@ -134,7 +135,7 @@ export default {
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
           })
       } else if (item.podeTrocar) {
-        await axios.get('http://localhost:8080/equivalentesAdicionais?emp=1&modelo=' + item.codMod + '&componente=' + item.codPro + '&der=' + item.codDer + '&token=' + token)
+        await axios.get('http://localhost:8080/equivalentesAdicionais?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&der=' + item.codDer + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
@@ -145,13 +146,13 @@ export default {
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
           })
       } else {
-        await axios.get('http://localhost:8080/equivalentes?emp=1&modelo=' + item.codMod + '&componente=' + item.codPro + '&token=' + token)
+        await axios.get('http://localhost:8080/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&token=' + token)
           .then(async (response) => {
             this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
             if (!item.equivalentes.length) {
               item.equivalentes = []
-              await axios.get('http://localhost:8080/derivacoesPossiveis?emp=1&pro=' + item.codPro + '&token=' + token)
+              await axios.get('http://localhost:8080/derivacoesPossiveis?emp=' + this.codEmp + '&pro=' + item.codPro + '&token=' + token)
                 .then((response) => {
                   this.checkInvalidLoginResponse(response.data)
                   item.equivalentes = response.data.derivacoes

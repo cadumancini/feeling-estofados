@@ -20,6 +20,7 @@
             v-if="item.PRODUCTFOUND"
             :item="item.ACABADO"
             :level=0
+            :codEmp="item.CODEMP"
             @trocar="(itemTroca) => efetuarTroca(item, itemTroca)"/>
         </tbody>
       </table>
@@ -64,7 +65,7 @@ export default {
 
         var parseString = require('xml2js').parseString
         var json = null
-        const response = await axios.get('http://localhost:8080/estrutura?emp=1&fil=1&pro=' + this.item.CODPRO +
+        const response = await axios.get('http://localhost:8080/estrutura?emp=' + this.item.CODEMP + '&fil=1&pro=' + this.item.CODPRO +
           '&der=' + this.item.CODDER + '&ped=' + this.pedido + '&ipd=' + this.item.SEQIPD + '&token=' + token)
         this.checkInvalidLoginResponse(response.data)
         parseString(response.data, { explicitArray: false }, (err, result) => {
@@ -104,7 +105,7 @@ export default {
         }
         component.derMod = node.codDer
         const token = sessionStorage.getItem('token')
-        axios.get('http://localhost:8080/equivalentesAdicionais?emp=1&modelo=' + component.codMod + '&componente=' + component.codPro + '&der=' + component.codDer + '&token=' + token)
+        axios.get('http://localhost:8080/equivalentesAdicionais?emp=' + this.item.CODEMP + '&modelo=' + component.codMod + '&componente=' + component.codPro + '&der=' + component.codDer + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             if (response.data.equivalentes.length) {
@@ -150,7 +151,7 @@ export default {
       this.trocas.push(itemTroca)
       if (itemTroca.codFam === '02001') {
         const token = sessionStorage.getItem('token')
-        const codEmp = 1
+        const codEmp = this.item.CODEMP
         let itensMontagem = null
         await axios.get('http://localhost:8080/itensMontagem?emp=' + codEmp + '&pro=' + itemTroca.cmpAtu + '&der=' + itemTroca.derAtu + '&token=' + token)
           .then((response) => {
@@ -211,7 +212,7 @@ export default {
     },
     async requestTroca (numPed, seqIpd, item) {
       const token = sessionStorage.getItem('token')
-      const codEmp = 1
+      const codEmp = this.item.CODEMP
       const codFil = 1
       return axios.post('http://localhost:8080/equivalente?emp=' + codEmp + '&fil=' + codFil + '&ped=' + numPed + '&ipd=' + seqIpd + '&token=' + token, this.trocas)
         .then((response) => {
