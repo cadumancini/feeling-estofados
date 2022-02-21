@@ -203,9 +203,6 @@ export default {
   th {
     vertical-align: middle;
   }
-  /* .temG, .filhoPodeTrocar {
-    background-color: cyan;
-  } */
   .align-center {
     text-align: center;
   }
@@ -222,7 +219,6 @@ export default {
     color: #28a745;
   }
   .contract {
-    /* color: #0d6efd; */
     color: #007bbd;
   }
   .exchange {

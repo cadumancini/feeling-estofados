@@ -58,7 +58,6 @@ export default {
         this.item.MANIPULAR = false
       } else {
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
-        // document.getElementById('btnManipular').disabled = true
         this.item.MANIPULAR = true
         this.item.PRODUCTFOUND = false
         const token = sessionStorage.getItem('token')
@@ -79,7 +78,6 @@ export default {
         this.parseAllComponentsIntoFullProduct(this.item)
         this.item.PRODUCTFOUND = true
         document.getElementsByTagName('body')[0].style.cursor = 'auto'
-        // document.getElementById('btnManipular').disabled = false
       }
     },
     async parseAllComponentsIntoFullProduct (item) {
