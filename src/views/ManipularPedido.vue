@@ -171,8 +171,7 @@ export default {
       if (filho.codPro === itemTroca.cmpAnt &&
         filho.codDer === itemTroca.derAnt &&
         filho.codNiv !== itemTroca.codNiv &&
-        filho.agpMod === itemTroca.agpMod &&
-        (filho.codDer === 'G' || filho.proGen === 'S')) {
+        filho.agpMod === itemTroca.agpMod) {
         const objTroca = {
           codNiv: filho.codNiv,
           codMod: pai.codPro,
