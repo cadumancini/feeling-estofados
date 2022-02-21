@@ -5,7 +5,7 @@
         <thead>
           <tr class="table-secondary">
             <th class="fw-normal sm-header"></th>
-            <th class="fw-normal font-small sm-header">Nível</th>
+            <th class="fw-normal font-small sm-header">Nível (na estrutura ERP)</th>
             <th class="fw-normal font-small sm-header">Produto</th>
             <th class="fw-normal font-small sm-header">Der.</th>
             <th class="fw-normal font-small sm-header">Descrição</th>
@@ -107,6 +107,9 @@ export default {
             this.checkInvalidLoginResponse(response.data)
             if (response.data.equivalentes.length) {
               component.podeTrocar = true
+              node.filhoPodeTrocar = true
+              console.log(component.codPro)
+              console.log(node)
             }
           })
           .catch((err) => console.log(err))

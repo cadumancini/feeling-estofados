@@ -1,5 +1,6 @@
 <template>
-  <tr style="padding-left: 10px" id="node" v-if="item.exiCmp !== 'S'" v-bind:class="{ trocar: (item.codDer === 'G' || item.proGen === 'S'), temG: item.temG, atencao: item.trocar }">
+  <!-- <tr style="padding-left: 10px" id="node" v-if="item.exiCmp !== 'S'" v-bind:class="{ trocar: (item.codDer === 'G' || item.proGen === 'S'), temG: item.temG, atencao: item.trocar, filhoPodeTrocar: item.filhoPodeTrocar }"> -->
+  <tr style="padding-left: 10px" id="node" v-show="item.nivel === '1.0' || (item.exiCmp !== 'S' && ((item.codDer === 'G' || item.proGen === 'S' || item.podeTrocar) || item.temG || item.filhoPodeTrocar))" v-bind:class="{ trocar: (item.codDer === 'G' || item.proGen === 'S'), temG: item.temG, atencao: item.trocar, filhoPodeTrocar: item.filhoPodeTrocar }">
     <th class="fw-normal">
       <font-awesome-icon v-if="(item.filhos && isOpen)" icon="minus-square" @click="toggleOpen" class="contract pointer"/>
       <font-awesome-icon v-else-if="(item.filhos && !isOpen)" icon="plus-square" @click="toggleOpen" class="expand pointer"/>
@@ -17,7 +18,7 @@
 
     <th class="fw-normal align-center">
       <font-awesome-icon v-if="(item.temG || item.trocar)" icon="exclamation-triangle" class="warning"/>
-      <font-awesome-icon v-else-if="level === 0" icon="check-square" class="success"/>
+      <font-awesome-icon v-else-if="item.nivel === '1.0'" icon="check-square" class="success"/>
     </th>
 
     <!-- Modal -->
@@ -72,7 +73,7 @@
     v-for="(child, index) in item.filhos"
     :key="index"
     :item="child"
-    :level="level + 1"
+    :level="(child.exiCmp !== 'S' && ((child.codDer === 'G' || child.proGen === 'S' || child.podeTrocar) || child.temG || child.filhoPodeTrocar)) ? level + 1 : level"
     @trocar="trocar"/>
 </template>
 
@@ -83,7 +84,7 @@ export default {
   props: ['item', 'level'],
   data () {
     return {
-      isOpen: false
+      isOpen: true
     }
   },
   created () {
@@ -91,6 +92,11 @@ export default {
     this.$props.item.hashModal = Math.floor(Math.random() * (niv * 1000))
     this.$props.item.equivalentes = []
     this.$props.item.equivalenteSelecionado = null
+    if (this.item.filhos) {
+      if (this.item.temG || this.item.filhoPodeTrocar) {
+        this.isOpen = false
+      }
+    }
   },
   computed: {
     cssVars () {
@@ -196,6 +202,9 @@ export default {
   th {
     vertical-align: middle;
   }
+  /* .temG, .filhoPodeTrocar {
+    background-color: cyan;
+  } */
   .align-center {
     text-align: center;
   }
