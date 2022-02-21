@@ -1077,7 +1077,6 @@ export default {
           } else {
             let compMaisProximo = ''
             let menorDistancia = 1000000
-            console.log(item.derivacoesPossiveis)
             compMaisProximo = item.derivacoesPossiveis[0].CODDER
             item.derivacoesPossiveis.forEach(comp => {
               if (comp.CODDER !== compMaisProximo) {
@@ -1090,7 +1089,6 @@ export default {
               }
             })
             item.codComp = compMaisProximo
-            console.log('Tem LARDER')
           }
         }
       })
@@ -1155,7 +1153,6 @@ export default {
           }
         )
         const headers = { headers: { 'Content-Type': 'application/json' } }
-        console.log('INSERINDO ITENS')
         axios.post('http://localhost:8080/pedido/itens?token=' + token, body, headers)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)

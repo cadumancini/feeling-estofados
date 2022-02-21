@@ -100,6 +100,10 @@ export default {
           node.filhos = [component]
         }
         component.codMod = node.codPro
+        component.agpMod = node.codAgp
+        if (component.codMod === '05010100578' || component.codMod === '05010200579') {
+          component.agpMod = 'ABC'
+        }
         component.derMod = node.codDer
         const token = sessionStorage.getItem('token')
         axios.get('http://localhost:8080/equivalentesAdicionais?emp=1&modelo=' + component.codMod + '&componente=' + component.codPro + '&der=' + component.codDer + '&token=' + token)
@@ -108,8 +112,6 @@ export default {
             if (response.data.equivalentes.length) {
               component.podeTrocar = true
               node.filhoPodeTrocar = true
-              console.log(component.codPro)
-              console.log(node)
             }
           })
           .catch((err) => console.log(err))
@@ -173,6 +175,7 @@ export default {
       if (filho.codPro === itemTroca.cmpAnt &&
         filho.codDer === itemTroca.derAnt &&
         filho.codNiv !== itemTroca.codNiv &&
+        filho.agpMod === itemTroca.agpMod &&
         (filho.codDer === 'G' || filho.proGen === 'S')) {
         const objTroca = {
           codNiv: filho.codNiv,
