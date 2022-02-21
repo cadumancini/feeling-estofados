@@ -100,9 +100,6 @@ export default {
         }
         component.codMod = node.codPro
         component.agpMod = node.codAgp
-        if (component.codMod === '05010100578' || component.codMod === '05010200579') {
-          component.agpMod = 'ABC'
-        }
         component.derMod = node.codDer
         const token = sessionStorage.getItem('token')
         axios.get('http://localhost:8080/equivalentesAdicionais?emp=' + this.item.CODEMP + '&modelo=' + component.codMod + '&componente=' + component.codPro + '&der=' + component.codDer + '&token=' + token)
