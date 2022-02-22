@@ -82,7 +82,8 @@
             <div class="col-4">
               <div class="input-group input-group-sm">
                 <span class="input-group-text">Condição de pagamento</span>
-                <input id="condPagamento" class="form-control" type="text" disabled v-model="condPagamento">
+                <input class="form-control" type="text" disabled v-model="condPagamento">
+                <button id="btnBuscaCondicoesPagto" :disabled="numPed !== ''" class="btn btn-secondary input-group-btn" @click="buscaCondicoesPagto" data-bs-toggle="modal" data-bs-target="#condicoesPagtoModal">...</button>
               </div>
             </div>
           </div>
@@ -297,6 +298,48 @@
         </div>
       </div>
 
+      <!-- Modal Condições de Pagto -->
+      <div class="modal fade" id="condicoesPagtoModal" tabindex="-1" aria-labelledby="condicoesPagtoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="condicoesPagtoModalLabel">Busca de Condições de Pagamento</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalCondicoesPagto"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3" v-if="empresa !== ''">
+                <div class="mb-3" v-if="condicoesPagto != null">
+                  <input type="text" class="form-control mb-3" v-on:keyup="filtrarCondicoesPagto" v-model="condicoesPagtoFiltro" placeholder="Digite para buscar a condição na tabela abaixo">
+                  <table class="table table-striped table-hover table-bordered table-sm table-responsive">
+                    <thead>
+                      <tr>
+                        <th class="sm-header" scope="col">Código</th>
+                        <th class="sm-header" scope="col">Descrição Condição</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="condicaoPagtoRow in condicoesPagtoFiltrados" :key="condicaoPagtoRow.CODCPG" class="mouseHover" @click="selectCondicaoPagto(condicaoPagtoRow)">
+                        <th class="fw-normal sm" scope="row">{{ condicaoPagtoRow.CODCPG }}</th>
+                        <th class="fw-normal sm">{{ condicaoPagtoRow.DESCPG }}</th>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div v-else>
+                  <label>Buscando condições de pagamento ...</label>
+                </div>
+              </div>
+              <div v-else>
+                <label>Favor selecionar uma empresa!</label>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fechar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Modal Gerar Pedido -->
       <div class="modal fade" id="confirmaPedidoModal" tabindex="-1">
         <div class="modal-dialog">
@@ -392,7 +435,7 @@
                 </td>
                 <td class="fw-normal">
                   <div class="input-group input-group-sm">
-                    <input :id="'inputComp'+item.hash" class="form-control sm" type="text" :disabled="!item.condEsp === 'M'" v-model="item.comp">
+                    <input :id="'inputComp'+item.hash" class="form-control sm" type="text" :disabled="item.condEsp !== 'M'" v-model="item.comp">
                     <button :id="`btnBuscaComps`+item.hash" disabled class="btn btn-secondary input-group-btn sm" @click="buscaComps(item, item.codConfig)" data-bs-toggle="modal" data-bs-target="#compsModal">...</button>
                   </div>
                 </td>
@@ -414,7 +457,6 @@
                 <td class="fw-normal"><small><input class="form-control form-control-sm sm" :disabled="enviadoEmpresa" type="text" v-model="item.obs"></small></td>
                 <td class="fw-normal">
                   <small class="sm">
-                    <!-- <input class="form-control sm money" :disabled="enviadoEmpresa" type="text" v-model="item.vlrUnit"> -->
                     <vue-mask class="form-control sm" :disabled="enviadoEmpresa" mask="000.000,00" :raw="false" :options="options" v-model="item.vlrUnit"></vue-mask>
                   </small>
                 </td>
@@ -624,21 +666,26 @@ export default {
       estilos: null,
       configs: null,
       comps: null,
+      condicoesPagto: null,
       clientesFiltrados: null,
       pedidosClienteFiltrados: null,
       pedidosFiltrados: null,
       estilosFiltrados: null,
       configsFiltrados: null,
       compsFiltrados: null,
+      condicoesPagtoFiltrados: null,
       cliente: '',
       pedidos: null,
       pedidosCliente: null,
+      codCondPagamento: '',
+      condPagamento: '',
       clientesFiltro: '',
       pedidosClienteFiltro: '',
       pedidosFiltro: '',
       estilosFiltro: '',
       configsFiltro: '',
       compsFiltro: '',
+      condicoesPagtoFiltro: '',
       nomCli: '',
       email: '',
       telefone: '',
@@ -747,6 +794,28 @@ export default {
           document.getElementById('btnBuscaPedidos').disabled = false
           console.log(err)
         })
+    },
+    buscaCondicoesPagto () {
+      if (this.empresa !== '') {
+        this.condicoesPagto = null
+        this.condicoesPagtoFiltro = ''
+        document.getElementsByTagName('body')[0].style.cursor = 'wait'
+        document.getElementById('btnBuscaCondicoesPagto').disabled = true
+        const token = sessionStorage.getItem('token')
+        axios.get('http://localhost:8080/condicoesPagto?emp=' + this.empresa + '&token=' + token)
+          .then((response) => {
+            this.checkInvalidLoginResponse(response.data)
+            this.condicoesPagto = response.data.condicoes
+            this.condicoesPagtoFiltrados = response.data.condicoes
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
+            document.getElementById('btnBuscaCondicoesPagto').disabled = false
+          })
+          .catch((err) => {
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
+            document.getElementById('btnBuscaCondicoesPagto').disabled = false
+            console.log(err)
+          })
+      }
     },
     buscaEstilos (item) {
       this.itemSelecionado = item
@@ -865,6 +934,12 @@ export default {
       this.carregarItens()
       document.getElementById('closeModalPedidos').click()
     },
+    selectCondicaoPagto (condicaoClicked) {
+      console.log(condicaoClicked)
+      this.codCondPagamento = condicaoClicked.CODCPG
+      this.condPagamento = condicaoClicked.DESCPG
+      document.getElementById('closeModalCondicoesPagto').click()
+    },
     selectEstilo (estiloClicked) {
       this.itemSelecionado.estilo = estiloClicked.DESCPR
       this.itemSelecionado.codEstilo = estiloClicked.CODCPR
@@ -964,6 +1039,8 @@ export default {
         alert('Favor escolher uma empresa!')
       } else if (this.pedCli === '') {
         alert('Favor preencher o campo Pedido Cliente!')
+      } else if (this.condPagamento === '') {
+        alert('Favor selecionar uma Condição de Pagamento!')
       } else if (this.pedidosCliente && this.pedidosCliente.some(pedido => pedido.PEDCLI === this.pedCli)) {
         alert('Valor para Pedido Cliente já utilizado. Utilize outro valor.')
       } else {
@@ -983,7 +1060,8 @@ export default {
               codRep: this.codRepresentada,
               codTra: this.codTransportadora,
               cifFob: 'F',
-              obsPed: this.observacoesPedido
+              obsPed: this.observacoesPedido,
+              codCpg: this.codCondPagamento
             },
             itens: this.itens
           }
@@ -1036,6 +1114,9 @@ export default {
     },
     filtrarComps () {
       this.compsFiltrados = this.comps.filter(comp => comp.DESDER.toUpperCase().startsWith(this.compsFiltro.toUpperCase()))
+    },
+    filtrarCondicoesPagto () {
+      this.condicoesPagtoFiltrados = this.condicoesPagto.filter(cond => cond.DESCPG.toUpperCase().startsWith(this.condicoesPagtoFiltro.toUpperCase()))
     },
     excluirRascunho () {
       document.getElementById('closeModalExclusaoRascunho').click()
