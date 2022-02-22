@@ -401,10 +401,10 @@
                 <th class="fw-normal sm-header" style="width: 18%;"><small>Configuração</small></th>
                 <th class="fw-normal sm-header" style="width: 9%;"><small>Comp. (cm)</small></th>
                 <th class="fw-normal sm-header" style="width: 4%"><small>UN</small></th>
-                <th class="fw-normal sm-header" style="width: 5%;"><small>Desc.</small></th>
-                <th class="fw-normal sm-header" style="width: 5%;"><small>Comiss.</small></th>
+                <th class="fw-normal sm-header" style="width: 4%;"><small>Desc. (%)</small></th>
+                <th class="fw-normal sm-header" style="width: 5%;"><small>Comiss. (%)</small></th>
                 <th class="fw-normal sm-header" style="width: 14%;"><small>Cond. Especial</small></th>
-                <th class="fw-normal sm-header" style="width: 17%;"><small>Observações</small></th>
+                <th class="fw-normal sm-header" style="width: 18%;"><small>Observações</small></th>
                 <th class="fw-normal sm-header" style="width: 6%;"><small>Vlr. Unit. (R$)</small></th>
                 <th class="fw-normal sm-header" style="width: 4%;"><small>Ação</small></th>
               </tr>
@@ -442,7 +442,11 @@
                 <td class="fw-normal"><input class="form-control form-control-sm sm"
                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   maxlength="2" type="number" v-model="item.un"></td>
-                <td class="fw-normal"><small class="sm">{{item.desc}}</small></td>
+                <td class="fw-normal">
+                  <small class="sm">
+                    <vue-mask class="form-control form-control-sm sm" :disabled="enviadoEmpresa" mask="00,00" :raw="false" :options="options" v-model="item.desc"></vue-mask>
+                  </small>
+                </td>
                 <td class="fw-normal"><small class="sm">{{item.comiss}}</small></td>
                 <td class="fw-normal">
                   <select id="inputGroupSelectCondEsp" :disabled="enviadoEmpresa" class="form-select form-select-sm sm" @change="handleCondicao(item)" v-model="item.condEsp">
@@ -457,7 +461,7 @@
                 <td class="fw-normal"><small><input class="form-control form-control-sm sm" :disabled="enviadoEmpresa" type="text" v-model="item.obs"></small></td>
                 <td class="fw-normal">
                   <small class="sm">
-                    <vue-mask class="form-control sm" :disabled="enviadoEmpresa" mask="000.000,00" :raw="false" :options="options" v-model="item.vlrUnit"></vue-mask>
+                    <vue-mask class="form-control form-control-sm sm" :disabled="enviadoEmpresa" mask="000.000,00" :raw="false" :options="options" v-model="item.vlrUnit"></vue-mask>
                   </small>
                 </td>
 
@@ -1016,7 +1020,7 @@ export default {
         config: '',
         comp: '',
         un: 1,
-        desc: '',
+        desc: 0,
         comiss: '',
         condEsp: ' ',
         obs: '',
@@ -1185,6 +1189,10 @@ export default {
           alert('Erro: Existe(m) produto(s) com condição especial que requer preenchimento de observação. Verifique!')
           temErro = true
         }
+        if (item.desc === '') {
+          alert('Erro: Existe(m) produto(s) com desconto em branco. Verifique!')
+          temErro = true
+        }
         if (item.vlrUnit === 0 || item.vlrUnit === '') {
           alert('Erro: Existe(m) produto(s) com valor unitário zerado. Verifique!')
           temErro = true
@@ -1250,6 +1258,7 @@ export default {
               seqIpd: 0,
               qtdPed: item.un,
               preUni: Number(item.vlrUnit.replace('.', '').replace(',', '')) / 100,
+              perDsc: Number(item.desc.toString().replace(',', '.')),
               datEnt: datEntFmt,
               conEsp: item.condEsp,
               obsIpd: item.obs
@@ -1358,8 +1367,8 @@ export default {
                     codComp: item.CODDER,
                     comp: item.CNDESP === 'M' ? item.LARDER : item.CODDER,
                     un: item.QTDPED,
-                    desc: Number(item.PERDSC).toFixed(2).toLocaleString() + ' %',
-                    comiss: Number(item.PERCOM).toFixed(2).toLocaleString() + ' %',
+                    desc: Number(item.PERDSC).toFixed(2).toLocaleString(),
+                    comiss: Number(item.PERCOM).toFixed(2).toLocaleString().replace('.', ','),
                     condEsp: item.CNDESP,
                     datEnt: item.DATENT,
                     obs: item.OBSIPD,
