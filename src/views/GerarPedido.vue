@@ -113,7 +113,7 @@
               </div>
             </div>
           </div>
-          <div class="row">
+          <div class="row mb-3">
             <div class="col-4">
               <div class="input-group input-group-sm">
                 <span class="input-group-text">Endereço</span>
@@ -130,6 +130,16 @@
               <div class="input-group input-group-sm">
                 <span class="input-group-text">Insc. Est.</span>
                 <input id="inscrEst" class="form-control" type="text" disabled v-model="inscrEst">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="input-group input-group-sm">
+                <span class="input-group-text">Observações</span>
+                <input id="observacoesPedido" class="form-control" :disabled="numPed !== ''"
+                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                maxlength="200" type="text" v-model="observacoesPedido">
               </div>
             </div>
           </div>
@@ -351,8 +361,8 @@
                 <th class="fw-normal sm-header" style="width: 5%;"><small>Desc.</small></th>
                 <th class="fw-normal sm-header" style="width: 5%;"><small>Comiss.</small></th>
                 <th class="fw-normal sm-header" style="width: 14%;"><small>Cond. Especial</small></th>
-                <th class="fw-normal sm-header" style="width: 18%;"><small>Observações</small></th>
-                <th class="fw-normal sm-header" style="width: 5%;"><small>R$</small></th>
+                <th class="fw-normal sm-header" style="width: 17%;"><small>Observações</small></th>
+                <th class="fw-normal sm-header" style="width: 6%;"><small>Vlr. Unit. (R$)</small></th>
                 <th class="fw-normal sm-header" style="width: 4%;"><small>Ação</small></th>
               </tr>
             </thead>
@@ -402,7 +412,13 @@
                   </select>
                 </td>
                 <td class="fw-normal"><small><input class="form-control form-control-sm sm" :disabled="enviadoEmpresa" type="text" v-model="item.obs"></small></td>
-                <td class="fw-normal"><small class="sm">{{item.vlrUnit}}</small></td>
+                <td class="fw-normal">
+                  <small class="sm">
+                    <!-- <input class="form-control sm money" :disabled="enviadoEmpresa" type="text" v-model="item.vlrUnit"> -->
+                    <vue-mask class="form-control sm" :disabled="enviadoEmpresa" mask="000.000,00" :raw="false" :options="options" v-model="item.vlrUnit"></vue-mask>
+                  </small>
+                </td>
+
                 <td><button class="btn btn-sm btn-danger sm" :disabled="enviadoEmpresa" @click="deleteItem(item)">Excluir</button></td>
               </tr>
               <tr v-if="item.MANIPULAR">
@@ -596,11 +612,12 @@
 <script>
 import Navbar from '../components/Navbar.vue'
 import ManipularPedido from './ManipularPedido.vue'
+import vueMask from 'vue-jquery-mask'
 import axios from 'axios'
 import StringMask from 'string-mask'
 export default {
   name: 'GerarPedido',
-  components: { Navbar, ManipularPedido },
+  components: { Navbar, ManipularPedido, vueMask },
   data () {
     return {
       clientes: null,
@@ -635,6 +652,7 @@ export default {
       codRepresentada: '',
       representada: '',
       empresa: '',
+      observacoesPedido: '',
       empresasCliente: [],
       addingProduct: false,
       itens: [],
@@ -648,7 +666,10 @@ export default {
       ipiValor: 0,
       icmsValor: 0,
       nfValor: 0,
-      manipulando: false
+      manipulando: false,
+      options: {
+        reverse: true
+      }
     }
   },
   mounted () {
@@ -670,7 +691,7 @@ export default {
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
         document.getElementById('btnBuscaClientes').disabled = true
         const token = sessionStorage.getItem('token')
-        axios.get('http://192.168.1.168:8080/clientes?token=' + token)
+        axios.get('http://localhost:8080/clientes?token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             this.clientes = response.data.clientes
@@ -692,7 +713,7 @@ export default {
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
         document.getElementById('btnBuscaPedidosCliente').disabled = true
         const token = sessionStorage.getItem('token')
-        axios.get('http://192.168.1.168:8080/pedidosCliente?cli=' + this.cliente + '&token=' + token)
+        axios.get('http://localhost:8080/pedidosCliente?cli=' + this.cliente + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             this.pedidosCliente = response.data.pedidos
@@ -713,7 +734,7 @@ export default {
       document.getElementsByTagName('body')[0].style.cursor = 'wait'
       document.getElementById('btnBuscaPedidos').disabled = true
       const token = sessionStorage.getItem('token')
-      axios.get('http://192.168.1.168:8080/pedidos?token=' + token)
+      axios.get('http://localhost:8080/pedidos?token=' + token)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           this.pedidos = response.data.pedidos
@@ -736,7 +757,7 @@ export default {
       document.getElementById('btnBuscaConfigs' + item.hash).disabled = true
       document.getElementById('btnBuscaComps' + item.hash).disabled = true
       const token = sessionStorage.getItem('token')
-      axios.get('http://192.168.1.168:8080/estilos?emp=1&token=' + token)
+      axios.get('http://localhost:8080/estilos?emp=1&token=' + token)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           this.estilos = response.data.estilos
@@ -759,7 +780,7 @@ export default {
         document.getElementById('btnBuscaConfigs' + item.hash).disabled = true
         document.getElementById('btnBuscaComps' + item.hash).disabled = true
         const token = sessionStorage.getItem('token')
-        axios.get('http://192.168.1.168:8080/produtosPorEstilo?emp=1&estilo=' + estilo + '&token=' + token)
+        axios.get('http://localhost:8080/produtosPorEstilo?emp=1&estilo=' + estilo + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             this.configs = response.data.produtos
@@ -784,7 +805,7 @@ export default {
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
         document.getElementById('btnBuscaComps' + item.hash).disabled = true
         const token = sessionStorage.getItem('token')
-        axios.get('http://192.168.1.168:8080/derivacoesPorProduto?emp=1&produto=' + config + '&token=' + token)
+        axios.get('http://localhost:8080/derivacoesPorProduto?emp=1&produto=' + config + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             this.comps = response.data.derivacoes
@@ -877,7 +898,7 @@ export default {
     },
     buscarDadosCliente (codCli, apenasEmpresas) {
       const token = sessionStorage.getItem('token')
-      axios.get('http://192.168.1.168:8080/dadosCliente?token=' + token + '&codCli=' + codCli)
+      axios.get('http://localhost:8080/dadosCliente?token=' + token + '&codCli=' + codCli)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           this.dadosCliente = response.data.dadosCliente
@@ -893,8 +914,16 @@ export default {
                 CODEMP: empresa.CODEMP, NOMEMP: empresa.NOMEMP
               })
             })
-          } else {
 
+            const token = sessionStorage.getItem('token')
+            axios.get('http://localhost:8080/pedidosCliente?cli=' + this.cliente + '&token=' + token)
+              .then((response) => {
+                this.checkInvalidLoginResponse(response.data)
+                this.pedidosCliente = response.data.pedidos
+              })
+              .catch((err) => {
+                console.log(err)
+              })
           }
         })
         .catch((err) => {
@@ -930,9 +959,13 @@ export default {
     gerarPedido () {
       document.getElementById('closeModalConfirmaPedido').click()
       if (this.cliente === '') {
-        alert('Favor preencher o cliente!')
+        alert('Favor preencher o Cliente!')
       } else if (this.empresa === '') {
         alert('Favor escolher uma empresa!')
+      } else if (this.pedCli === '') {
+        alert('Favor preencher o campo Pedido Cliente!')
+      } else if (this.pedidosCliente && this.pedidosCliente.some(pedido => pedido.PEDCLI === this.pedCli)) {
+        alert('Valor para Pedido Cliente já utilizado. Utilize outro valor.')
       } else {
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
         document.getElementById('btnSalvar').disabled = true
@@ -949,13 +982,14 @@ export default {
               pedCli: this.pedCli !== '' ? this.pedCli : 0,
               codRep: this.codRepresentada,
               codTra: this.codTransportadora,
-              cifFob: 'F'
+              cifFob: 'F',
+              obsPed: this.observacoesPedido
             },
             itens: this.itens
           }
         )
         const headers = { headers: { 'Content-Type': 'application/json' } }
-        axios.put('http://192.168.1.168:8080/pedido?token=' + token, body, headers)
+        axios.put('http://localhost:8080/pedido?token=' + token, body, headers)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             parseString(response.data, { explicitArray: false }, (err, result) => {
@@ -1026,8 +1060,8 @@ export default {
       this.enviadoEmpresa = false
       this.prevFaturamento = ''
       this.condPagamento = ''
-      document.getElementById('btnBuscaPedidosCliente').disabled = false
-      document.getElementById('btnBuscaClientes').disabled = false
+      this.manipulando = false
+      this.observacoesPedido = ''
     },
     handleCondicao (item) {
       if (item.condEsp === 'M') {
@@ -1058,16 +1092,20 @@ export default {
           alert('Erro: Existe(m) produto(s) com quantidade menor que zero ou maior que 99. Verifique!')
           temErro = true
         }
-        if (!item.cnj || !item.codEstilo || !item.codConfig || (item.condEsp !== 'M' && !item.codComp)) {
-          alert('Erro: Existe(m) produto(s) faltando definir conjunto, estilo, configuração ou comprimento. Verifique!')
+        if (!item.codEstilo || !item.codConfig || (item.condEsp !== 'M' && !item.codComp)) {
+          alert('Erro: Existe(m) produto(s) faltando definir estilo, configuração ou comprimento. Verifique!')
           temErro = true
         }
-        if (item.cnj < 1) {
+        if (item.cnj !== '' && item.cnj < 1) {
           alert('Erro: Existe(m) produto(s) com número de conjunto menor que 1. Verifique!')
           temErro = true
         }
         if ((item.condEsp === 'D' || item.condEsp === 'C' || item.condEsp === 'P' || item.condEsp === 'O') && (!item.obs)) {
           alert('Erro: Existe(m) produto(s) com condição especial que requer preenchimento de observação. Verifique!')
+          temErro = true
+        }
+        if (item.vlrUnit === 0 || item.vlrUnit === '') {
+          alert('Erro: Existe(m) produto(s) com valor unitário zerado. Verifique!')
           temErro = true
         }
         if (item.condEsp === 'M') {
@@ -1104,11 +1142,11 @@ export default {
       let estiloIni = itensChecarCnj[0].codEstilo
       let temErro = false
       itensChecarCnj.forEach(item => {
-        if (item.cnj === cnjIni && item.codEstilo !== estiloIni) {
+        if (item.cnj !== '' && item.cnj === cnjIni && item.codEstilo !== estiloIni) {
           alert('Erro: Existe(m) produto(s) com o mesmo número do conjunto (conj. ' + item.cnj + ') mas com estilos diferentes. Verifique!')
           temErro = true
         }
-        if (item.cnj !== cnjIni) {
+        if (item.cnj !== '' && item.cnj !== cnjIni) {
           cnjIni = item.cnj
           estiloIni = item.codEstilo
         }
@@ -1130,7 +1168,7 @@ export default {
               derEsp: item.condEsp === 'M' ? item.comp : '',
               seqIpd: 0,
               qtdPed: item.un,
-              preUni: 1000,
+              preUni: Number(item.vlrUnit.replace('.', '').replace(',', '')) / 100,
               datEnt: datEntFmt,
               conEsp: item.condEsp,
               obsIpd: item.obs
@@ -1153,7 +1191,7 @@ export default {
           }
         )
         const headers = { headers: { 'Content-Type': 'application/json' } }
-        axios.post('http://192.168.1.168:8080/pedido/itens?token=' + token, body, headers)
+        axios.post('http://localhost:8080/pedido/itens?token=' + token, body, headers)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             parseString(response.data, { explicitArray: false }, (err, result) => {
@@ -1181,7 +1219,7 @@ export default {
     },
     buscarDerivacoes (config) {
       const token = sessionStorage.getItem('token')
-      return axios.get('http://192.168.1.168:8080/derivacoesPorProduto?emp=1&produto=' + config + '&token=' + token)
+      return axios.get('http://localhost:8080/derivacoesPorProduto?emp=1&produto=' + config + '&token=' + token)
     },
     compare (a, b) {
       if (a.cnj < b.cnj) {
@@ -1194,7 +1232,7 @@ export default {
     },
     carregarCabecalho () {
       const token = sessionStorage.getItem('token')
-      axios.get('http://192.168.1.168:8080/pedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + token)
+      axios.get('http://localhost:8080/pedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + token)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data.pedido)
           this.prevFaturamento = response.data.pedido[0].DATENT
@@ -1203,6 +1241,7 @@ export default {
           this.codTransportadora = response.data.pedido[0].CODTRA
           this.codRepresentada = response.data.pedido[0].CODREP
           this.enviadoEmpresa = (response.data.pedido[0].SITPED === '3' || response.data.pedido[0].SITPED === '4' || response.data.pedido[0].SITPED === '5')
+          this.observacoesPedido = response.data.pedido[0].OBSPED
         })
         .catch((err) => {
           console.log(err)
@@ -1217,7 +1256,7 @@ export default {
       this.ipiValor = parseFloat(0)
       this.icmsValor = parseFloat(0)
       this.nfValor = parseFloat(0)
-      axios.get('http://192.168.1.168:8080/itensPedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + token)
+      axios.get('http://localhost:8080/itensPedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + token)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           response.data.itens.forEach(item => {
@@ -1225,11 +1264,12 @@ export default {
               .then((response) => {
                 const derivacoesPossiveis = response.data.derivacoes
                 this.itemSelecionado = null
+                console.log(item.SEQIPD + ' - ' + item.VLRIPD)
                 this.itens.push(
                   {
                     MANIPULAR: false,
                     seqIpd: item.SEQIPD,
-                    cnj: item.SEQPCL,
+                    cnj: item.SEQPCL === 'null' ? '' : item.SEQPCL,
                     codEstilo: item.CODCPR,
                     estilo: item.DESCPR,
                     codConfig: item.CODPRO,
@@ -1277,7 +1317,7 @@ export default {
       } else {
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
         const token = sessionStorage.getItem('token')
-        axios.post('http://192.168.1.168:8080/enviarPedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + token)
+        axios.post('http://localhost:8080/enviarPedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             if (response.data === 'OK') {
