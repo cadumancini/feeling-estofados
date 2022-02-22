@@ -156,7 +156,7 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalEnviarEmpresa"></button>
             </div>
             <div class="modal-body">
-              <p>Ao enviar à empresa, o pedido será gerado no sistema da Feeling e não constará mais para alteração ou consulta. Para realizar quaisquer alterações, será preciso entrar em contato com o comercial Feeling. Deseja continuar?</p>
+              <p>Ao enviar à empresa, o pedido será gerado no sistema da Feeling e não constará mais para alteração ou consulta. Para realizar quaisquer alterações, será preciso entrar em contato com o comercial Feeling. O processo pode demorar alguns instantes, pois irá verificar se existe pendências na estrutura. Deseja continuar?</p>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" @click="enviarEmpresa">Sim</button>
@@ -939,7 +939,6 @@ export default {
       document.getElementById('closeModalPedidos').click()
     },
     selectCondicaoPagto (condicaoClicked) {
-      console.log(condicaoClicked)
       this.codCondPagamento = condicaoClicked.CODCPG
       this.condPagamento = condicaoClicked.DESCPG
       document.getElementById('closeModalCondicoesPagto').click()
@@ -1354,7 +1353,6 @@ export default {
               .then((response) => {
                 const derivacoesPossiveis = response.data.derivacoes
                 this.itemSelecionado = null
-                console.log(item.SEQIPD + ' - ' + item.VLRIPD)
                 this.itens.push(
                   {
                     MANIPULAR: false,
