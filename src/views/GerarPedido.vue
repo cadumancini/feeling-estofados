@@ -82,7 +82,8 @@
             <div class="col-4">
               <div class="input-group input-group-sm">
                 <span class="input-group-text">Condição de pagamento</span>
-                <input class="form-control" type="text" disabled v-model="condPagamento">
+                <!-- <input class="form-control" type="text" disabled v-model="condPagamento"> -->
+                <input class="form-control" type="text" disabled v-bind:class="{ 'white-bg': (!numPed) }" v-model="condPagamento" placeholder="Clique ao lado para selecionar">
                 <button id="btnBuscaCondicoesPagto" :disabled="numPed !== ''" class="btn btn-secondary input-group-btn" @click="buscaCondicoesPagto" data-bs-toggle="modal" data-bs-target="#condicoesPagtoModal">...</button>
               </div>
             </div>
@@ -91,7 +92,7 @@
             <div class="col-3">
               <div class="input-group input-group-sm">
                 <span class="input-group-text">Cliente</span>
-                <input id="nomCli" class="form-control" type="text" :disabled="numPed !== ''" v-model="nomCli" placeholder="Clique ao lado para selecionar o cliente">
+                <input id="nomCli" class="form-control" type="text" disabled v-bind:class="{ 'white-bg': (!numPed) }" v-model="nomCli" placeholder="Clique ao lado para selecionar">
                 <button id="btnBuscaClientes" class="btn btn-secondary input-group-btn" :disabled="numPed !== ''" @click="buscaClientes" data-bs-toggle="modal" data-bs-target="#clientesModal">...</button>
               </div>
             </div>
@@ -742,7 +743,7 @@ export default {
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
         document.getElementById('btnBuscaClientes').disabled = true
         const token = sessionStorage.getItem('token')
-        axios.get('http://192.168.1.168:8080/clientes?token=' + token)
+        axios.get('http://localhost:8080/clientes?token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             this.clientes = response.data.clientes
@@ -764,7 +765,7 @@ export default {
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
         document.getElementById('btnBuscaPedidosCliente').disabled = true
         const token = sessionStorage.getItem('token')
-        axios.get('http://192.168.1.168:8080/pedidosCliente?cli=' + this.cliente + '&token=' + token)
+        axios.get('http://localhost:8080/pedidosCliente?cli=' + this.cliente + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             this.pedidosCliente = response.data.pedidos
@@ -785,7 +786,7 @@ export default {
       document.getElementsByTagName('body')[0].style.cursor = 'wait'
       document.getElementById('btnBuscaPedidos').disabled = true
       const token = sessionStorage.getItem('token')
-      axios.get('http://192.168.1.168:8080/pedidos?token=' + token)
+      axios.get('http://localhost:8080/pedidos?token=' + token)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           this.pedidos = response.data.pedidos
@@ -806,7 +807,7 @@ export default {
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
         document.getElementById('btnBuscaCondicoesPagto').disabled = true
         const token = sessionStorage.getItem('token')
-        axios.get('http://192.168.1.168:8080/condicoesPagto?emp=' + this.empresa + '&token=' + token)
+        axios.get('http://localhost:8080/condicoesPagto?emp=' + this.empresa + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             this.condicoesPagto = response.data.condicoes
@@ -830,7 +831,7 @@ export default {
       document.getElementById('btnBuscaConfigs' + item.hash).disabled = true
       document.getElementById('btnBuscaComps' + item.hash).disabled = true
       const token = sessionStorage.getItem('token')
-      axios.get('http://192.168.1.168:8080/estilos?emp=1&token=' + token)
+      axios.get('http://localhost:8080/estilos?emp=1&token=' + token)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           this.estilos = response.data.estilos
@@ -853,7 +854,7 @@ export default {
         document.getElementById('btnBuscaConfigs' + item.hash).disabled = true
         document.getElementById('btnBuscaComps' + item.hash).disabled = true
         const token = sessionStorage.getItem('token')
-        axios.get('http://192.168.1.168:8080/produtosPorEstilo?emp=1&estilo=' + estilo + '&token=' + token)
+        axios.get('http://localhost:8080/produtosPorEstilo?emp=1&estilo=' + estilo + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             this.configs = response.data.produtos
@@ -878,7 +879,7 @@ export default {
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
         document.getElementById('btnBuscaComps' + item.hash).disabled = true
         const token = sessionStorage.getItem('token')
-        axios.get('http://192.168.1.168:8080/derivacoesPorProduto?emp=1&produto=' + config + '&token=' + token)
+        axios.get('http://localhost:8080/derivacoesPorProduto?emp=1&produto=' + config + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             this.comps = response.data.derivacoes
@@ -976,7 +977,7 @@ export default {
     },
     buscarDadosCliente (codCli, apenasEmpresas) {
       const token = sessionStorage.getItem('token')
-      axios.get('http://192.168.1.168:8080/dadosCliente?token=' + token + '&codCli=' + codCli)
+      axios.get('http://localhost:8080/dadosCliente?token=' + token + '&codCli=' + codCli)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           this.dadosCliente = response.data.dadosCliente
@@ -994,7 +995,7 @@ export default {
             })
 
             const token = sessionStorage.getItem('token')
-            axios.get('http://192.168.1.168:8080/pedidosCliente?cli=' + this.cliente + '&token=' + token)
+            axios.get('http://localhost:8080/pedidosCliente?cli=' + this.cliente + '&token=' + token)
               .then((response) => {
                 this.checkInvalidLoginResponse(response.data)
                 this.pedidosCliente = response.data.pedidos
@@ -1070,7 +1071,7 @@ export default {
           }
         )
         const headers = { headers: { 'Content-Type': 'application/json' } }
-        axios.put('http://192.168.1.168:8080/pedido?token=' + token, body, headers)
+        axios.put('http://localhost:8080/pedido?token=' + token, body, headers)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             parseString(response.data, { explicitArray: false }, (err, result) => {
@@ -1280,7 +1281,7 @@ export default {
           }
         )
         const headers = { headers: { 'Content-Type': 'application/json' } }
-        axios.post('http://192.168.1.168:8080/pedido/itens?token=' + token, body, headers)
+        axios.post('http://localhost:8080/pedido/itens?token=' + token, body, headers)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             parseString(response.data, { explicitArray: false }, (err, result) => {
@@ -1308,7 +1309,7 @@ export default {
     },
     buscarDerivacoes (config) {
       const token = sessionStorage.getItem('token')
-      return axios.get('http://192.168.1.168:8080/derivacoesPorProduto?emp=1&produto=' + config + '&token=' + token)
+      return axios.get('http://localhost:8080/derivacoesPorProduto?emp=1&produto=' + config + '&token=' + token)
     },
     compare (a, b) {
       if (a.cnj < b.cnj) {
@@ -1321,7 +1322,7 @@ export default {
     },
     carregarCabecalho () {
       const token = sessionStorage.getItem('token')
-      axios.get('http://192.168.1.168:8080/pedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + token)
+      axios.get('http://localhost:8080/pedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + token)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data.pedido)
           this.prevFaturamento = response.data.pedido[0].DATENT
@@ -1345,7 +1346,7 @@ export default {
       this.ipiValor = parseFloat(0)
       this.icmsValor = parseFloat(0)
       this.nfValor = parseFloat(0)
-      axios.get('http://192.168.1.168:8080/itensPedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + token)
+      axios.get('http://localhost:8080/itensPedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + token)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           response.data.itens.forEach(item => {
@@ -1405,7 +1406,7 @@ export default {
       } else {
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
         const token = sessionStorage.getItem('token')
-        axios.post('http://192.168.1.168:8080/enviarPedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + token)
+        axios.post('http://localhost:8080/enviarPedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             if (response.data === 'OK') {
@@ -1469,5 +1470,8 @@ export default {
   }
   .modal-backdrop.show:nth-of-type(even) {
     z-index: 1061 !important;
+  }
+  .white-bg {
+    background-color: white !important;
   }
 </style>

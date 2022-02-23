@@ -8,7 +8,8 @@
     <th class="fw-normal indent font-small" :style="cssVars">{{ item.codNiv }}</th>
     <th class="fw-normal indent font-small" :style="cssVars">{{ item.codPro }}</th>
     <th class="fw-normal font-small">{{ item.codDer }}</th>
-    <th class="fw-normal font-small">{{ item.desPro }} {{ item.desDer }}</th>
+    <th class="fw-normal font-small" v-if="item.codFam === '02001' && item.codDer !== 'G'">{{ item.codRef }}</th>
+      <th class="fw-normal font-small" v-else>{{ item.desPro }} {{ item.desDer }}</th>
     <th class="fw-normal font-small">{{ item.qtdCon }}</th>
     <th class="fw-normal font-small">{{ item.uniMed }}</th>
     <th class="fw-normal align-center exchange" v-if="item.codDer === 'G' || item.proGen === 'S' || item.podeTrocar">
@@ -126,7 +127,7 @@ export default {
       item.equivalenteSelecionado = null
       document.getElementsByTagName('body')[0].style.cursor = 'wait'
       if (item.proGen === 'S') {
-        await axios.get('http://192.168.1.168:8080/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&token=' + token)
+        await axios.get('http://localhost:8080/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
@@ -137,7 +138,7 @@ export default {
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
           })
       } else if (item.podeTrocar) {
-        await axios.get('http://192.168.1.168:8080/equivalentesAdicionais?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&der=' + item.codDer + '&token=' + token)
+        await axios.get('http://localhost:8080/equivalentesAdicionais?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&der=' + item.codDer + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
@@ -148,13 +149,13 @@ export default {
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
           })
       } else {
-        await axios.get('http://192.168.1.168:8080/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&token=' + token)
+        await axios.get('http://localhost:8080/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&token=' + token)
           .then(async (response) => {
             this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
             if (!item.equivalentes.length) {
               item.equivalentes = []
-              await axios.get('http://192.168.1.168:8080/derivacoesPossiveis?emp=' + this.codEmp + '&pro=' + item.codPro + '&token=' + token)
+              await axios.get('http://localhost:8080/derivacoesPossiveis?emp=' + this.codEmp + '&pro=' + item.codPro + '&token=' + token)
                 .then((response) => {
                   this.checkInvalidLoginResponse(response.data)
                   item.equivalentes = response.data.derivacoes
