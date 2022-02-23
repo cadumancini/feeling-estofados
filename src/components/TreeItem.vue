@@ -137,11 +137,37 @@ export default {
             console.log(err)
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
           })
-      } else if (item.podeTrocar) {
-        await axios.get('http://localhost:8080/equivalentesAdicionais?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&der=' + item.codDer + '&token=' + token)
+      } else if (item.podeTrocar && item.codDer !== 'G') {
+        await axios.get('http://localhost:8080/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
+            if (!item.equivalentes.length) {
+              item.equivalentes = []
+              axios.get('http://localhost:8080/equivalentesAdicionais?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&der=' + item.codDer + '&token=' + token)
+                .then((response) => {
+                  this.checkInvalidLoginResponse(response.data)
+                  item.equivalentes = response.data.equivalentes
+                  if (!item.equivalentes.length) {
+                    item.equivalentes = []
+                    axios.get('http://localhost:8080/derivacoesPossiveis?emp=' + this.codEmp + '&pro=' + item.codPro + '&mod=' + item.codMod + '&derMod=' + item.derMod + '&token=' + token)
+                      .then((response) => {
+                        this.checkInvalidLoginResponse(response.data)
+                        item.equivalentes = response.data.derivacoes
+                        document.getElementsByTagName('body')[0].style.cursor = 'auto'
+                      })
+                      .catch((err) => {
+                        console.log(err)
+                        document.getElementsByTagName('body')[0].style.cursor = 'auto'
+                      })
+                  }
+                  document.getElementsByTagName('body')[0].style.cursor = 'auto'
+                })
+                .catch((err) => {
+                  console.log(err)
+                  document.getElementsByTagName('body')[0].style.cursor = 'auto'
+                })
+            }
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
           })
           .catch((err) => {
@@ -155,7 +181,7 @@ export default {
             item.equivalentes = response.data.equivalentes
             if (!item.equivalentes.length) {
               item.equivalentes = []
-              await axios.get('http://localhost:8080/derivacoesPossiveis?emp=' + this.codEmp + '&pro=' + item.codPro + '&token=' + token)
+              await axios.get('http://localhost:8080/derivacoesPossiveis?emp=' + this.codEmp + '&pro=' + item.codPro + '&mod=' + item.codMod + '&derMod=' + item.derMod + '&token=' + token)
                 .then((response) => {
                   this.checkInvalidLoginResponse(response.data)
                   item.equivalentes = response.data.derivacoes

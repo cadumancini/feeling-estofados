@@ -102,15 +102,51 @@ export default {
         component.agpMod = node.codAgp
         component.derMod = node.codDer
         const token = sessionStorage.getItem('token')
-        axios.get('http://localhost:8080/equivalentesAdicionais?emp=' + this.item.CODEMP + '&modelo=' + component.codMod + '&componente=' + component.codPro + '&der=' + component.codDer + '&token=' + token)
-          .then((response) => {
-            this.checkInvalidLoginResponse(response.data)
-            if (response.data.equivalentes.length) {
-              component.podeTrocar = true
-              node.filhoPodeTrocar = true
-            }
-          })
-          .catch((err) => console.log(err))
+        if (component.exiCmp !== 'S') {
+          await axios.get('http://localhost:8080/equivalentes?emp=' + this.item.CODEMP + '&modelo=' + component.codMod + '&componente=' + component.codPro + '&token=' + token)
+            .then((response) => {
+              this.checkInvalidLoginResponse(response.data)
+              if (response.data.equivalentes.length) {
+                if (component.codMod === '07010100572') {
+                  console.log('1')
+                }
+                component.podeTrocar = true
+                node.filhoPodeTrocar = true
+              } else {
+                axios.get('http://localhost:8080/equivalentesAdicionais?emp=' + this.item.CODEMP + '&modelo=' + component.codMod + '&componente=' + component.codPro + '&der=' + component.codDer + '&token=' + token)
+                  .then((response) => {
+                    this.checkInvalidLoginResponse(response.data)
+                    if (response.data.equivalentes.length) {
+                      if (component.codMod === '07010100572') {
+                        console.log('2')
+                      }
+                      component.podeTrocar = true
+                      node.filhoPodeTrocar = true
+                    } else {
+                      axios.get('http://localhost:8080/derivacoesPossiveis?emp=' + this.item.CODEMP + '&pro=' + component.codPro + '&mod=' + component.codMod + '&derMod=' + component.derMod + '&token=' + token)
+                        .then((response) => {
+                          this.checkInvalidLoginResponse(response.data)
+                          if (response.data.derivacoes.length) {
+                            if (component.codMod === '07010100572') {
+                              console.log('3')
+                              console.log(component.codPro)
+                            }
+                            component.podeTrocar = true
+                            node.filhoPodeTrocar = true
+                          }
+                        })
+                        .catch((err) => console.log(err))
+                    }
+                  })
+                  .catch((err) => console.log(err))
+              }
+              document.getElementsByTagName('body')[0].style.cursor = 'auto'
+            })
+            .catch((err) => {
+              console.log(err)
+              document.getElementsByTagName('body')[0].style.cursor = 'auto'
+            })
+        }
       } else {
         if (node.filhos) {
           node.filhos.forEach(filho => {
