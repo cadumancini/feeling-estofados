@@ -103,13 +103,10 @@ export default {
         component.derMod = node.codDer
         const token = sessionStorage.getItem('token')
         if (component.exiCmp !== 'S') {
-          await axios.get('http://192.168.1.168:8080/equivalentes?emp=' + this.item.CODEMP + '&modelo=' + component.codMod + '&componente=' + component.codPro + '&token=' + token)
+          await axios.get('http://192.168.1.168:8080/equivalentes?emp=' + this.item.CODEMP + '&modelo=' + component.codMod + '&componente=' + component.codPro + '&derivacao=' + component.codDer + '&token=' + token)
             .then((response) => {
               this.checkInvalidLoginResponse(response.data)
               if (response.data.equivalentes.length) {
-                if (component.codMod === '07010100572') {
-                  console.log('1')
-                }
                 component.podeTrocar = true
                 node.filhoPodeTrocar = true
               } else {
@@ -117,9 +114,6 @@ export default {
                   .then((response) => {
                     this.checkInvalidLoginResponse(response.data)
                     if (response.data.equivalentes.length) {
-                      if (component.codMod === '07010100572') {
-                        console.log('2')
-                      }
                       component.podeTrocar = true
                       node.filhoPodeTrocar = true
                     } else {
@@ -127,10 +121,6 @@ export default {
                         .then((response) => {
                           this.checkInvalidLoginResponse(response.data)
                           if (response.data.derivacoes.length) {
-                            if (component.codMod === '07010100572') {
-                              console.log('3')
-                              console.log(component.codPro)
-                            }
                             component.podeTrocar = true
                             node.filhoPodeTrocar = true
                           }

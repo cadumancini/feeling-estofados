@@ -127,7 +127,7 @@ export default {
       item.equivalenteSelecionado = null
       document.getElementsByTagName('body')[0].style.cursor = 'wait'
       if (item.proGen === 'S') {
-        await axios.get('http://192.168.1.168:8080/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&token=' + token)
+        await axios.get('http://192.168.1.168:8080/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&derivacao=' + item.codDer + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
@@ -138,7 +138,7 @@ export default {
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
           })
       } else if (item.podeTrocar && item.codDer !== 'G') {
-        await axios.get('http://192.168.1.168:8080/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&token=' + token)
+        await axios.get('http://192.168.1.168:8080/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&derivacao=' + item.codDer + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
@@ -175,7 +175,7 @@ export default {
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
           })
       } else {
-        await axios.get('http://192.168.1.168:8080/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&token=' + token)
+        await axios.get('http://192.168.1.168:8080/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&derivacao=' + item.codDer + '&token=' + token)
           .then(async (response) => {
             this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
