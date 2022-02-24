@@ -12,13 +12,14 @@
             <th class="fw-normal font-small sm-header">Qtde.</th>
             <th class="fw-normal font-small sm-header">U.M.</th>
             <th class="fw-normal font-small sm-header">Ação</th>
-            <th class="fw-normal font-small sm-header"></th>
+            <th class="fw-normal font-small sm-header">Sit.</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody v-if="item.PRODUCTFOUND">
           <TreeItem
-            v-if="item.PRODUCTFOUND"
-            :item="item.ACABADO"
+            v-for="(child, index) in item.ACABADOS"
+            :key="index"
+            :item="child"
             :level=0
             :codEmp="item.CODEMP"
             @trocar="(itemTroca) => efetuarTroca(item, itemTroca)"/>
@@ -65,7 +66,7 @@ export default {
 
         var parseString = require('xml2js').parseString
         var json = null
-        const response = await axios.get('http://192.168.1.168:8080/estrutura?emp=' + this.item.CODEMP + '&fil=1&pro=' + this.item.CODPRO +
+        const response = await axios.get('http://localhost:8080/estrutura?emp=' + this.item.CODEMP + '&fil=1&pro=' + this.item.CODPRO +
           '&der=' + this.item.CODDER + '&ped=' + this.pedido + '&ipd=' + this.item.SEQIPD + '&token=' + token)
         this.checkInvalidLoginResponse(response.data)
         parseString(response.data, { explicitArray: false }, (err, result) => {
@@ -75,6 +76,7 @@ export default {
           json = result
           this.item.ALLCOMPONENTS = json['S:Envelope']['S:Body']['ns2:EstruturaResponse'].result.componentes
           this.item.ACABADO = this.item.ALLCOMPONENTS[0] // inserindo primeiro (produto pai) no objeto
+          this.item.ACABADOS = this.item.ALLCOMPONENTS.filter(comp => /^[1][.]\d+(?!.)/.test(comp.codNiv))
         })
         this.parseAllComponentsIntoFullProduct(this.item)
         this.item.PRODUCTFOUND = true
@@ -82,12 +84,52 @@ export default {
       }
     },
     async parseAllComponentsIntoFullProduct (item) {
-      item.ALLCOMPONENTS.shift() // removendo produto pai do array
+      this.item.ACABADOS.forEach(async acabado => {
+        acabado.codMod = this.item.CODPRO
+        acabado.derMod = this.item.CODDER
+
+        // ver se o pai pode ser trocado
+        if (acabado.exiCmp !== 'S') {
+          const token = sessionStorage.getItem('token')
+          await axios.get('http://localhost:8080/equivalentes?emp=' + this.item.CODEMP + '&modelo=' + this.item.CODPRO + '&componente=' + acabado.codPro + '&derivacao=' + acabado.codDer + '&token=' + token)
+            .then((response) => {
+              this.checkInvalidLoginResponse(response.data)
+              if (response.data.equivalentes.length) {
+                acabado.podeTrocar = true
+              } else {
+                axios.get('http://localhost:8080/equivalentesAdicionais?emp=' + this.item.CODEMP + '&modelo=' + this.item.CODPRO + '&componente=' + acabado.codPro + '&der=' + acabado.codDer + '&token=' + token)
+                  .then((response) => {
+                    this.checkInvalidLoginResponse(response.data)
+                    if (response.data.equivalentes.length) {
+                      acabado.podeTrocar = true
+                    } else {
+                      axios.get('http://localhost:8080/derivacoesPossiveis?emp=' + this.item.CODEMP + '&pro=' + this.item.CODPRO + '&mod=' + acabado.codMod + '&derMod=' + acabado.derMod + '&token=' + token)
+                        .then((response) => {
+                          this.checkInvalidLoginResponse(response.data)
+                          if (response.data.derivacoes.length) {
+                            acabado.podeTrocar = true
+                          }
+                        })
+                        .catch((err) => console.log(err))
+                    }
+                  })
+                  .catch((err) => console.log(err))
+              }
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
+      })
       item.ALLCOMPONENTS.forEach(async component => {
         // percorrer objeto completo
-        await this.checkNodeChildren(item.ACABADO, component)
+        this.item.ACABADOS.forEach(async acabado => {
+          await this.checkNodeChildren(acabado, component)
+        })
       })
-      this.markItemsToExchange(item.ACABADO)
+      this.item.ACABADOS.forEach(acabado => {
+        this.markItemsToExchange(acabado)
+      })
     },
     async checkNodeChildren (node, component) {
       // comparar niveis
@@ -103,21 +145,21 @@ export default {
         component.derMod = node.codDer
         const token = sessionStorage.getItem('token')
         if (component.exiCmp !== 'S') {
-          await axios.get('http://192.168.1.168:8080/equivalentes?emp=' + this.item.CODEMP + '&modelo=' + component.codMod + '&componente=' + component.codPro + '&derivacao=' + component.codDer + '&token=' + token)
+          await axios.get('http://localhost:8080/equivalentes?emp=' + this.item.CODEMP + '&modelo=' + component.codMod + '&componente=' + component.codPro + '&derivacao=' + component.codDer + '&token=' + token)
             .then((response) => {
               this.checkInvalidLoginResponse(response.data)
               if (response.data.equivalentes.length) {
                 component.podeTrocar = true
                 node.filhoPodeTrocar = true
               } else {
-                axios.get('http://192.168.1.168:8080/equivalentesAdicionais?emp=' + this.item.CODEMP + '&modelo=' + component.codMod + '&componente=' + component.codPro + '&der=' + component.codDer + '&token=' + token)
+                axios.get('http://localhost:8080/equivalentesAdicionais?emp=' + this.item.CODEMP + '&modelo=' + component.codMod + '&componente=' + component.codPro + '&der=' + component.codDer + '&token=' + token)
                   .then((response) => {
                     this.checkInvalidLoginResponse(response.data)
                     if (response.data.equivalentes.length) {
                       component.podeTrocar = true
                       node.filhoPodeTrocar = true
                     } else {
-                      axios.get('http://192.168.1.168:8080/derivacoesPossiveis?emp=' + this.item.CODEMP + '&pro=' + component.codPro + '&mod=' + component.codMod + '&derMod=' + component.derMod + '&token=' + token)
+                      axios.get('http://localhost:8080/derivacoesPossiveis?emp=' + this.item.CODEMP + '&pro=' + component.codPro + '&mod=' + component.codMod + '&derMod=' + component.derMod + '&token=' + token)
                         .then((response) => {
                           this.checkInvalidLoginResponse(response.data)
                           if (response.data.derivacoes.length) {
@@ -176,7 +218,7 @@ export default {
         const token = sessionStorage.getItem('token')
         const codEmp = this.item.CODEMP
         let itensMontagem = null
-        await axios.get('http://192.168.1.168:8080/itensMontagem?emp=' + codEmp + '&pro=' + itemTroca.cmpAtu + '&der=' + itemTroca.derAtu + '&token=' + token)
+        await axios.get('http://localhost:8080/itensMontagem?emp=' + codEmp + '&pro=' + itemTroca.cmpAtu + '&der=' + itemTroca.derAtu + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             itensMontagem = response.data.itensMontagem
@@ -236,7 +278,7 @@ export default {
       const token = sessionStorage.getItem('token')
       const codEmp = this.item.CODEMP
       const codFil = 1
-      return axios.post('http://192.168.1.168:8080/equivalente?emp=' + codEmp + '&fil=' + codFil + '&ped=' + numPed + '&ipd=' + seqIpd + '&token=' + token, this.trocas)
+      return axios.post('http://localhost:8080/equivalente?emp=' + codEmp + '&fil=' + codFil + '&ped=' + numPed + '&ipd=' + seqIpd + '&token=' + token, this.trocas)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           const requestResponse = response.data

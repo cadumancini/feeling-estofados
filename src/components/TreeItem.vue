@@ -1,9 +1,9 @@
 <template>
   <!-- <tr style="padding-left: 10px" id="node" v-if="item.exiCmp !== 'S'" v-bind:class="{ trocar: (item.codDer === 'G' || item.proGen === 'S'), temG: item.temG, atencao: item.trocar, filhoPodeTrocar: item.filhoPodeTrocar }"> -->
-  <tr style="padding-left: 10px" id="node" v-show="item.codNiv === '1.0' || (item.exiCmp !== 'S' && ((item.codDer === 'G' || item.proGen === 'S' || item.podeTrocar) || item.temG || item.filhoPodeTrocar))" v-bind:class="{ trocar: (item.codDer === 'G' || item.proGen === 'S'), temG: item.temG, atencao: item.trocar, filhoPodeTrocar: item.filhoPodeTrocar }">
+  <tr style="padding-left: 10px" id="node" v-show="/^[1][.]\d+(?!.)/.test(item.codNiv) || (item.exiCmp !== 'S' && ((item.codDer === 'G' || item.proGen === 'S' || item.podeTrocar) || item.temG || item.filhoPodeTrocar))" v-bind:class="{ trocar: (item.codDer === 'G' || item.proGen === 'S'), temG: item.temG, atencao: item.trocar, filhoPodeTrocar: item.filhoPodeTrocar }">
     <th class="fw-normal">
-      <font-awesome-icon v-if="(item.filhos && isOpen)" icon="minus-square" @click="toggleOpen" class="contract pointer"/>
-      <font-awesome-icon v-else-if="(item.filhos && !isOpen)" icon="plus-square" @click="toggleOpen" class="expand pointer"/>
+      <font-awesome-icon v-if="((item.filhos && (item.temG || item.filhoPodeTrocar)) && isOpen)" icon="minus-square" @click="toggleOpen" class="contract pointer"/>
+      <font-awesome-icon v-else-if="((item.filhos && (item.temG || item.filhoPodeTrocar)) && !isOpen)" icon="plus-square" @click="toggleOpen" class="expand pointer"/>
     </th>
     <th class="fw-normal indent font-small" :style="cssVars">{{ item.codNiv }}</th>
     <th class="fw-normal indent font-small" :style="cssVars">{{ item.codPro }}</th>
@@ -19,7 +19,7 @@
 
     <th class="fw-normal align-center">
       <font-awesome-icon v-if="(item.temG || item.trocar)" icon="exclamation-triangle" class="warning"/>
-      <font-awesome-icon v-else-if="item.codNiv === '1.0'" icon="check-square" class="success"/>
+      <font-awesome-icon v-else-if="/^[1][.]\d+(?!.)/.test(item.codNiv)" icon="check-square" class="success"/>
     </th>
 
     <!-- Modal -->
@@ -127,7 +127,7 @@ export default {
       item.equivalenteSelecionado = null
       document.getElementsByTagName('body')[0].style.cursor = 'wait'
       if (item.proGen === 'S') {
-        await axios.get('http://192.168.1.168:8080/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&derivacao=' + item.codDer + '&token=' + token)
+        await axios.get('http://localhost:8080/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&derivacao=' + item.codDer + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
@@ -138,19 +138,19 @@ export default {
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
           })
       } else if (item.podeTrocar && item.codDer !== 'G') {
-        await axios.get('http://192.168.1.168:8080/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&derivacao=' + item.codDer + '&token=' + token)
+        await axios.get('http://localhost:8080/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&derivacao=' + item.codDer + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
             if (!item.equivalentes.length) {
               item.equivalentes = []
-              axios.get('http://192.168.1.168:8080/equivalentesAdicionais?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&der=' + item.codDer + '&token=' + token)
+              axios.get('http://localhost:8080/equivalentesAdicionais?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&der=' + item.codDer + '&token=' + token)
                 .then((response) => {
                   this.checkInvalidLoginResponse(response.data)
                   item.equivalentes = response.data.equivalentes
                   if (!item.equivalentes.length) {
                     item.equivalentes = []
-                    axios.get('http://192.168.1.168:8080/derivacoesPossiveis?emp=' + this.codEmp + '&pro=' + item.codPro + '&mod=' + item.codMod + '&derMod=' + item.derMod + '&token=' + token)
+                    axios.get('http://localhost:8080/derivacoesPossiveis?emp=' + this.codEmp + '&pro=' + item.codPro + '&mod=' + item.codMod + '&derMod=' + item.derMod + '&token=' + token)
                       .then((response) => {
                         this.checkInvalidLoginResponse(response.data)
                         item.equivalentes = response.data.derivacoes
@@ -175,13 +175,13 @@ export default {
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
           })
       } else {
-        await axios.get('http://192.168.1.168:8080/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&derivacao=' + item.codDer + '&token=' + token)
+        await axios.get('http://localhost:8080/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&derivacao=' + item.codDer + '&token=' + token)
           .then(async (response) => {
             this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
             if (!item.equivalentes.length) {
               item.equivalentes = []
-              await axios.get('http://192.168.1.168:8080/derivacoesPossiveis?emp=' + this.codEmp + '&pro=' + item.codPro + '&mod=' + item.codMod + '&derMod=' + item.derMod + '&token=' + token)
+              await axios.get('http://localhost:8080/derivacoesPossiveis?emp=' + this.codEmp + '&pro=' + item.codPro + '&mod=' + item.codMod + '&derMod=' + item.derMod + '&token=' + token)
                 .then((response) => {
                   this.checkInvalidLoginResponse(response.data)
                   item.equivalentes = response.data.derivacoes
