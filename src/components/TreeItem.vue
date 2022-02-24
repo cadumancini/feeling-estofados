@@ -144,23 +144,10 @@ export default {
             item.equivalentes = response.data.equivalentes
             if (!item.equivalentes.length) {
               item.equivalentes = []
-              axios.get('http://localhost:8080/equivalentesAdicionais?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&der=' + item.codDer + '&token=' + token)
+              axios.get('http://localhost:8080/derivacoesPossiveis?emp=' + this.codEmp + '&pro=' + item.codPro + '&mod=' + item.codMod + '&derMod=' + item.derMod + '&token=' + token)
                 .then((response) => {
                   this.checkInvalidLoginResponse(response.data)
-                  item.equivalentes = response.data.equivalentes
-                  if (!item.equivalentes.length) {
-                    item.equivalentes = []
-                    axios.get('http://localhost:8080/derivacoesPossiveis?emp=' + this.codEmp + '&pro=' + item.codPro + '&mod=' + item.codMod + '&derMod=' + item.derMod + '&token=' + token)
-                      .then((response) => {
-                        this.checkInvalidLoginResponse(response.data)
-                        item.equivalentes = response.data.derivacoes
-                        document.getElementsByTagName('body')[0].style.cursor = 'auto'
-                      })
-                      .catch((err) => {
-                        console.log(err)
-                        document.getElementsByTagName('body')[0].style.cursor = 'auto'
-                      })
-                  }
+                  item.equivalentes = response.data.derivacoes
                   document.getElementsByTagName('body')[0].style.cursor = 'auto'
                 })
                 .catch((err) => {

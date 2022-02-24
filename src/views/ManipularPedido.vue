@@ -97,20 +97,11 @@ export default {
               if (response.data.equivalentes.length) {
                 acabado.podeTrocar = true
               } else {
-                axios.get('http://localhost:8080/equivalentesAdicionais?emp=' + this.item.CODEMP + '&modelo=' + this.item.CODPRO + '&componente=' + acabado.codPro + '&der=' + acabado.codDer + '&token=' + token)
+                axios.get('http://localhost:8080/derivacoesPossiveis?emp=' + this.item.CODEMP + '&pro=' + this.item.CODPRO + '&mod=' + acabado.codMod + '&derMod=' + acabado.derMod + '&token=' + token)
                   .then((response) => {
                     this.checkInvalidLoginResponse(response.data)
-                    if (response.data.equivalentes.length) {
+                    if (response.data.derivacoes.length) {
                       acabado.podeTrocar = true
-                    } else {
-                      axios.get('http://localhost:8080/derivacoesPossiveis?emp=' + this.item.CODEMP + '&pro=' + this.item.CODPRO + '&mod=' + acabado.codMod + '&derMod=' + acabado.derMod + '&token=' + token)
-                        .then((response) => {
-                          this.checkInvalidLoginResponse(response.data)
-                          if (response.data.derivacoes.length) {
-                            acabado.podeTrocar = true
-                          }
-                        })
-                        .catch((err) => console.log(err))
                     }
                   })
                   .catch((err) => console.log(err))
@@ -152,22 +143,12 @@ export default {
                 component.podeTrocar = true
                 node.filhoPodeTrocar = true
               } else {
-                axios.get('http://localhost:8080/equivalentesAdicionais?emp=' + this.item.CODEMP + '&modelo=' + component.codMod + '&componente=' + component.codPro + '&der=' + component.codDer + '&token=' + token)
+                axios.get('http://localhost:8080/derivacoesPossiveis?emp=' + this.item.CODEMP + '&pro=' + component.codPro + '&mod=' + component.codMod + '&derMod=' + component.derMod + '&token=' + token)
                   .then((response) => {
                     this.checkInvalidLoginResponse(response.data)
-                    if (response.data.equivalentes.length) {
+                    if (response.data.derivacoes.length) {
                       component.podeTrocar = true
                       node.filhoPodeTrocar = true
-                    } else {
-                      axios.get('http://localhost:8080/derivacoesPossiveis?emp=' + this.item.CODEMP + '&pro=' + component.codPro + '&mod=' + component.codMod + '&derMod=' + component.derMod + '&token=' + token)
-                        .then((response) => {
-                          this.checkInvalidLoginResponse(response.data)
-                          if (response.data.derivacoes.length) {
-                            component.podeTrocar = true
-                            node.filhoPodeTrocar = true
-                          }
-                        })
-                        .catch((err) => console.log(err))
                     }
                   })
                   .catch((err) => console.log(err))
