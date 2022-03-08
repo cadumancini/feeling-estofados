@@ -95,11 +95,6 @@ export default {
     this.$props.item.hashModal = Math.floor(Math.random() * (niv * 1000))
     this.$props.item.equivalentes = []
     this.$props.item.equivalenteSelecionado = null
-    if (this.item.filhos) {
-      if (this.item.temG || this.item.filhoPodeTrocar) {
-        this.isOpen = false
-      }
-    }
   },
   computed: {
     cssVars () {
