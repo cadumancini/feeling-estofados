@@ -5,14 +5,16 @@
         <thead>
           <tr class="table-secondary">
             <th class="fw-normal sm-header"></th>
+            <!-- remover depois -->
             <th class="fw-normal font-small sm-header">Nível (na estrutura ERP)</th>
-            <th class="fw-normal font-small sm-header">Produto</th>
-            <th class="fw-normal font-small sm-header">Der.</th>
+            <!-- <th class="fw-normal font-small sm-header">Produto</th> -->
+            <!-- <th class="fw-normal font-small sm-header">Der.</th> -->
             <th class="fw-normal font-small sm-header">Descrição</th>
             <th class="fw-normal font-small sm-header">Qtde.</th>
             <th class="fw-normal font-small sm-header">U.M.</th>
             <th class="fw-normal font-small sm-header">Ação</th>
-            <th class="fw-normal font-small sm-header">Sit.</th>
+            <!-- remover depois -->
+            <!-- <th class="fw-normal font-small sm-header">Sit.</th> -->
           </tr>
         </thead>
         <tbody v-if="item.PRODUCTFOUND">

@@ -1,12 +1,13 @@
 <template>
   <tr style="padding-left: 10px" id="node" v-show="(/^[1][.]\d+(?!.)/.test(item.codNiv) && (item.codNiv === '1.0' || item.filhoPodeTrocar || item.temG || item.trocar)) || (item.exiCmp !== 'S' && ((item.codDer === 'G' || item.proGen === 'S' || item.podeTrocar) || item.temG || item.filhoPodeTrocar))" v-bind:class="{ trocar: (item.codDer === 'G' || item.proGen === 'S'), temG: item.temG, atencao: item.trocar, filhoPodeTrocar: item.filhoPodeTrocar }">
     <th class="fw-normal">
-      <font-awesome-icon v-if="((item.filhos && (item.temG || item.filhoPodeTrocar)) && isOpen)" icon="minus-square" @click="toggleOpen" class="contract pointer"/>
-      <font-awesome-icon v-else-if="((item.filhos && (item.temG || item.filhoPodeTrocar)) && !isOpen)" icon="plus-square" @click="toggleOpen" class="expand pointer"/>
+      <font-awesome-icon v-if="((item.filhos && (item.temG || item.filhoPodeTrocar)) && isOpen)" icon="minus-square" @click="toggleOpen" class="expand pointer" v-bind:class="{ warning: (item.temG || item.trocar) }" />
+      <font-awesome-icon v-else-if="((item.filhos && (item.temG || item.filhoPodeTrocar)) && !isOpen)" icon="plus-square" @click="toggleOpen" class="expand pointer" v-bind:class="{ warning: (item.temG || item.trocar) }" />
     </th>
-    <th class="fw-normal indent font-small" :style="cssVars">{{ item.codNiv }}</th>
-    <th class="fw-normal indent font-small" :style="cssVars">{{ item.codPro }}</th>
-    <th class="fw-normal font-small">{{ item.codDer }}</th>
+    <!-- remover depois -->
+    <!-- <th class="fw-normal indent font-small" :style="cssVars">{{ item.codNiv }}</th> -->
+    <!-- <th class="fw-normal indent font-small" :style="cssVars">{{ item.codPro }}</th> -->
+    <!-- <th class="fw-normal font-small">{{ item.codDer }}</th> -->
     <th class="fw-normal font-small" v-if="item.codFam === '02001' && item.codDer !== 'G'">{{ item.codRef }}</th>
       <th class="fw-normal font-small" v-else>{{ item.desPro }} {{ item.desDer }}</th>
     <th class="fw-normal font-small">{{ item.qtdCon }}</th>
@@ -16,10 +17,11 @@
     </th>
     <th v-else></th>
 
-    <th class="fw-normal align-center">
+    <!-- remover depois -->
+    <!-- <th class="fw-normal align-center">
       <font-awesome-icon v-if="(item.temG || item.trocar)" icon="exclamation-triangle" class="warning"/>
       <font-awesome-icon v-else-if="/^[1][.]\d+(?!.)/.test(item.codNiv)" icon="check-square" class="success"/>
-    </th>
+    </th> -->
 
     <!-- Modal -->
     <div class="modal fade" :id="`modal-`+item.hashModal" tabindex="-1" aria-labelledby="equivalentesModalLabel" aria-hidden="true">
