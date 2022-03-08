@@ -1019,7 +1019,7 @@ export default {
         estilo: '',
         config: '',
         comp: '',
-        un: 1,
+        un: '',
         desc: 0,
         comiss: '',
         condEsp: ' ',
@@ -1173,8 +1173,8 @@ export default {
       document.getElementById('closeModalSalvarItens').click()
       let temErro = false
       this.itens.forEach(item => {
-        if (item.un < 1 || item.un > 99) {
-          alert('Erro: Existe(m) produto(s) com quantidade menor que zero ou maior que 99. Verifique!')
+        if (item.un === '' || item.un < 1 || item.un > 99) {
+          alert('Erro: Existe(m) produto(s) com quantidade sem preencher, ou menor que zero, ou maior que 99. Verifique!')
           temErro = true
         }
         if (!item.codEstilo || !item.codConfig || (item.condEsp !== 'M' && !item.codComp)) {
