@@ -22,7 +22,7 @@ export default {
   },
   mounted () {
     if (sessionStorage.getItem('token')) {
-      this.$router.push({ name: 'Home' })
+      this.$router.push({ name: 'GerarPedido' })
     }
     this.$refs.inputUser.focus()
   },
@@ -33,7 +33,7 @@ export default {
       const formData = new FormData()
       formData.append('user', this.user)
       formData.append('pswd', this.password)
-      axios.post('http://192.168.1.168:8080/login', formData)
+      axios.post('http://localhost:8080/login', formData)
         .then((response) => {
           document.getElementsByTagName('body')[0].style.cursor = 'auto'
           document.getElementById('btnLogin').disabled = false
@@ -42,7 +42,7 @@ export default {
             this.$refs.inputUser.focus()
           } else {
             sessionStorage.setItem('token', response.data)
-            this.$router.push({ name: 'Home' })
+            this.$router.push({ name: 'GerarPedido' })
           }
         })
         .catch((err) => {

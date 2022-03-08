@@ -8,7 +8,7 @@ import { useCurrencyInput } from 'vue-currency-input'
 export default {
   name: 'CurrencyInput',
   props: {
-    modelValue: Number, // Vue 2: value
+    modelValue: Number,
     options: Object
   },
   setup (props) {

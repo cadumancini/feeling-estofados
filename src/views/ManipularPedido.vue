@@ -1,97 +1,53 @@
 <template>
-  <div class="manipularPedido">
-    <Navbar/>
-    <div class="mx-3">
-      <div class="row mb-3">
-        <p class="fw-bold fs-3">Manipulação de Pedido</p>
-      </div>
-      <div class="row mb-3">
-        <label for="pedido" class="form-label">Pedido:</label>
-        <div class="col-auto">
-          <input id="pedido" class="form-control" type="number" v-model="pedido" ref="inputPedido">
-        </div>
-        <div class="col-auto">
-          <button class="btn btn-secondary" id="btnBuscarPedido" @click="buscaPedido">Buscar</button>
-        </div>
-        <div class="col-auto">
-          <button class="btn btn-secondary" @click="limpar">Cancelar</button>
-        </div>
-      </div>
-
-      <div class="row mb-3 mx-0">
-        <table v-if="itens.length" class="table table-striped table-bordered table-sm table-responsive">
-          <thead>
-            <tr class="table-dark">
-              <th class="fw-normal">Seq</th>
-              <th class="fw-normal">Produto</th>
-              <th class="fw-normal">Der.</th>
-              <th class="fw-normal">Descrição</th>
-              <th class="fw-normal">Qtde.</th>
-              <th class="fw-normal">Ação</th>
-            </tr>
-          </thead>
-          <tbody v-for="item in itens" :key="item.codPro">
-            <tr>
-              <td class="fw-normal">{{ item.SEQIPD }}</td>
-              <td class="fw-normal">{{ item.CODPRO }}</td>
-              <td class="fw-normal">{{ item.CODDER }}</td>
-              <td class="fw-normal">{{ item.DSCPRO }}</td>
-              <td class="fw-normal">{{ item.QTDPED }}</td>
-              <td><button class="btn btn-sm btn-primary" :id="`btnManipular` + item.SEQIPD" @click="manipularItem(item)">Manipular</button></td>
-            </tr>
-            <tr v-if="item.MANIPULAR">
-              <td colspan="6">
-                <table class="table table-hover table-bordered table-sm table-responsive">
-                  <thead>
-                    <tr class="table-secondary">
-                      <th class="fw-normal"></th>
-                      <th class="fw-normal font-small">Nível</th>
-                      <th class="fw-normal font-small">Produto</th>
-                      <th class="fw-normal font-small">Der.</th>
-                      <th class="fw-normal font-small">Descrição</th>
-                      <th class="fw-normal font-small">Qtde.</th>
-                      <th class="fw-normal font-small">U.M.</th>
-                      <th class="fw-normal font-small">Ação</th>
-                      <th class="fw-normal font-small"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <TreeItem
-                      v-if="item.PRODUCTFOUND"
-                      :item="item.ACABADO"
-                      :level=0
-                      @trocar="(itemTroca) => efetuarTroca(item, itemTroca)"/>
-                  </tbody>
-                </table>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+  <div class="mx-3">
+    <div class="row mb-1">
+      <table v-if="item.MANIPULAR" class="table table-hover table-bordered table-sm table-responsive">
+        <thead>
+          <tr class="table-secondary">
+            <th class="fw-normal sm-header"></th>
+            <th class="fw-normal font-small sm-header">Nível (na estrutura ERP)</th>
+            <th class="fw-normal font-small sm-header">Produto</th>
+            <th class="fw-normal font-small sm-header">Der.</th>
+            <th class="fw-normal font-small sm-header">Descrição</th>
+            <th class="fw-normal font-small sm-header">Qtde.</th>
+            <th class="fw-normal font-small sm-header">U.M.</th>
+            <th class="fw-normal font-small sm-header">Ação</th>
+            <th class="fw-normal font-small sm-header">Sit.</th>
+          </tr>
+        </thead>
+        <tbody v-if="item.PRODUCTFOUND">
+          <TreeItem
+            v-for="(child, index) in item.ACABADOS"
+            :key="index"
+            :item="child"
+            :level=0
+            :codEmp="item.CODEMP"
+            @trocar="(itemTroca) => efetuarTroca(item, itemTroca)"/>
+        </tbody>
+      </table>
     </div>
-</div>
+  </div>
 </template>
 
 <script>
-import Navbar from '../components/Navbar.vue'
 import TreeItem from '../components/TreeItem.vue'
 import axios from 'axios'
 export default {
-  props: ['numPed'],
-  components: { TreeItem, Navbar },
+  components: { TreeItem },
+  props: ['seqIpd', 'numPed'],
   data () {
     return {
-      pedido: this.numPed,
-      itens: [],
+      pedido: 0,
+      item: {},
       trocas: []
     }
   },
+  created () {
+    this.pedido = this.numPed
+    this.item = this.seqIpd
+    this.manipularItem()
+  },
   methods: {
-    limpar () {
-      this.pedido = ''
-      this.itens = []
-      this.$nextTick(() => this.$refs.inputPedido.focus())
-    },
     checkInvalidLoginResponse (response) {
       if (response === 'Token inválido.') {
         alert('Seu token de acesso não é mais válido. É necessário fazer login novamente.')
@@ -99,63 +55,72 @@ export default {
         this.$router.push({ name: 'Login' })
       }
     },
-    buscaPedido () {
-      if (this.pedido === '' || this.pedido === undefined) {
-        alert('Favor preencher o pedido')
+    async manipularItem () {
+      if (this.item.MANIPULAR) {
+        this.item.MANIPULAR = false
       } else {
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
-        document.getElementById('btnBuscarPedido').disabled = true
-        const token = sessionStorage.getItem('token')
-        axios.get('http://192.168.1.168:8080/itensPedido?emp=1&fil=1&ped=' + this.pedido + '&token=' + token)
-          .then((response) => {
-            this.checkInvalidLoginResponse(response.data)
-            this.itens = response.data.itens
-            document.getElementsByTagName('body')[0].style.cursor = 'auto'
-            document.getElementById('btnBuscarPedido').disabled = false
-          })
-          .catch((err) => {
-            console.log(err)
-            document.getElementsByTagName('body')[0].style.cursor = 'auto'
-            document.getElementById('btnBuscarPedido').disabled = false
-          })
-      }
-    },
-    async manipularItem (item) {
-      if (item.MANIPULAR) {
-        item.MANIPULAR = false
-      } else {
-        document.getElementsByTagName('body')[0].style.cursor = 'wait'
-        document.getElementById('btnManipular' + item.SEQIPD).disabled = true
-        item.MANIPULAR = true
-        item.PRODUCTFOUND = false
+        this.item.MANIPULAR = true
+        this.item.PRODUCTFOUND = false
         const token = sessionStorage.getItem('token')
 
         var parseString = require('xml2js').parseString
         var json = null
-        const response = await axios.get('http://192.168.1.168:8080/estrutura?emp=1&fil=1&pro=' + item.CODPRO +
-          '&der=' + item.CODDER + '&ped=' + this.pedido + '&ipd=' + item.SEQIPD + '&token=' + token)
+        const response = await axios.get('http://localhost:8080/estrutura?emp=' + this.item.CODEMP + '&fil=1&pro=' + this.item.CODPRO +
+          '&der=' + this.item.CODDER + '&ped=' + this.pedido + '&ipd=' + this.item.SEQIPD + '&token=' + token)
         this.checkInvalidLoginResponse(response.data)
         parseString(response.data, { explicitArray: false }, (err, result) => {
           if (err) {
             console.log(err)
           }
           json = result
-          item.ALLCOMPONENTS = json['S:Envelope']['S:Body']['ns2:EstruturaResponse'].result.componentes
-          item.ACABADO = item.ALLCOMPONENTS[0] // inserindo primeiro (produto pai) no objeto
+          this.item.ALLCOMPONENTS = json['S:Envelope']['S:Body']['ns2:EstruturaResponse'].result.componentes
+          this.item.ACABADO = this.item.ALLCOMPONENTS[0] // inserindo primeiro (produto pai) no objeto
+          this.item.ACABADOS = this.item.ALLCOMPONENTS.filter(comp => /^[1][.]\d+(?!.)/.test(comp.codNiv))
         })
-        this.parseAllComponentsIntoFullProduct(item)
-        item.PRODUCTFOUND = true
+        this.parseAllComponentsIntoFullProduct(this.item)
+        this.item.PRODUCTFOUND = true
         document.getElementsByTagName('body')[0].style.cursor = 'auto'
-        document.getElementById('btnManipular' + item.SEQIPD).disabled = false
       }
     },
     async parseAllComponentsIntoFullProduct (item) {
-      item.ALLCOMPONENTS.shift() // removendo produto pai do array
+      this.item.ACABADOS.forEach(async acabado => {
+        acabado.codMod = this.item.CODPRO
+        acabado.derMod = this.item.CODDER
+
+        // ver se o pai pode ser trocado
+        if (acabado.exiCmp !== 'S') {
+          const token = sessionStorage.getItem('token')
+          await axios.get('http://localhost:8080/equivalentes?emp=' + this.item.CODEMP + '&modelo=' + this.item.CODPRO + '&componente=' + acabado.codPro + '&derivacao=' + acabado.codDer + '&token=' + token)
+            .then((response) => {
+              this.checkInvalidLoginResponse(response.data)
+              if (response.data.equivalentes.length) {
+                acabado.podeTrocar = true
+              } else {
+                axios.get('http://localhost:8080/derivacoesPossiveis?emp=' + this.item.CODEMP + '&pro=' + this.item.CODPRO + '&mod=' + acabado.codMod + '&derMod=' + acabado.derMod + '&token=' + token)
+                  .then((response) => {
+                    this.checkInvalidLoginResponse(response.data)
+                    if (response.data.derivacoes.length) {
+                      acabado.podeTrocar = true
+                    }
+                  })
+                  .catch((err) => console.log(err))
+              }
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
+      })
       item.ALLCOMPONENTS.forEach(async component => {
         // percorrer objeto completo
-        await this.checkNodeChildren(item.ACABADO, component)
+        this.item.ACABADOS.forEach(async acabado => {
+          await this.checkNodeChildren(acabado, component)
+        })
       })
-      this.markItemsToExchange(item.ACABADO)
+      this.item.ACABADOS.forEach(acabado => {
+        this.markItemsToExchange(acabado)
+      })
     },
     async checkNodeChildren (node, component) {
       // comparar niveis
@@ -167,16 +132,34 @@ export default {
           node.filhos = [component]
         }
         component.codMod = node.codPro
+        component.agpMod = node.codAgp
         component.derMod = node.codDer
         const token = sessionStorage.getItem('token')
-        axios.get('http://192.168.1.168:8080/equivalentesAdicionais?emp=1&modelo=' + component.codMod + '&componente=' + component.codPro + '&der=' + component.codDer + '&token=' + token)
-          .then((response) => {
-            this.checkInvalidLoginResponse(response.data)
-            if (response.data.equivalentes.length) {
-              component.podeTrocar = true
-            }
-          })
-          .catch((err) => console.log(err))
+        if (component.exiCmp !== 'S') {
+          await axios.get('http://localhost:8080/equivalentes?emp=' + this.item.CODEMP + '&modelo=' + component.codMod + '&componente=' + component.codPro + '&derivacao=' + component.codDer + '&token=' + token)
+            .then((response) => {
+              this.checkInvalidLoginResponse(response.data)
+              if (response.data.equivalentes.length) {
+                component.podeTrocar = true
+                node.filhoPodeTrocar = true
+              } else {
+                axios.get('http://localhost:8080/derivacoesPossiveis?emp=' + this.item.CODEMP + '&pro=' + component.codPro + '&mod=' + component.codMod + '&derMod=' + component.derMod + '&token=' + token)
+                  .then((response) => {
+                    this.checkInvalidLoginResponse(response.data)
+                    if (response.data.derivacoes.length) {
+                      component.podeTrocar = true
+                      node.filhoPodeTrocar = true
+                    }
+                  })
+                  .catch((err) => console.log(err))
+              }
+              document.getElementsByTagName('body')[0].style.cursor = 'auto'
+            })
+            .catch((err) => {
+              console.log(err)
+              document.getElementsByTagName('body')[0].style.cursor = 'auto'
+            })
+        }
       } else {
         if (node.filhos) {
           node.filhos.forEach(filho => {
@@ -214,9 +197,9 @@ export default {
       this.trocas.push(itemTroca)
       if (itemTroca.codFam === '02001') {
         const token = sessionStorage.getItem('token')
-        const codEmp = 1
+        const codEmp = this.item.CODEMP
         let itensMontagem = null
-        await axios.get('http://192.168.1.168:8080/itensMontagem?emp=' + codEmp + '&pro=' + itemTroca.cmpAtu + '&der=' + itemTroca.derAtu + '&token=' + token)
+        await axios.get('http://localhost:8080/itensMontagem?emp=' + codEmp + '&pro=' + itemTroca.cmpAtu + '&der=' + itemTroca.derAtu + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             itensMontagem = response.data.itensMontagem
@@ -237,7 +220,7 @@ export default {
       if (filho.codPro === itemTroca.cmpAnt &&
         filho.codDer === itemTroca.derAnt &&
         filho.codNiv !== itemTroca.codNiv &&
-        (filho.codDer === 'G' || filho.proGen === 'S')) {
+        filho.agpMod === itemTroca.agpMod) {
         const objTroca = {
           codNiv: filho.codNiv,
           codMod: pai.codPro,
@@ -274,9 +257,9 @@ export default {
     },
     async requestTroca (numPed, seqIpd, item) {
       const token = sessionStorage.getItem('token')
-      const codEmp = 1
+      const codEmp = this.item.CODEMP
       const codFil = 1
-      return axios.post('http://192.168.1.168:8080/equivalente?emp=' + codEmp + '&fil=' + codFil + '&ped=' + numPed + '&ipd=' + seqIpd + '&token=' + token, this.trocas)
+      return axios.post('http://localhost:8080/equivalente?emp=' + codEmp + '&fil=' + codFil + '&ped=' + numPed + '&ipd=' + seqIpd + '&token=' + token, this.trocas)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           const requestResponse = response.data
@@ -297,11 +280,20 @@ export default {
 </script>
 
 <style scoped>
-  html, body {
-      height: 100%;
-    }
-  .manipularPedido {
-    height: 100%;
-    background-color: #f5f5f5;
+  .btn-dismiss {
+    color: #fff;
+    background-color: #aab4bd;
+    border-color: #aab4bd;
+  }
+  .btn-dismiss:hover {
+    color: #fff;
+    background-color: #93999e;
+    border-color: #93999e;
+  }
+  .sm {
+    font-size: 0.8rem !important;
+  }
+  .sm-header {
+    font-size: 0.9rem !important;
   }
 </style>

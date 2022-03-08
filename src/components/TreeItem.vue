@@ -1,13 +1,14 @@
 <template>
-  <tr style="padding-left: 10px" id="node" v-if="item.exiCmp !== 'S'" v-bind:class="{ trocar: (item.codDer === 'G' || item.proGen === 'S'), temG: item.temG, atencao: item.trocar }">
+  <tr style="padding-left: 10px" id="node" v-show="(/^[1][.]\d+(?!.)/.test(item.codNiv) && (item.codNiv === '1.0' || item.filhoPodeTrocar || item.temG || item.trocar)) || (item.exiCmp !== 'S' && ((item.codDer === 'G' || item.proGen === 'S' || item.podeTrocar) || item.temG || item.filhoPodeTrocar))" v-bind:class="{ trocar: (item.codDer === 'G' || item.proGen === 'S'), temG: item.temG, atencao: item.trocar, filhoPodeTrocar: item.filhoPodeTrocar }">
     <th class="fw-normal">
-      <font-awesome-icon v-if="(item.filhos && isOpen)" icon="minus-square" @click="toggleOpen" class="contract pointer"/>
-      <font-awesome-icon v-else-if="(item.filhos && !isOpen)" icon="plus-square" @click="toggleOpen" class="expand pointer"/>
+      <font-awesome-icon v-if="((item.filhos && (item.temG || item.filhoPodeTrocar)) && isOpen)" icon="minus-square" @click="toggleOpen" class="contract pointer"/>
+      <font-awesome-icon v-else-if="((item.filhos && (item.temG || item.filhoPodeTrocar)) && !isOpen)" icon="plus-square" @click="toggleOpen" class="expand pointer"/>
     </th>
     <th class="fw-normal indent font-small" :style="cssVars">{{ item.codNiv }}</th>
     <th class="fw-normal indent font-small" :style="cssVars">{{ item.codPro }}</th>
     <th class="fw-normal font-small">{{ item.codDer }}</th>
-    <th class="fw-normal font-small">{{ item.desPro }} {{ item.desDer }}</th>
+    <th class="fw-normal font-small" v-if="item.codFam === '02001' && item.codDer !== 'G'">{{ item.codRef }}</th>
+      <th class="fw-normal font-small" v-else>{{ item.desPro }} {{ item.desDer }}</th>
     <th class="fw-normal font-small">{{ item.qtdCon }}</th>
     <th class="fw-normal font-small">{{ item.uniMed }}</th>
     <th class="fw-normal align-center exchange" v-if="item.codDer === 'G' || item.proGen === 'S' || item.podeTrocar">
@@ -17,7 +18,7 @@
 
     <th class="fw-normal align-center">
       <font-awesome-icon v-if="(item.temG || item.trocar)" icon="exclamation-triangle" class="warning"/>
-      <font-awesome-icon v-else-if="level === 0" icon="check-square" class="success"/>
+      <font-awesome-icon v-else-if="/^[1][.]\d+(?!.)/.test(item.codNiv)" icon="check-square" class="success"/>
     </th>
 
     <!-- Modal -->
@@ -25,8 +26,8 @@
       <div class="modal-dialog modal-dialog-scrollable modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="equivalentesModalLabel">Busca de Produtos Equivalentes</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModal"></button>
+            <h5 class="modal-title">Busca de Produtos Equivalentes</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" id="closeModal"></button>
           </div>
           <div class="modal-body">
             <div class="mb-3" v-if="item.equivalentes !== []">
@@ -35,6 +36,7 @@
                   <tr>
                     <th scope="col">Produto</th>
                     <th scope="col">Derivação</th>
+                    <th scope="col">Referência</th>
                     <th scope="col">Descrição</th>
                   </tr>
                 </thead>
@@ -42,6 +44,7 @@
                   <tr v-for="equivalenteRow in item.equivalentes" :key="equivalenteRow.CODPRO" class="mouseHover pointer" @click="selecionarEquivalente(equivalenteRow)">
                     <th class="fw-normal" scope="row">{{ equivalenteRow.CODPRO }}</th>
                     <th class="fw-normal">{{ equivalenteRow.CODDER }}</th>
+                    <th class="fw-normal">{{ equivalenteRow.CODREF }}</th>
                     <th class="fw-normal">{{ equivalenteRow.DSCEQI }}</th>
                   </tr>
                 </tbody>
@@ -72,7 +75,8 @@
     v-for="(child, index) in item.filhos"
     :key="index"
     :item="child"
-    :level="level + 1"
+    :codEmp="codEmp"
+    :level="(child.exiCmp !== 'S' && ((child.codDer === 'G' || child.proGen === 'S' || child.podeTrocar) || child.temG || child.filhoPodeTrocar)) ? level + 1 : level"
     @trocar="trocar"/>
 </template>
 
@@ -80,10 +84,10 @@
 import axios from 'axios'
 export default {
   name: 'TreeItem',
-  props: ['item', 'level'],
+  props: ['item', 'level', 'codEmp'],
   data () {
     return {
-      isOpen: false
+      isOpen: true
     }
   },
   created () {
@@ -91,6 +95,11 @@ export default {
     this.$props.item.hashModal = Math.floor(Math.random() * (niv * 1000))
     this.$props.item.equivalentes = []
     this.$props.item.equivalenteSelecionado = null
+    if (this.item.filhos) {
+      if (this.item.temG || this.item.filhoPodeTrocar) {
+        this.isOpen = false
+      }
+    }
   },
   computed: {
     cssVars () {
@@ -117,7 +126,7 @@ export default {
       item.equivalenteSelecionado = null
       document.getElementsByTagName('body')[0].style.cursor = 'wait'
       if (item.proGen === 'S') {
-        await axios.get('http://192.168.1.168:8080/equivalentes?emp=1&modelo=' + item.codMod + '&componente=' + item.codPro + '&token=' + token)
+        await axios.get('http://localhost:8080/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&derivacao=' + item.codDer + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
@@ -127,11 +136,24 @@ export default {
             console.log(err)
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
           })
-      } else if (item.podeTrocar) {
-        await axios.get('http://192.168.1.168:8080/equivalentesAdicionais?emp=1&modelo=' + item.codMod + '&componente=' + item.codPro + '&der=' + item.codDer + '&token=' + token)
+      } else if (item.podeTrocar && item.codDer !== 'G') {
+        await axios.get('http://localhost:8080/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&derivacao=' + item.codDer + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
+            if (!item.equivalentes.length) {
+              item.equivalentes = []
+              axios.get('http://localhost:8080/derivacoesPossiveis?emp=' + this.codEmp + '&pro=' + item.codPro + '&mod=' + item.codMod + '&derMod=' + item.derMod + '&token=' + token)
+                .then((response) => {
+                  this.checkInvalidLoginResponse(response.data)
+                  item.equivalentes = response.data.derivacoes
+                  document.getElementsByTagName('body')[0].style.cursor = 'auto'
+                })
+                .catch((err) => {
+                  console.log(err)
+                  document.getElementsByTagName('body')[0].style.cursor = 'auto'
+                })
+            }
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
           })
           .catch((err) => {
@@ -139,13 +161,13 @@ export default {
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
           })
       } else {
-        await axios.get('http://192.168.1.168:8080/equivalentes?emp=1&modelo=' + item.codMod + '&componente=' + item.codPro + '&token=' + token)
+        await axios.get('http://localhost:8080/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&derivacao=' + item.codDer + '&token=' + token)
           .then(async (response) => {
             this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
             if (!item.equivalentes.length) {
               item.equivalentes = []
-              await axios.get('http://192.168.1.168:8080/derivacoesPossiveis?emp=1&pro=' + item.codPro + '&token=' + token)
+              await axios.get('http://localhost:8080/derivacoesPossiveis?emp=' + this.codEmp + '&pro=' + item.codPro + '&mod=' + item.codMod + '&derMod=' + item.derMod + '&token=' + token)
                 .then((response) => {
                   this.checkInvalidLoginResponse(response.data)
                   item.equivalentes = response.data.derivacoes
@@ -172,6 +194,7 @@ export default {
       const itemTroca = {
         codNiv: this.$props.item.codNiv,
         codMod: this.$props.item.codMod,
+        agpMod: this.$props.item.agpMod,
         derMod: this.$props.item.derMod,
         cmpAnt: this.$props.item.codPro,
         derAnt: this.$props.item.codDer,
@@ -193,41 +216,37 @@ export default {
 </script>
 
 <style scoped>
- /* .atencao, .temG {
-   background-color: #fffac2;
- } */
- th {
-   vertical-align: middle;
- }
- .align-center {
-   text-align: center;
- }
- .trocar {
-   background-color: #ffdede;
- }
- .pointer {
-   cursor: pointer;
- }
- .expand {
-   color: #28a745;
- }
- .success {
-   color: #28a745;
- }
- .contract {
-   /* color: #0d6efd; */
-   color: #007bbd;
- }
- .exchange {
-   color: #0d6efd;
- }
- .warning {
-   color: red;
- }
- .indent {
-   padding-left: var(--padding);
- }
- .font-small {
-   font-size: small;
- }
+  th {
+    vertical-align: middle;
+  }
+  .align-center {
+    text-align: center;
+  }
+  .trocar {
+    background-color: #ffdede;
+  }
+  .pointer {
+    cursor: pointer;
+  }
+  .expand {
+    color: #28a745;
+  }
+  .success {
+    color: #28a745;
+  }
+  .contract {
+    color: #007bbd;
+  }
+  .exchange {
+    color: #0d6efd;
+  }
+  .warning {
+    color: red;
+  }
+  .indent {
+    padding-left: var(--padding);
+  }
+  .font-small {
+    font-size: small;
+  }
 </style>
