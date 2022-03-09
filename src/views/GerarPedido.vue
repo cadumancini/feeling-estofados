@@ -469,7 +469,7 @@
                 <td><button class="btn btn-sm btn-danger sm" :disabled="enviadoEmpresa" @click="deleteItem(item)">Excluir</button></td>
               </tr>
               <tr v-if="item.MANIPULAR">
-                <td colspan="12">
+                <td colspan="8">
                   <ManipularPedido ref="manipularPedido" :numPed="numPed" :seqIpd="{
                                                                               CODEMP: empresa,
                                                                               NUMPED: numPed,

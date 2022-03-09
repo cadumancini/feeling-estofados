@@ -8,8 +8,9 @@
     <!-- <th class="fw-normal indent font-small" :style="cssVars">{{ item.codNiv }}</th> -->
     <!-- <th class="fw-normal indent font-small" :style="cssVars">{{ item.codPro }}</th> -->
     <!-- <th class="fw-normal font-small">{{ item.codDer }}</th> -->
-    <th class="fw-normal font-small" v-if="item.codFam === '02001' && item.codDer !== 'G'">{{ item.codRef }}</th>
-      <th class="fw-normal font-small" v-else>{{ item.desPro }} {{ item.desDer }}</th>
+    <th class="fw-normal font-small" v-if="item.codFam === '02001' && item.codDer !== 'G'"><span class="indent pipe" :style="cssVars">|</span><span class="dash">&#8213;&#8213;&#8213;&#8213;&#8213;&#8213;</span><span class="pe-2">></span>{{ item.codRef }}</th>
+    <th class="fw-normal font-small" v-else><span class="indent pipe" :style="cssVars">|</span><span class="dash">&#8213;&#8213;&#8213;&#8213;&#8213;&#8213;</span><span class="pe-2">></span>{{ item.desPro }} {{ item.desDer }}</th>
+
     <th class="fw-normal font-small">{{ item.qtdCon }}</th>
     <th class="fw-normal font-small">{{ item.uniMed }}</th>
     <th class="fw-normal align-center exchange" v-if="item.codDer === 'G' || item.proGen === 'S' || item.podeTrocar">
@@ -245,5 +246,15 @@ export default {
   }
   .font-small {
     font-size: small;
+  }
+  .pipe {
+    position: relative;
+    top: -6px;
+    left: 2px;
+  }
+  .pipe-2 {
+    position: relative;
+    bottom: -6px;
+    right: 1.4px;
   }
 </style>
