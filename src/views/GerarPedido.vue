@@ -405,8 +405,8 @@
                 <th class="fw-normal sm-header" style="width: 4%;"><small>Desc. (%)</small></th>
                 <th class="fw-normal sm-header" style="width: 5%;"><small>Comiss. (%)</small></th>
                 <th class="fw-normal sm-header" style="width: 14%;"><small>Cond. Especial</small></th>
-                <th class="fw-normal sm-header" style="width: 18%;"><small>Observações</small></th>
-                <th class="fw-normal sm-header" style="width: 6%;"><small>Vlr. Unit. (R$)</small></th>
+                <th class="fw-normal sm-header" style="width: 17%;"><small>Observações</small></th>
+                <th class="fw-normal sm-header" style="width: 7%;"><small>Vlr. Unit. (R$)</small></th>
                 <th class="fw-normal sm-header" style="width: 4%;"><small>Ação</small></th>
               </tr>
             </thead>
