@@ -1250,7 +1250,7 @@ export default {
         this.itens.forEach(item => {
           itensPedido.push(
             {
-              numCnj: item.cnj,
+              numCnj: item.cnj === '' ? ' ' : item.cnj,
               codPro: item.codConfig,
               desPro: (item.config + ' ' + item.comp),
               codDer: item.codComp,
