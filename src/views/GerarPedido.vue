@@ -50,6 +50,7 @@
               <div class="input-group input-group-sm">
                 <span class="input-group-text">Transportadora</span>
                 <input id="transportadora" class="form-control" type="text" disabled v-model="transportadora">
+                <button id="btnBuscaTransportadoras" :disabled="numPed !== '' || cliente === ''" class="btn btn-secondary input-group-btn" @click="buscaTransportadoras" data-bs-toggle="modal" data-bs-target="#transportadorasModal">...</button>
               </div>
             </div>
             <div class="col-3">
@@ -200,6 +201,43 @@
               </div>
               <div v-else>
                 <label>Buscando clientes ...</label>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fechar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Transportadoras -->
+      <div class="modal fade" id="transportadorasModal" tabindex="-1" aria-labelledby="transportadorasModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="transportadorasModalLabel">Busca de Transportadoras</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalTransportadoras"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3" v-if="transportadoras != null">
+                <input type="text" class="form-control mb-3" v-on:keyup="filtrarTransportadoras" v-model="transportadorasFiltro" placeholder="Digite para buscar a transportadora na tabela abaixo">
+                <table class="table table-striped table-hover table-bordered table-sm table-responsive">
+                  <thead>
+                    <tr>
+                      <th class="sm-header" scope="col">Código</th>
+                      <th class="sm-header" scope="col">Transportadora</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="transportadoraRow in transportadorasFiltradas" :key="transportadoraRow.CODTRA" class="mouseHover" @click="selectTransportadora(transportadoraRow)">
+                      <th class="fw-normal sm" scope="row">{{ transportadoraRow.CODTRA }}</th>
+                      <th class="fw-normal sm">{{ transportadoraRow.NOMTRA }}</th>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div v-else>
+                <label>Buscando transportadoras ...</label>
               </div>
             </div>
             <div class="modal-footer">
@@ -673,11 +711,13 @@ export default {
   data () {
     return {
       clientes: null,
+      transportadoras: null,
       estilos: null,
       configs: null,
       comps: null,
       condicoesPagto: null,
       clientesFiltrados: null,
+      transportadorasFiltradas: null,
       pedidosClienteFiltrados: null,
       pedidosFiltrados: null,
       estilosFiltrados: null,
@@ -690,6 +730,7 @@ export default {
       codCondPagamento: '',
       condPagamento: '',
       clientesFiltro: '',
+      transportadorasFiltro: '',
       clientesOpcaoFiltro: 'desc',
       pedidosClienteFiltro: '',
       pedidosFiltro: '',
@@ -765,6 +806,27 @@ export default {
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
             document.getElementById('btnBuscaClientes').disabled = false
             console.log(err)
+          })
+      }
+    },
+    buscaTransportadoras () {
+      this.transportadorasFiltro = ''
+      if (this.transportadoras === null) {
+        document.getElementsByTagName('body')[0].style.cursor = 'wait'
+        document.getElementById('btnBuscaTransportadoras').disabled = true
+        const token = sessionStorage.getItem('token')
+        axios.get('http://localhost:8080/transportadoras?token=' + token)
+          .then((response) => {
+            this.checkInvalidLoginResponse(response.data)
+            this.transportadoras = response.data.transportadoras
+            this.transportadorasFiltradas = response.data.transportadoras
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+          .finally(() => {
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
+            document.getElementById('btnBuscaTransportadoras').disabled = false
           })
       }
     },
@@ -920,6 +982,11 @@ export default {
       this.empresasCliente = []
       document.getElementById('closeModalClientes').click()
       this.buscarDadosCliente(this.cliente, false)
+    },
+    selectTransportadora (transportadoraClicked) {
+      this.codTransportadora = transportadoraClicked.CODTRA
+      this.transportadora = transportadoraClicked.NOMTRA
+      document.getElementById('closeModalTransportadoras').click()
     },
     selectPedidoCliente (pedidoClienteClicked) {
       this.numPed = pedidoClienteClicked.NUMPED
@@ -1121,6 +1188,9 @@ export default {
     },
     filtrarPedidosCliente () {
       this.pedidosClienteFiltrados = this.pedidosCliente.filter(pedido => pedido.PEDCLI.toUpperCase().startsWith(this.pedidosClienteFiltro.toUpperCase()))
+    },
+    filtrarTransportadoras () {
+      this.transportadorasFiltradas = this.transportadoras.filter(transp => transp.NOMTRA.toUpperCase().startsWith(this.transportadorasFiltro.toUpperCase()))
     },
     filtrarPedidos () {
       this.pedidosFiltrados = this.pedidos.filter(pedido => pedido.NUMPED.toUpperCase().startsWith(this.pedidosFiltro.toUpperCase()))
