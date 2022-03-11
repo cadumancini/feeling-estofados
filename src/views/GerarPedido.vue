@@ -1181,7 +1181,7 @@ export default {
           alert('Erro: Existe(m) produto(s) faltando definir estilo, configuração ou comprimento. Verifique!')
           temErro = true
         }
-        if (item.cnj !== '' && item.cnj < 1) {
+        if (item.cnj !== '' && item.cnj !== ' ' && item.cnj < 1) {
           alert('Erro: Existe(m) produto(s) com número de conjunto menor que 1. Verifique!')
           temErro = true
         }

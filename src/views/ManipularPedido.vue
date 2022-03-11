@@ -142,6 +142,7 @@ export default {
             .then((response) => {
               this.checkInvalidLoginResponse(response.data)
               if (response.data.equivalentes.length) {
+                component.equivalentes = response.data.equivalentes
                 component.podeTrocar = true
                 node.filhoPodeTrocar = true
               } else {
@@ -192,7 +193,7 @@ export default {
         pai.temG = true
       }
     },
-    async efetuarTroca (item, itemTroca) {
+    efetuarTroca (item, itemTroca) {
       document.getElementsByTagName('body')[0].style.cursor = 'wait'
       const seqIpd = item.SEQIPD
       this.trocas = []
@@ -202,7 +203,7 @@ export default {
         const codEmp = this.item.CODEMP
         let itensMontagem = null
         item.ACABADO.filhos.forEach(filho => this.analisarSeTrocarFilhos(item, filho, itemTroca))
-        await axios.get('http://localhost:8080/itensMontagem?emp=' + codEmp + '&pro=' + itemTroca.cmpAtu + '&der=' + itemTroca.derAtu + '&token=' + token)
+        axios.get('http://localhost:8080/itensMontagem?emp=' + codEmp + '&pro=' + itemTroca.cmpAtu + '&der=' + itemTroca.derAtu + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             itensMontagem = response.data.itensMontagem
@@ -211,8 +212,42 @@ export default {
           .catch((err) => {
             console.log(err)
           })
+      } else if (itemTroca.codFam === '05001') { // talhado
+        // Ver se existem outros talhados com o mesmo agrupamento para trocar
+        item.ACABADO.filhos.forEach(filho => this.analisarSeTrocarTalhado(item, filho, itemTroca))
       }
       this.requestTroca(this.pedido, seqIpd, item)
+    },
+    analisarSeTrocarTalhado (pai, filho, itemTroca) {
+      if (pai.ACABADO) {
+        pai.codPro = pai.ACABADO.codPro
+        pai.codDer = pai.ACABADO.codDer
+        pai.numOri = pai.ACABADO.numOri
+      }
+      if (filho.codAgp === itemTroca.codAgp &&
+        filho.codNiv !== itemTroca.codNiv) {
+        // ver qual é o equivalente do filho
+        if (filho.equivalentes.length) {
+          if ((itemTroca.dscCmp.includes('TECIDO') && filho.equivalentes[0].DSCEQI.includes('TECIDO')) ||
+          (itemTroca.dscCmp.includes('COURO') && filho.equivalentes[0].DSCEQI.includes('COURO'))) {
+            const objTroca = {
+              codNiv: filho.codNiv,
+              codMod: pai.codPro,
+              derMod: pai.codDer,
+              cmpAnt: filho.codPro,
+              derAnt: filho.codDer,
+              cmpAtu: filho.equivalentes[0].CODPRO,
+              derAtu: filho.equivalentes[0].CODDER,
+              dscCmp: filho.equivalentes[0].DSCEQI
+            }
+            this.trocas.push(objTroca)
+            console.log(this.trocas)
+          }
+        }
+      }
+      if (filho.filhos) {
+        filho.filhos.forEach(neto => this.analisarSeTrocarTalhado(filho, neto, itemTroca))
+      }
     },
     analisarItensMontagem (pai, filho, itensMontagem) {
       itensMontagem.forEach(itemMontagem => {

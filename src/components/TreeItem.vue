@@ -192,6 +192,7 @@ export default {
       const itemTroca = {
         codNiv: this.$props.item.codNiv,
         codMod: this.$props.item.codMod,
+        codAgp: this.$props.item.codAgp,
         agpMod: this.$props.item.agpMod,
         derMod: this.$props.item.derMod,
         cmpAnt: this.$props.item.codPro,
