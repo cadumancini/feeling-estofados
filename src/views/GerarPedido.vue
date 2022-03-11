@@ -169,7 +169,7 @@
 
       <!-- Modal Clientes -->
       <div class="modal fade" id="clientesModal" tabindex="-1" aria-labelledby="clientesModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-dialog modal-dialog-scrollable modal-xl">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="clientesModalLabel">Busca de Clientes</h5>
@@ -177,17 +177,22 @@
             </div>
             <div class="modal-body">
               <div class="mb-3" v-if="clientes != null">
+                <span>Buscar por: </span>
+                <input type="radio" id="filtroDesc" checked v-model="clientesOpcaoFiltro" name="opcaoFiltroCliente" value="desc">
+                <label class="ps-1 pe-2" for="filtroDesc">Descrição</label>
+                <input type="radio" id="filtroCnpj" v-model="clientesOpcaoFiltro" name="opcaoFiltroCliente" value="cnpj">
+                <label class="ps-1" for="filtroCnpj">CNPJ (apenas números)</label>
                 <input type="text" class="form-control mb-3" v-on:keyup="filtrarClientes" v-model="clientesFiltro" placeholder="Digite para buscar na tabela abaixo">
                 <table class="table table-striped table-hover table-bordered table-sm table-responsive">
                   <thead>
                     <tr>
-                      <th scope="col">Código</th>
-                      <th scope="col">Cliente</th>
+                      <th scope="col">CNPJ</th>
+                      <th scope="col">Descrição</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="clienteRow in clientesFiltrados" :key="clienteRow.CODCLI" class="mouseHover" @click="selectCliente(clienteRow)">
-                      <th class="fw-normal" scope="row">{{ clienteRow.CODCLI }}</th>
+                      <th class="fw-normal" scope="row">{{ clienteRow.CNPJ }}</th>
                       <th class="fw-normal">{{ clienteRow.NOMCLI }}</th>
                     </tr>
                   </tbody>
@@ -685,6 +690,7 @@ export default {
       codCondPagamento: '',
       condPagamento: '',
       clientesFiltro: '',
+      clientesOpcaoFiltro: 'desc',
       pedidosClienteFiltro: '',
       pedidosFiltro: '',
       estilosFiltro: '',
@@ -747,6 +753,10 @@ export default {
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             this.clientes = response.data.clientes
+            this.clientes.forEach(cliente => {
+              const formatter = new StringMask('99.999.999/0000-00')
+              cliente.CNPJ = formatter.apply(cliente.CGCCPF)
+            })
             this.clientesFiltrados = response.data.clientes
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
             document.getElementById('btnBuscaClientes').disabled = false
@@ -1102,7 +1112,12 @@ export default {
       }
     },
     filtrarClientes () {
-      this.clientesFiltrados = this.clientes.filter(cliente => cliente.NOMCLI.toUpperCase().startsWith(this.clientesFiltro.toUpperCase()))
+      if (this.clientesOpcaoFiltro === 'desc') {
+        this.clientesFiltrados = this.clientes.filter(cliente => cliente.NOMCLI.toUpperCase().startsWith(this.clientesFiltro.toUpperCase()))
+      } else {
+        this.clientesFiltrados = this.clientes.filter(cliente => cliente.CNPJ.replace('.', '').replace('-', '').replace('/', '').toUpperCase()
+          .startsWith(this.clientesFiltro.replace('.', '').replace('-', '').replace('/', '').toUpperCase()))
+      }
     },
     filtrarPedidosCliente () {
       this.pedidosClienteFiltrados = this.pedidosCliente.filter(pedido => pedido.PEDCLI.toUpperCase().startsWith(this.pedidosClienteFiltro.toUpperCase()))
