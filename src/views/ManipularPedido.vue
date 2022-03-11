@@ -197,15 +197,16 @@ export default {
       const seqIpd = item.SEQIPD
       this.trocas = []
       this.trocas.push(itemTroca)
-      if (itemTroca.codFam === '02001') {
+      if (itemTroca.codFam === '02001' || itemTroca.codFam === '02002') {
         const token = sessionStorage.getItem('token')
         const codEmp = this.item.CODEMP
         let itensMontagem = null
+        item.ACABADO.filhos.forEach(filho => this.analisarSeTrocarFilhos(item, filho, itemTroca))
         await axios.get('http://localhost:8080/itensMontagem?emp=' + codEmp + '&pro=' + itemTroca.cmpAtu + '&der=' + itemTroca.derAtu + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             itensMontagem = response.data.itensMontagem
-            item.ACABADO.filhos.forEach(filho => this.analisarSeTrocarFilhos(item, filho, itemTroca, seqIpd, itensMontagem))
+            item.ACABADO.filhos.forEach(filho => this.analisarItensMontagem(item, filho, itensMontagem))
           })
           .catch((err) => {
             console.log(err)
@@ -213,7 +214,29 @@ export default {
       }
       this.requestTroca(this.pedido, seqIpd, item)
     },
-    analisarSeTrocarFilhos (pai, filho, itemTroca, seqIpd, itensMontagem) {
+    analisarItensMontagem (pai, filho, itensMontagem) {
+      itensMontagem.forEach(itemMontagem => {
+        if (pai.numOri <= 320 &&
+        filho.codPro === itemMontagem.CODCMP &&
+        (filho.codDer === 'G' || filho.proGen === 'S')) {
+          const objTroca = {
+            codNiv: filho.codNiv,
+            codMod: pai.codPro,
+            derMod: pai.codDer,
+            cmpAnt: filho.codPro,
+            derAnt: filho.codDer,
+            cmpAtu: itemMontagem.CODCMP,
+            derAtu: itemMontagem.DERCMP,
+            dscCmp: itemMontagem.DSCCMP
+          }
+          this.trocas.push(objTroca)
+        }
+      })
+      if (filho.filhos) {
+        filho.filhos.forEach(neto => this.analisarItensMontagem(filho, neto, itensMontagem))
+      }
+    },
+    analisarSeTrocarFilhos (pai, filho, itemTroca) {
       if (pai.ACABADO) {
         pai.codPro = pai.ACABADO.codPro
         pai.codDer = pai.ACABADO.codDer
@@ -235,26 +258,8 @@ export default {
         }
         this.trocas.push(objTroca)
       }
-      itensMontagem.forEach(itemMontagem => {
-        if (pai.numOri <= 320 &&
-        filho.codPro === itemMontagem.CODCMP &&
-        (filho.codDer === 'G' || filho.proGen === 'S')) {
-          const objTroca = {
-            codNiv: filho.codNiv,
-            codMod: pai.codPro,
-            derMod: pai.codDer,
-            cmpAnt: filho.codPro,
-            derAnt: filho.codDer,
-            cmpAtu: itemMontagem.CODCMP,
-            derAtu: itemMontagem.DERCMP,
-            dscCmp: itemMontagem.DSCCMP
-          }
-          this.trocas.push(objTroca)
-        }
-      })
-
       if (filho.filhos) {
-        filho.filhos.forEach(neto => this.analisarSeTrocarFilhos(filho, neto, itemTroca, seqIpd, itensMontagem))
+        filho.filhos.forEach(neto => this.analisarSeTrocarFilhos(filho, neto, itemTroca))
       }
     },
     async requestTroca (numPed, seqIpd, item) {
