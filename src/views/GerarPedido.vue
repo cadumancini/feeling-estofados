@@ -70,7 +70,7 @@
             <div class="col-3">
               <div class="input-group input-group-sm">
                 <span class="input-group-text">Pedido Cliente</span>
-                <input id="pedCli" class="form-control" :disabled="numPed !== ''" type="text" v-model="pedCli">
+                <input id="pedCli" class="form-control" :disabled="numPed !== ''" type="text" v-model="pedCli" v-on:keyup="normalizarPedidoCliente">
                 <button id="btnBuscaPedidosCliente" :disabled="numPed !== ''" class="btn btn-secondary input-group-btn" @click="buscaPedidosCliente" data-bs-toggle="modal" data-bs-target="#pedidosClienteModal">...</button>
               </div>
             </div>
@@ -1206,6 +1206,9 @@ export default {
     },
     filtrarCondicoesPagto () {
       this.condicoesPagtoFiltrados = this.condicoesPagto.filter(cond => cond.DESCPG.toUpperCase().startsWith(this.condicoesPagtoFiltro.toUpperCase()))
+    },
+    normalizarPedidoCliente () {
+      this.pedCli = this.pedCli.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     },
     excluirRascunho () {
       document.getElementById('closeModalExclusaoRascunho').click()
