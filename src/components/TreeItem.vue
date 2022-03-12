@@ -34,6 +34,7 @@
           </div>
           <div class="modal-body">
             <div class="mb-3" v-if="item.equivalentes !== []">
+              <input type="text" class="form-control mb-3" v-on:keyup="filtrarEquivalentes(item)" v-model="equivalentesFiltro" placeholder="Digite para buscar por referência na tabela abaixo">
               <table class="table table-striped table-hover table-bordered table-sm table-responsive">
                 <thead>
                   <tr>
@@ -44,8 +45,9 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="equivalenteRow in item.equivalentes" :key="equivalenteRow.CODPRO" class="mouseHover pointer" @click="selecionarEquivalente(equivalenteRow)">
-                    <th class="fw-normal" scope="row">{{ equivalenteRow.CODPRO }}</th>
+                  <!-- eslint-disable-next-line vue/require-v-for-key -->
+                  <tr v-for="equivalenteRow in item.equivalentesFiltrados" class="mouseHover pointer" @click="selecionarEquivalente(equivalenteRow)">
+                    <th class="fw-normal">{{ equivalenteRow.CODPRO }}</th>
                     <th class="fw-normal">{{ equivalenteRow.CODDER }}</th>
                     <th class="fw-normal">{{ equivalenteRow.CODREF }}</th>
                     <th class="fw-normal">{{ equivalenteRow.DSCEQI }}</th>
@@ -90,7 +92,8 @@ export default {
   props: ['item', 'level', 'codEmp'],
   data () {
     return {
-      isOpen: true
+      isOpen: true,
+      equivalentesFiltro: ''
     }
   },
   created () {
@@ -120,6 +123,7 @@ export default {
     async buscarOpcoes (item) {
       const token = sessionStorage.getItem('token')
       item.equivalentes = []
+      item.equivalentesFiltrados = []
       this.$props.item.equivalenteSelecionado = null
       item.equivalenteSelecionado = null
       document.getElementsByTagName('body')[0].style.cursor = 'wait'
@@ -128,6 +132,7 @@ export default {
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
+            item.equivalentesFiltrados = response.data.equivalentes
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
           })
           .catch((err) => {
@@ -139,12 +144,15 @@ export default {
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
+            item.equivalentesFiltrados = response.data.equivalentes
             if (!item.equivalentes.length) {
               item.equivalentes = []
+              item.equivalentesFiltrados = []
               axios.get('http://localhost:8080/derivacoesPossiveis?emp=' + this.codEmp + '&pro=' + item.codPro + '&mod=' + item.codMod + '&derMod=' + item.derMod + '&token=' + token)
                 .then((response) => {
                   this.checkInvalidLoginResponse(response.data)
                   item.equivalentes = response.data.derivacoes
+                  item.equivalentesFiltrados = response.data.derivacoes
                   document.getElementsByTagName('body')[0].style.cursor = 'auto'
                 })
                 .catch((err) => {
@@ -163,12 +171,15 @@ export default {
           .then(async (response) => {
             this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
+            item.equivalentesFiltrados = response.data.equivalentes
             if (!item.equivalentes.length) {
               item.equivalentes = []
+              item.equivalentesFiltrados = []
               await axios.get('http://localhost:8080/derivacoesPossiveis?emp=' + this.codEmp + '&pro=' + item.codPro + '&mod=' + item.codMod + '&derMod=' + item.derMod + '&token=' + token)
                 .then((response) => {
                   this.checkInvalidLoginResponse(response.data)
                   item.equivalentes = response.data.derivacoes
+                  item.equivalentesFiltrados = response.data.derivacoes
                   document.getElementsByTagName('body')[0].style.cursor = 'auto'
                 })
                 .catch((err) => {
@@ -183,6 +194,10 @@ export default {
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
           })
       }
+    },
+    filtrarEquivalentes (item) {
+      item.equivalentesFiltrados = []
+      item.equivalentesFiltrados = item.equivalentes.filter(equiv => equiv.CODREF.toUpperCase().startsWith(this.equivalentesFiltro.toUpperCase()))
     },
     selecionarEquivalente (equivalente) {
       this.$props.item.equivalenteSelecionado = equivalente
