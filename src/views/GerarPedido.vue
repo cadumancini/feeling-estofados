@@ -1316,7 +1316,7 @@ export default {
       let estiloIni = itensChecarCnj[0].codEstilo
       let temErro = false
       itensChecarCnj.forEach(item => {
-        if (item.cnj !== '' && item.cnj === cnjIni && item.codEstilo !== estiloIni) {
+        if (item.cnj !== '' && item.cnj !== ' ' && item.cnj === cnjIni && item.codEstilo !== estiloIni) {
           alert('Erro: Existe(m) produto(s) com o mesmo número do conjunto (conj. ' + item.cnj + ') mas com estilos diferentes. Verifique!')
           temErro = true
         }
