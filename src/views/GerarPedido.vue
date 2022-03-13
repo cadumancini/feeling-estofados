@@ -907,7 +907,14 @@ export default {
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           this.estilos = response.data.estilos
-          this.estilosFiltrados = response.data.estilos
+          if (item.cnj !== '' && item.cnj !== ' ') {
+            this.itens.forEach(ipd => {
+              if (ipd.hash !== item.hash && ipd.cnj === item.cnj && ipd.codEstilo) {
+                this.estilos = this.estilos.filter(estilo => estilo.CODCPR === ipd.codEstilo)
+              }
+            })
+          }
+          this.estilosFiltrados = this.estilos
           document.getElementsByTagName('body')[0].style.cursor = 'auto'
           document.getElementById('btnBuscaEstilos' + item.hash).disabled = false
         })
@@ -967,6 +974,9 @@ export default {
       } else {
         alert('Favor escolher uma configuração!')
       }
+    },
+    verificarConjunto () {
+      console.log('focus out')
     },
     selectCliente (clienteClicked) {
       const formatter = new StringMask('99.999.999/0000-00')
