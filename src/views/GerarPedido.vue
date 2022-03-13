@@ -491,7 +491,11 @@
                     <vue-mask class="form-control form-control-sm sm" :disabled="enviadoEmpresa" mask="00,00" :raw="false" :options="options" v-model="item.desc"></vue-mask>
                   </small>
                 </td>
-                <td class="fw-normal"><small class="sm">{{item.comiss}}</small></td>
+                <td class="fw-normal">
+                  <small class="sm">
+                    <vue-mask class="form-control form-control-sm sm" :disabled="enviadoEmpresa" mask="00,00" :raw="false" :options="options" v-model="item.comiss"></vue-mask>
+                  </small>
+                </td>
                 <td class="fw-normal">
                   <select id="inputGroupSelectCondEsp" :disabled="enviadoEmpresa" class="form-select form-select-sm sm" @change="handleCondicao(item)" v-model="item.condEsp">
                     <option value=" "></option>
@@ -750,6 +754,7 @@ export default {
       transportadora: '',
       codRepresentada: '',
       representada: '',
+      comissao: '',
       empresa: '',
       observacoesPedido: '',
       empresasCliente: [],
@@ -1069,6 +1074,7 @@ export default {
           this.checkInvalidLoginResponse(response.data)
           this.dadosCliente = response.data.dadosCliente
           if (this.dadosCliente.length > 0) {
+            this.comissao = this.dadosCliente[0].PERCOM
             if (!apenasEmpresas) {
               this.codTransportadora = this.dadosCliente[0].CODTRA
               this.transportadora = this.dadosCliente[0].NOMTRA
@@ -1108,7 +1114,7 @@ export default {
         comp: '',
         un: '',
         desc: 0,
-        comiss: '',
+        comiss: this.comissao,
         condEsp: ' ',
         obs: '',
         vlrUnit: '',
@@ -1243,6 +1249,7 @@ export default {
       this.enviadoEmpresa = false
       this.prevFaturamento = ''
       this.condPagamento = ''
+      this.comissao = ''
       this.manipulando = false
       this.observacoesPedido = ''
     },
@@ -1357,6 +1364,7 @@ export default {
               qtdPed: item.un,
               preUni: Number(item.vlrUnit.replace('.', '').replace(',', '')) / 100,
               perDsc: Number(item.desc.toString().replace(',', '.')),
+              perCom: Number(item.comiss.toString().replace(',', '.')),
               datEnt: datEntFmt,
               conEsp: item.condEsp,
               obsIpd: item.obs
@@ -1465,7 +1473,7 @@ export default {
                     comp: item.CNDESP === 'M' ? item.LARDER : item.CODDER,
                     un: item.QTDPED,
                     desc: Number(item.PERDSC).toFixed(2).toLocaleString(),
-                    comiss: Number(item.PERCOM).toFixed(2).toLocaleString().replace('.', ','),
+                    comiss: Number(item.PERCOM).toFixed(2).toLocaleString(),
                     condEsp: item.CNDESP,
                     datEnt: item.DATENT,
                     obs: item.OBSIPD,
