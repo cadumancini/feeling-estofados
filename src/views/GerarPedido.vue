@@ -568,6 +568,11 @@
             </div>
           </div>
         </div>
+        <div class="row">
+          <div class="col-12">
+            <span class="sm fw-bold fst-italic">* O total em peso e cubagem serão carregados ao enviar o pedido à empresa.</span>
+          </div>
+        </div>
       </div>
 
       <!-- Modal Estilos -->
@@ -1515,9 +1520,11 @@ export default {
         axios.post('http://localhost:8080/enviarPedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
-            if (response.data === 'OK') {
+            if (response.data.pesoTotal) {
               alert('Pedido enviado à empresa com sucesso!')
               this.enviadoEmpresa = true
+              this.totalKg = parseFloat(response.data.pesoTotal).toFixed(2)
+              this.totalM3 = parseFloat(response.data.volumeTotal).toFixed(2)
             } else {
               alert(response.data)
             }

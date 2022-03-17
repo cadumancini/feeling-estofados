@@ -1,5 +1,5 @@
 <template>
-  <tr style="padding-left: 10px" id="node" v-show="(/^[1][.]\d+(?!.)/.test(item.codNiv) && (item.codNiv === '1.0' || item.trocar)) || (item.exiCmp !== 'S' && ((item.codDer === 'G' || item.proGen === 'S' || item.podeTrocar)))" v-bind:class="{ trocar: (item.codDer === 'G' || item.proGen === 'S'), temG: item.temG, atencao: item.trocar, filhoPodeTrocar: item.filhoPodeTrocar }">
+  <tr style="padding-left: 10px" id="node" v-show="(/^[1][.]\d+(?!.)/.test(item.codNiv) && (item.codFam === '14001' || item.trocar)) || (item.exiCmp !== 'S' && ((item.codDer === 'G' || item.proGen === 'S' || item.podeTrocar)))" v-bind:class="{ trocar: (item.codDer === 'G' || item.proGen === 'S'), temG: item.temG, atencao: item.trocar, filhoPodeTrocar: item.filhoPodeTrocar }">
     <th class="fw-normal">
       <font-awesome-icon v-if="((item.filhos && (item.temG || item.filhoPodeTrocar)) && isOpen)" icon="minus-square" @click="toggleOpen" class="expand pointer" v-bind:class="{ warning: (item.temG || item.trocar) }" />
       <font-awesome-icon v-else-if="((item.filhos && (item.temG || item.filhoPodeTrocar)) && !isOpen)" icon="plus-square" @click="toggleOpen" class="expand pointer" v-bind:class="{ warning: (item.temG || item.trocar) }" />
