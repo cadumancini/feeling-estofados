@@ -1365,7 +1365,7 @@ export default {
               desPro: (item.config + ' ' + item.comp),
               codDer: item.codComp,
               derEsp: item.condEsp === 'M' ? item.comp : '',
-              seqIpd: 0,
+              seqIpd: item.seqIpd ? Number(item.seqIpd) : 0,
               qtdPed: item.un,
               preUni: Number(item.vlrUnit.replace('.', '').replace(',', '')) / 100,
               perDsc: Number(item.desc.toString().replace(',', '.')),
