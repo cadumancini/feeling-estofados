@@ -33,7 +33,7 @@
           </div>
           <div class="col-6">
             <div class="float-end">
-              <button id="btnSalvar" class="btn btn-secondary btn-sm" :disabled="numPed !== ''" data-bs-toggle="modal" data-bs-target="#confirmaPedidoModal">Salvar</button>
+              <button id="btnSalvar" class="btn btn-secondary btn-sm" :disabled="enviadoEmpresa" data-bs-toggle="modal" data-bs-target="#confirmaPedidoModal">Salvar</button>
             </div>
           </div>
         </div>
@@ -50,7 +50,7 @@
               <div class="input-group input-group-sm">
                 <span class="input-group-text">Transportadora</span>
                 <input id="transportadora" class="form-control" type="text" disabled v-model="transportadora">
-                <button id="btnBuscaTransportadoras" :disabled="numPed !== '' || cliente === ''" class="btn btn-secondary input-group-btn" @click="buscaTransportadoras" data-bs-toggle="modal" data-bs-target="#transportadorasModal">...</button>
+                <button id="btnBuscaTransportadoras" :disabled="enviadoEmpresa || cliente === ''" class="btn btn-secondary input-group-btn" @click="buscaTransportadoras" data-bs-toggle="modal" data-bs-target="#transportadorasModal">...</button>
               </div>
             </div>
             <div class="col-3">
@@ -70,8 +70,8 @@
             <div class="col-3">
               <div class="input-group input-group-sm">
                 <span class="input-group-text">Pedido Cliente</span>
-                <input id="pedCli" class="form-control" :disabled="numPed !== ''" type="text" v-model="pedCli" v-on:keyup="normalizarPedidoCliente">
-                <button id="btnBuscaPedidosCliente" :disabled="numPed !== ''" class="btn btn-secondary input-group-btn" @click="buscaPedidosCliente" data-bs-toggle="modal" data-bs-target="#pedidosClienteModal">...</button>
+                <input id="pedCli" class="form-control" :disabled="enviadoEmpresa" type="text" v-model="pedCli" v-on:keyup="normalizarPedidoCliente">
+                <button id="btnBuscaPedidosCliente" :disabled="enviadoEmpresa" class="btn btn-secondary input-group-btn" @click="buscaPedidosCliente" data-bs-toggle="modal" data-bs-target="#pedidosClienteModal">...</button>
               </div>
             </div>
             <div class="col-5">
@@ -83,9 +83,8 @@
             <div class="col-4">
               <div class="input-group input-group-sm">
                 <span class="input-group-text">Condição de pagamento</span>
-                <!-- <input class="form-control" type="text" disabled v-model="condPagamento"> -->
-                <input class="form-control" type="text" disabled v-bind:class="{ 'white-bg': (!numPed) }" v-model="condPagamento" placeholder="Clique ao lado para selecionar">
-                <button id="btnBuscaCondicoesPagto" :disabled="numPed !== ''" class="btn btn-secondary input-group-btn" @click="buscaCondicoesPagto" data-bs-toggle="modal" data-bs-target="#condicoesPagtoModal">...</button>
+                <input class="form-control" type="text" disabled v-bind:class="{ 'white-bg': (!enviadoEmpresa) }" v-model="condPagamento" placeholder="Clique ao lado para selecionar">
+                <button id="btnBuscaCondicoesPagto" :disabled="enviadoEmpresa" class="btn btn-secondary input-group-btn" @click="buscaCondicoesPagto" data-bs-toggle="modal" data-bs-target="#condicoesPagtoModal">...</button>
               </div>
             </div>
           </div>
@@ -93,8 +92,8 @@
             <div class="col-3">
               <div class="input-group input-group-sm">
                 <span class="input-group-text">Cliente</span>
-                <input id="nomCli" class="form-control" type="text" disabled v-bind:class="{ 'white-bg': (!numPed) }" v-model="nomCli" placeholder="Clique ao lado para selecionar">
-                <button id="btnBuscaClientes" class="btn btn-secondary input-group-btn" :disabled="numPed !== ''" @click="buscaClientes" data-bs-toggle="modal" data-bs-target="#clientesModal">...</button>
+                <input id="nomCli" class="form-control" type="text" disabled v-bind:class="{ 'white-bg': (!enviadoEmpresa) }" v-model="nomCli" placeholder="Clique ao lado para selecionar">
+                <button id="btnBuscaClientes" class="btn btn-secondary input-group-btn" :disabled="enviadoEmpresa" @click="buscaClientes" data-bs-toggle="modal" data-bs-target="#clientesModal">...</button>
               </div>
             </div>
             <div class="col-3">
@@ -140,7 +139,7 @@
             <div class="col-12">
               <div class="input-group input-group-sm">
                 <span class="input-group-text">Observações</span>
-                <input id="observacoesPedido" class="form-control" :disabled="numPed !== ''"
+                <input id="observacoesPedido" class="form-control" :disabled="enviadoEmpresa"
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 maxlength="200" type="text" v-model="observacoesPedido">
               </div>
@@ -1143,11 +1142,10 @@ export default {
         alert('Favor preencher o campo Pedido Cliente!')
       } else if (this.condPagamento === '') {
         alert('Favor selecionar uma Condição de Pagamento!')
-      } else if (this.pedidosCliente && this.pedidosCliente.some(pedido => pedido.PEDCLI === this.pedCli)) {
+      } else if (this.pedidosCliente && this.pedidosCliente.some(pedido => pedido.PEDCLI === this.pedCli && pedido.NUMPED !== this.numPed)) {
         alert('Valor para Pedido Cliente já utilizado. Utilize outro valor.')
       } else {
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
-        document.getElementById('btnSalvar').disabled = true
         var parseString = require('xml2js').parseString
         var respostaPedido = null
         const token = sessionStorage.getItem('token')
@@ -1156,7 +1154,7 @@ export default {
             pedido: {
               codEmp: this.empresa,
               codFil: 1,
-              numPed: 0,
+              numPed: this.numPed > 0 ? this.numPed : 0,
               codCli: this.cliente,
               pedCli: this.pedCli !== '' ? this.pedCli : 0,
               codRep: this.codRepresentada,
@@ -1165,7 +1163,7 @@ export default {
               obsPed: this.observacoesPedido,
               codCpg: this.codCondPagamento
             },
-            itens: this.itens
+            itens: []
           }
         )
         const headers = { headers: { 'Content-Type': 'application/json' } }
@@ -1181,21 +1179,16 @@ export default {
                 alert(respostaPedido.retorno)
               } else {
                 this.numPed = respostaPedido.numPed
-                document.getElementById('pedCli').disabled = true
-                document.getElementById('nomCli').disabled = true
-                document.getElementById('btnBuscaPedidosCliente').disabled = true
-                document.getElementById('btnBuscaClientes').disabled = true
-                alert('Pedido ' + this.numPed + ' gerado com sucesso!')
-                this.itens = []
+                alert('Pedido ' + this.numPed + ' gerado/atualizado com sucesso!')
+                this.carregarItens()
               }
             })
-            document.getElementsByTagName('body')[0].style.cursor = 'auto'
-            document.getElementById('btnSalvar').disabled = false
           })
           .catch((err) => {
-            document.getElementsByTagName('body')[0].style.cursor = 'auto'
-            document.getElementById('btnSalvar').disabled = false
             console.log(err)
+          })
+          .finally(() => {
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
           })
       }
     },
