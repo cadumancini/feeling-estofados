@@ -441,15 +441,15 @@
                 <th class="fw-normal sm-header" style="width: 2%;"><small><font-awesome-icon icon="edit"/></small></th>
                 <th class="fw-normal sm-header" style="width: 4%;"><small>Cnj.</small></th>
                 <th class="fw-normal sm-header" style="width: 14%;"><small>Estilo</small></th>
-                <th class="fw-normal sm-header" style="width: 18%;"><small>Configuração</small></th>
+                <th class="fw-normal sm-header" style="width: 17%;"><small>Configuração</small></th>
                 <th class="fw-normal sm-header" style="width: 9%;"><small>Comp. (cm)</small></th>
                 <th class="fw-normal sm-header" style="width: 4%"><small>UN</small></th>
-                <th class="fw-normal sm-header" style="width: 4%;"><small>Desc. (%)</small></th>
-                <th class="fw-normal sm-header" style="width: 5%;"><small>Comiss. (%)</small></th>
-                <th class="fw-normal sm-header" style="width: 14%;"><small>Cond. Especial</small></th>
-                <th class="fw-normal sm-header" style="width: 17%;"><small>Observações</small></th>
+                <th class="fw-normal sm-header" style="width: 6%;"><small>Desc. (%)</small></th>
+                <th class="fw-normal sm-header" style="width: 6%;"><small>Comiss. (%)</small></th>
+                <th class="fw-normal sm-header" style="width: 12%;"><small>Cond. Especial</small></th>
+                <th class="fw-normal sm-header" style="width: 13%;"><small>Observações</small></th>
                 <th class="fw-normal sm-header" style="width: 7%;"><small>Vlr. Unit. (R$)</small></th>
-                <th class="fw-normal sm-header" style="width: 4%;"><small>Ação</small></th>
+                <th class="fw-normal sm-header" style="width: 7%;"><small>Ação</small></th>
               </tr>
             </thead>
             <tbody v-for="item in itens" :key="item.codPro">
@@ -512,7 +512,13 @@
                   </small>
                 </td>
 
-                <td><button class="btn btn-sm btn-danger sm" :disabled="enviadoEmpresa" @click="deleteItem(item)">Excluir</button></td>
+                <td>
+                  <label class="btn btn-sm btn-action btn-secondary sm" :disabled="!item.seqIpd || enviadoEmpresa">
+                    <font-awesome-icon icon="file-upload"/><input type="file" ref="uploadArquivo" style="display: none;" @change="onUploadArquivo(item)"/>
+                  </label>
+                  <!-- <button class="btn btn-sm btn-action btn-secondary sm" :disabled="enviadoEmpresa" @click="deleteItem(item)"><font-awesome-icon icon="download"/></button> -->
+                  <button class="btn btn-sm btn-action btn-danger sm" :disabled="enviadoEmpresa" @click="deleteItem(item)"><font-awesome-icon icon="trash-alt"/></button>
+                </td>
               </tr>
               <tr v-if="item.MANIPULAR">
                 <td colspan="8">
@@ -775,6 +781,7 @@ export default {
       icmsValor: 0,
       nfValor: 0,
       manipulando: false,
+      formData: null,
       options: {
         reverse: true
       }
@@ -1538,6 +1545,22 @@ export default {
           this.manipulando = true
         }
       })
+    },
+    onUploadArquivo (item) {
+      document.getElementsByTagName('body')[0].style.cursor = 'wait'
+      const file = this.$refs.uploadArquivo.files[0]
+      this.formData = new FormData()
+      this.formData.append('file', file)
+      const headers = {
+        Accept: 'application/json',
+        'Content-Type': 'multipart/form-data'
+      }
+      const token = sessionStorage.getItem('token')
+      axios.post('http://localhost:8080/uploadArquivo?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&ipd=' + item.seqIpd + '&token=' + token, this.formData, { headers: headers })
+        .then((response) => {
+          alert(response.data)
+          document.getElementsByTagName('body')[0].style.cursor = 'auto'
+        })
     }
   }
 }
@@ -1563,6 +1586,11 @@ export default {
   .btn-dismiss:hover {
     color: #fff;
     background-color: #93999e;
+  }
+  .btn-action {
+    width: 2rem;
+    margin-left: 1px;
+    margin-right: 1px;
   }
   .sm {
     font-size: 0.8rem !important;
