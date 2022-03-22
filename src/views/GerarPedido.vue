@@ -43,14 +43,14 @@
               <div class="input-group input-group-sm">
                 <span class="input-group-text">Nº Pedido</span>
                 <input id="numPed" class="form-control" type="text" disabled v-model="numPed">
-                <button id="btnBuscaPedidos" class="btn btn-secondary input-group-btn" @click="buscaPedidos" data-bs-toggle="modal" data-bs-target="#pedidosModal">...</button>
+                <button id="btnBuscaPedidos" class="btn btn-secondary input-group-btn btn-busca" @click="buscaPedidos" data-bs-toggle="modal" data-bs-target="#pedidosModal">...</button>
               </div>
             </div>
             <div class="col-3">
               <div class="input-group input-group-sm">
                 <span class="input-group-text">Transportadora</span>
                 <input id="transportadora" class="form-control" type="text" disabled v-model="transportadora">
-                <button id="btnBuscaTransportadoras" :disabled="enviadoEmpresa || cliente === ''" class="btn btn-secondary input-group-btn" @click="buscaTransportadoras" data-bs-toggle="modal" data-bs-target="#transportadorasModal">...</button>
+                <button id="btnBuscaTransportadoras" :disabled="enviadoEmpresa || cliente === ''" class="btn btn-secondary input-group-btn btn-busca" @click="buscaTransportadoras" data-bs-toggle="modal" data-bs-target="#transportadorasModal">...</button>
               </div>
             </div>
             <div class="col-3">
@@ -71,7 +71,7 @@
               <div class="input-group input-group-sm">
                 <span class="input-group-text">Pedido Cliente</span>
                 <input id="pedCli" class="form-control" :disabled="enviadoEmpresa" type="text" v-model="pedCli" v-on:keyup="normalizarPedidoCliente">
-                <button id="btnBuscaPedidosCliente" :disabled="enviadoEmpresa" class="btn btn-secondary input-group-btn" @click="buscaPedidosCliente" data-bs-toggle="modal" data-bs-target="#pedidosClienteModal">...</button>
+                <button id="btnBuscaPedidosCliente" :disabled="enviadoEmpresa" class="btn btn-secondary input-group-btn btn-busca" @click="buscaPedidosCliente" data-bs-toggle="modal" data-bs-target="#pedidosClienteModal">...</button>
               </div>
             </div>
             <div class="col-5">
@@ -84,7 +84,7 @@
               <div class="input-group input-group-sm">
                 <span class="input-group-text">Condição de pagamento</span>
                 <input class="form-control" type="text" disabled v-bind:class="{ 'white-bg': (!enviadoEmpresa) }" v-model="condPagamento" placeholder="Clique ao lado para selecionar">
-                <button id="btnBuscaCondicoesPagto" :disabled="enviadoEmpresa" class="btn btn-secondary input-group-btn" @click="buscaCondicoesPagto" data-bs-toggle="modal" data-bs-target="#condicoesPagtoModal">...</button>
+                <button id="btnBuscaCondicoesPagto" :disabled="enviadoEmpresa" class="btn btn-secondary input-group-btn btn-busca" @click="buscaCondicoesPagto" data-bs-toggle="modal" data-bs-target="#condicoesPagtoModal">...</button>
               </div>
             </div>
           </div>
@@ -93,7 +93,7 @@
               <div class="input-group input-group-sm">
                 <span class="input-group-text">Cliente</span>
                 <input id="nomCli" class="form-control" type="text" disabled v-bind:class="{ 'white-bg': (!enviadoEmpresa) }" v-model="nomCli" placeholder="Clique ao lado para selecionar">
-                <button id="btnBuscaClientes" class="btn btn-secondary input-group-btn" :disabled="enviadoEmpresa" @click="buscaClientes" data-bs-toggle="modal" data-bs-target="#clientesModal">...</button>
+                <button id="btnBuscaClientes" class="btn btn-secondary input-group-btn btn-busca" :disabled="enviadoEmpresa" @click="buscaClientes" data-bs-toggle="modal" data-bs-target="#clientesModal">...</button>
               </div>
             </div>
             <div class="col-3">
@@ -440,16 +440,16 @@
               <tr class="table-dark">
                 <th class="fw-normal sm-header" style="width: 2%;"><small><font-awesome-icon icon="edit"/></small></th>
                 <th class="fw-normal sm-header" style="width: 4%;"><small>Cnj.</small></th>
-                <th class="fw-normal sm-header" style="width: 14%;"><small>Estilo</small></th>
-                <th class="fw-normal sm-header" style="width: 17%;"><small>Configuração</small></th>
-                <th class="fw-normal sm-header" style="width: 9%;"><small>Comp. (cm)</small></th>
+                <th class="fw-normal sm-header" style="width: 13%;"><small>Estilo</small></th>
+                <th class="fw-normal sm-header" style="width: 16%;"><small>Configuração</small></th>
+                <th class="fw-normal sm-header" style="width: 8%;"><small>Comp. (cm)</small></th>
                 <th class="fw-normal sm-header" style="width: 4%"><small>UN</small></th>
                 <th class="fw-normal sm-header" style="width: 6%;"><small>Desc. (%)</small></th>
                 <th class="fw-normal sm-header" style="width: 6%;"><small>Comiss. (%)</small></th>
                 <th class="fw-normal sm-header" style="width: 12%;"><small>Cond. Especial</small></th>
                 <th class="fw-normal sm-header" style="width: 13%;"><small>Observações</small></th>
                 <th class="fw-normal sm-header" style="width: 7%;"><small>Vlr. Unit. (R$)</small></th>
-                <th class="fw-normal sm-header" style="width: 7%;"><small>Ação</small></th>
+                <th class="fw-normal sm-header" style="width: 10%;"><small>Ação</small></th>
               </tr>
             </thead>
             <tbody v-for="item in itens" :key="item.codPro">
@@ -467,19 +467,19 @@
                 <td class="fw-normal">
                   <div class="input-group input-group-sm">
                     <input class="form-control sm" type="text" disabled v-model="item.estilo">
-                    <button :id="`btnBuscaEstilos`+item.hash" :disabled="enviadoEmpresa" class="btn btn-secondary input-group-btn sm" @click="buscaEstilos(item)" data-bs-toggle="modal" data-bs-target="#estilosModal">...</button>
+                    <button :id="`btnBuscaEstilos`+item.hash" :disabled="enviadoEmpresa" class="btn btn-secondary input-group-btn sm btn-busca" @click="buscaEstilos(item)" data-bs-toggle="modal" data-bs-target="#estilosModal">...</button>
                   </div>
                 </td>
                 <td class="fw-normal">
                   <div class="input-group input-group-sm">
                     <input class="form-control sm" type="text" disabled v-model="item.config">
-                    <button :id="`btnBuscaConfigs`+item.hash" disabled class="btn btn-secondary input-group-btn sm" @click="buscaConfigs(item, item.codEstilo)" data-bs-toggle="modal" data-bs-target="#configsModal">...</button>
+                    <button :id="`btnBuscaConfigs`+item.hash" disabled class="btn btn-secondary input-group-btn sm btn-busca" @click="buscaConfigs(item, item.codEstilo)" data-bs-toggle="modal" data-bs-target="#configsModal">...</button>
                   </div>
                 </td>
                 <td class="fw-normal">
                   <div class="input-group input-group-sm">
                     <input :id="'inputComp'+item.hash" class="form-control sm" type="text" :disabled="item.condEsp !== 'M'" v-model="item.comp">
-                    <button :id="`btnBuscaComps`+item.hash" disabled class="btn btn-secondary input-group-btn sm" @click="buscaComps(item, item.codConfig)" data-bs-toggle="modal" data-bs-target="#compsModal">...</button>
+                    <button :id="`btnBuscaComps`+item.hash" disabled class="btn btn-secondary input-group-btn sm btn-busca" @click="buscaComps(item, item.codConfig)" data-bs-toggle="modal" data-bs-target="#compsModal">...</button>
                   </div>
                 </td>
                 <td class="fw-normal"><input class="form-control form-control-sm sm"
@@ -512,11 +512,11 @@
                   </small>
                 </td>
 
-                <td>
+                <td class="d-flex justify-content-around">
                   <label class="btn btn-sm btn-action btn-secondary sm" :disabled="!item.seqIpd || enviadoEmpresa">
                     <font-awesome-icon icon="file-upload"/><input type="file" ref="uploadArquivo" style="display: none;" @change="onUploadArquivo(item)"/>
                   </label>
-                  <!-- <button class="btn btn-sm btn-action btn-secondary sm" :disabled="enviadoEmpresa" @click="deleteItem(item)"><font-awesome-icon icon="download"/></button> -->
+                  <button class="btn btn-sm btn-action btn-secondary sm" :disabled="enviadoEmpresa" @click="download(item)"><font-awesome-icon icon="download"/></button>
                   <button class="btn btn-sm btn-action btn-danger sm" :disabled="enviadoEmpresa" @click="deleteItem(item)"><font-awesome-icon icon="trash-alt"/></button>
                 </td>
               </tr>
@@ -1558,7 +1558,42 @@ export default {
       const token = sessionStorage.getItem('token')
       axios.post('http://localhost:8080/uploadArquivo?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&ipd=' + item.seqIpd + '&token=' + token, this.formData, { headers: headers })
         .then((response) => {
-          alert(response.data)
+          if (response.data === 'OK') {
+            alert('Arquivo enviado com sucesso!')
+          } else {
+            alert(response.data)
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+        .finally(() => {
+          document.getElementsByTagName('body')[0].style.cursor = 'auto'
+        })
+    },
+    download (item) {
+      document.getElementsByTagName('body')[0].style.cursor = 'wait'
+      const token = sessionStorage.getItem('token')
+      axios.get('http://localhost:8080/downloadArquivo?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&ipd=' + item.seqIpd + '&token=' + token)
+      axios({
+        url: 'http://localhost:8080/downloadArquivo?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&ipd=' + item.seqIpd + '&token=' + token, // your url
+        method: 'GET',
+        responseType: 'blob'
+      })
+        .then((response) => {
+          console.log(response)
+          if (response.status === 204) {
+            alert('Nenhum arquivo disponível para download.')
+          } else {
+            const url = window.URL.createObjectURL(new Blob([response.data]))
+            const link = document.createElement('a')
+            link.href = url
+            link.setAttribute('download', this.numPed + '-' + item.seqIpd + '.zip')
+            document.body.appendChild(link)
+            link.click()
+          }
+        })
+        .finally(() => {
           document.getElementsByTagName('body')[0].style.cursor = 'auto'
         })
     }
@@ -1591,6 +1626,9 @@ export default {
     width: 2rem;
     margin-left: 1px;
     margin-right: 1px;
+  }
+  .btn-busca {
+    width: 1.75rem !important;
   }
   .sm {
     font-size: 0.8rem !important;
