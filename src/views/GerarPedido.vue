@@ -440,14 +440,13 @@
               <tr class="table-dark">
                 <th class="fw-normal sm-header" style="width: 2%;"><small><font-awesome-icon icon="edit"/></small></th>
                 <th class="fw-normal sm-header" style="width: 4%;"><small>Cnj.</small></th>
-                <th class="fw-normal sm-header" style="width: 14%;"><small>Estilo</small></th>
-                <th class="fw-normal sm-header" style="width: 16%;"><small>Configuração</small></th>
-                <th class="fw-normal sm-header" style="width: 8%;"><small>Comp. (cm)</small></th>
+                <th class="fw-normal sm-header" style="width: 12%;"><small>Estilo</small></th>
+                <th class="fw-normal sm-header" style="width: 20%;"><small>Configuração</small></th>
+                <th class="fw-normal sm-header" style="width: 9%;"><small>Comp. (cm)</small></th>
                 <th class="fw-normal sm-header" style="width: 4%"><small>UN</small></th>
-                <th class="fw-normal sm-header" style="width: 6%;"><small>Desc. (%)</small></th>
-                <th class="fw-normal sm-header" style="width: 7%;"><small>Comiss. (%)</small></th>
                 <th class="fw-normal sm-header" style="width: 6%;"><small>Cond. Especial</small></th>
-                <th class="fw-normal sm-header" style="width: 16%;"><small>Observações</small></th>
+                <th class="fw-normal sm-header" style="width: 23%;"><small>Observações</small></th>
+                <th class="fw-normal sm-header" style="width: 2%;"><small>%</small></th>
                 <th class="fw-normal sm-header" style="width: 8%;"><small>Vlr. Unit. (R$)</small></th>
                 <th class="fw-normal sm-header" style="width: 10%;"><small>Ação</small></th>
               </tr>
@@ -487,7 +486,7 @@
                 <td class="fw-normal"><input class="form-control form-control-sm sm"
                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   maxlength="2" type="number" v-model="item.un"></td>
-                <td class="fw-normal">
+                <!-- <td class="fw-normal">
                   <small class="sm">
                     <vue-mask class="form-control form-control-sm sm" :disabled="enviadoEmpresa" mask="00,00" :raw="false" :options="options" v-model="item.desc"></vue-mask>
                   </small>
@@ -496,7 +495,7 @@
                   <small class="sm">
                     <vue-mask class="form-control form-control-sm sm" :disabled="enviadoEmpresa" mask="00,00" :raw="false" :options="options" v-model="item.comiss"></vue-mask>
                   </small>
-                </td>
+                </td> -->
                 <td class="fw-normal" data-bs-toggle="tooltip" data-bs-placement="top" title="Condições especiais">
                   <button class="btn btn-secondary dropdown-toggle sm btn-sm" :disabled="enviadoEmpresa" type="button" data-bs-toggle="dropdown"
                           aria-haspopup="true" aria-expanded="false">Selecione</button>
@@ -534,6 +533,75 @@
                   </div>
                 </td>
                 <td class="fw-normal"><small><input class="form-control form-control-sm sm" :disabled="enviadoEmpresa" type="text" v-model="item.obs"></small></td>
+                <td data-bs-toggle="tooltip" data-bs-placement="top" title="Parâmetros comerciais">
+                  <button class="btn btn-sm btn-secondary sm" :disabled="enviadoEmpresa" data-bs-toggle="modal" :data-bs-target="`#paramsModal-`+item.hash">
+                    <font-awesome-icon icon="percentage"/>
+                  </button>
+                  <!-- Modal Params -->
+                  <div class="modal fade" :id="`paramsModal-`+item.hash" tabindex="-1" aria-labelledby="paramsModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable modal-sm">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="paramsModalLabel">Parâmetros Comerciais</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          <div class="row mb-3">
+                            <div class="input-group input-group-sm">
+                              <span class="input-group-text param-comercial ps-4">1º Desc. (%)</span>
+                              <vue-mask class="form-control form-control-sm sm" mask="00,00" :raw="false" :options="options" v-model="item.desc1"></vue-mask>
+                            </div>
+                          </div>
+                          <div class="row mb-3">
+                            <div class="input-group input-group-sm">
+                              <span class="input-group-text param-comercial ps-4">2º Desc. (%)</span>
+                              <vue-mask class="form-control form-control-sm sm" mask="00,00" :raw="false" :options="options" v-model="item.desc2"></vue-mask>
+                            </div>
+                          </div>
+                          <div class="row mb-3">
+                            <div class="input-group input-group-sm">
+                              <span class="input-group-text param-comercial ps-4">3º Desc. (%)</span>
+                              <vue-mask class="form-control form-control-sm sm" mask="00,00" :raw="false" :options="options" v-model="item.desc3"></vue-mask>
+                            </div>
+                          </div>
+                          <div class="row mb-3">
+                            <div class="input-group input-group-sm">
+                              <span class="input-group-text param-comercial ps-4">4º Desc. (%)</span>
+                              <vue-mask class="form-control form-control-sm sm" mask="00,00" :raw="false" :options="options" v-model="item.desc4"></vue-mask>
+                            </div>
+                          </div>
+                          <div class="row mb-3">
+                            <div class="input-group input-group-sm">
+                              <span class="input-group-text param-comercial ps-4">5º Desc. (%)</span>
+                              <vue-mask class="form-control form-control-sm sm" mask="00,00" :raw="false" :options="options" v-model="item.desc5"></vue-mask>
+                            </div>
+                          </div>
+                          <div class="row mb-3">
+                            <div class="input-group input-group-sm">
+                              <span class="input-group-text param-comercial param-guelta">Guelta (%)</span>
+                              <vue-mask class="form-control form-control-sm sm" mask="00,00" :raw="false" :options="options" v-model="item.guelta"></vue-mask>
+                            </div>
+                          </div>
+                          <div class="row mb-3">
+                            <div class="input-group input-group-sm">
+                              <span class="input-group-text param-comercial param-rt">RT (R$)</span>
+                              <vue-mask class="form-control form-control-sm sm" mask="000.000,00" :raw="false" :options="options" v-model="item.rt"></vue-mask>
+                            </div>
+                          </div>
+                          <div class="row mb-3">
+                            <div class="input-group input-group-sm">
+                              <span class="input-group-text param-comercial ps-3">Comissão (%)</span>
+                              <vue-mask class="form-control form-control-sm sm" mask="00,00" :raw="false" :options="options" v-model="item.comiss"></vue-mask>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Confirmar</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
                 <td class="fw-normal">
                   <small class="sm">
                     <vue-mask class="form-control form-control-sm sm" :disabled="enviadoEmpresa" mask="000.000,00" :raw="false" :options="options" v-model="item.vlrUnit"></vue-mask>
@@ -553,7 +621,7 @@
                 </td>
               </tr>
               <tr v-if="item.MANIPULAR">
-                <td colspan="8">
+                <td colspan="7">
                   <ManipularPedido ref="manipularPedido" :numPed="numPed" :seqIpd="{
                                                                               CODEMP: empresa,
                                                                               NUMPED: numPed,
@@ -797,6 +865,12 @@ export default {
       codRepresentada: '',
       representada: '',
       comissao: '',
+      desc1: '',
+      desc2: '',
+      desc3: '',
+      desc4: '',
+      desc5: '',
+      guelta: '',
       empresa: '',
       observacoesPedido: '',
       empresasCliente: [],
@@ -1114,7 +1188,13 @@ export default {
           this.checkInvalidLoginResponse(response.data)
           this.dadosCliente = response.data.dadosCliente
           if (this.dadosCliente.length > 0) {
-            this.comissao = this.dadosCliente[0].PERCOM
+            this.desc1 = Number(this.dadosCliente[0].PERDS1).toFixed(2).toLocaleString()
+            this.desc2 = Number(this.dadosCliente[0].PERDS2).toFixed(2).toLocaleString()
+            this.desc3 = Number(this.dadosCliente[0].PERDS3).toFixed(2).toLocaleString()
+            this.desc4 = Number(this.dadosCliente[0].PERDS4).toFixed(2).toLocaleString()
+            this.desc5 = Number(this.dadosCliente[0].PERDS5).toFixed(2).toLocaleString()
+            this.guelta = Number(this.dadosCliente[0].PERGUE).toFixed(2).toLocaleString()
+            this.comissao = Number(this.dadosCliente[0].PERCOM).toFixed(2).toLocaleString()
             if (!apenasEmpresas) {
               this.codTransportadora = this.dadosCliente[0].CODTRA
               this.transportadora = this.dadosCliente[0].NOMTRA
@@ -1154,6 +1234,13 @@ export default {
         comp: '',
         un: '',
         desc: 0,
+        desc1: this.desc1,
+        desc2: this.desc2,
+        desc3: this.desc3,
+        desc4: this.desc4,
+        desc5: this.desc5,
+        guelta: this.guelta,
+        rt: Number(0).toFixed(2).toLocaleString(),
         comiss: this.comissao,
         cMed: false,
         cDes: false,
@@ -1288,6 +1375,12 @@ export default {
       this.prevFaturamento = ''
       this.condPagamento = ''
       this.comissao = ''
+      this.desc1 = ''
+      this.desc2 = ''
+      this.desc3 = ''
+      this.desc4 = ''
+      this.desc5 = ''
+      this.guelta = ''
       this.manipulando = false
       this.observacoesPedido = ''
     },
@@ -1380,7 +1473,13 @@ export default {
               seqIpd: item.seqIpd ? Number(item.seqIpd) : 0,
               qtdPed: item.un,
               preUni: Number(item.vlrUnit.replace('.', '').replace(',', '')) / 100,
-              perDsc: Number(item.desc.toString().replace(',', '.')),
+              perDs1: Number(item.desc1.toString().replace(',', '.')),
+              perDs2: Number(item.desc2.toString().replace(',', '.')),
+              perDs3: Number(item.desc3.toString().replace(',', '.')),
+              perDs4: Number(item.desc4.toString().replace(',', '.')),
+              perDs5: Number(item.desc5.toString().replace(',', '.')),
+              perGue: Number(item.guelta.toString().replace(',', '.')),
+              vlrRet: Number(item.rt.replace('.', '').replace(',', '')) / 100,
               perCom: Number(item.comiss.toString().replace(',', '.')),
               datEnt: datEntFmt,
               medEsp: item.cMed === true ? 'S' : 'N',
@@ -1494,6 +1593,13 @@ export default {
                     comp: item.cMed ? item.LARDER : item.CODDER,
                     un: item.QTDPED,
                     desc: Number(item.PERDSC).toFixed(2).toLocaleString(),
+                    desc1: Number(item.PERDS1).toFixed(2).toLocaleString(),
+                    desc2: Number(item.PERDS2).toFixed(2).toLocaleString(),
+                    desc3: Number(item.PERDS3).toFixed(2).toLocaleString(),
+                    desc4: Number(item.PERDS4).toFixed(2).toLocaleString(),
+                    desc5: Number(item.PERDS5).toFixed(2).toLocaleString(),
+                    guelta: Number(item.PERGUE).toFixed(2).toLocaleString(),
+                    rt: Number(item.VLRRET).toFixed(2).toLocaleString(),
                     comiss: Number(item.PERCOM).toFixed(2).toLocaleString(),
                     // eslint-disable-next-line no-unneeded-ternary
                     cMed: item.CMED === 'S' ? true : false,
@@ -1697,5 +1803,14 @@ export default {
   }
   .white-bg {
     background-color: white !important;
+  }
+  .param-comercial {
+    width: 7rem;
+  }
+  .param-guelta {
+    padding-left: 2.2rem !important;
+  }
+  .param-rt {
+    padding-left: 3.3rem !important;
   }
 </style>

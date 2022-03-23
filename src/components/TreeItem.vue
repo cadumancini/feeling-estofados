@@ -4,10 +4,6 @@
       <font-awesome-icon v-if="((item.filhos && (item.temG || item.filhoPodeTrocar)) && isOpen)" icon="minus-square" @click="toggleOpen" class="expand pointer" v-bind:class="{ warning: (item.temG || item.trocar) }" />
       <font-awesome-icon v-else-if="((item.filhos && (item.temG || item.filhoPodeTrocar)) && !isOpen)" icon="plus-square" @click="toggleOpen" class="expand pointer" v-bind:class="{ warning: (item.temG || item.trocar) }" />
     </th>
-    <!-- remover depois -->
-    <!-- <th class="fw-normal indent font-small" :style="cssVars">{{ item.codNiv }}</th> -->
-    <!-- <th class="fw-normal indent font-small" :style="cssVars">{{ item.codPro }}</th> -->
-    <!-- <th class="fw-normal font-small">{{ item.codDer }}</th> -->
     <th class="fw-normal font-small" v-if="(item.codFam === '02001' || item.codFam === '02002') && item.codDer !== 'G'"><span class="indent pipe" :style="cssVars">|</span><span class="dash">&#8213;&#8213;&#8213;&#8213;&#8213;&#8213;</span><span class="pe-2">></span>{{ item.codRef }}</th>
     <th class="fw-normal font-small" v-else><span class="indent pipe" :style="cssVars">|</span><span class="dash">&#8213;&#8213;&#8213;&#8213;&#8213;&#8213;</span><span class="pe-2">></span>{{ item.desPro }} {{ item.desDer }}</th>
 
@@ -17,12 +13,6 @@
       <font-awesome-icon class="pointer" icon="redo-alt" @click="buscarOpcoes(item)" data-bs-toggle="modal" :data-bs-target="`#modal-`+item.hashModal"/>
     </th>
     <th v-else></th>
-
-    <!-- remover depois -->
-    <!-- <th class="fw-normal align-center">
-      <font-awesome-icon v-if="(item.temG || item.trocar)" icon="exclamation-triangle" class="warning"/>
-      <font-awesome-icon v-else-if="/^[1][.]\d+(?!.)/.test(item.codNiv)" icon="check-square" class="success"/>
-    </th> -->
 
     <!-- Modal -->
     <div class="modal fade" :id="`modal-`+item.hashModal" tabindex="-1" aria-labelledby="equivalentesModalLabel" aria-hidden="true">
@@ -278,10 +268,5 @@ export default {
     position: relative;
     top: -6px;
     left: 2px;
-  }
-  .pipe-2 {
-    position: relative;
-    bottom: -6px;
-    right: 1.4px;
   }
 </style>

@@ -3,7 +3,10 @@ import App from './App.vue'
 import router from './router'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faReceipt, faEdit, faPlusSquare, faMinusSquare, faExclamationTriangle, faRedoAlt, faCheckSquare, faTrashAlt, faFileUpload, faDownload } from '@fortawesome/free-solid-svg-icons'
+import {
+  faReceipt, faEdit, faPlusSquare, faMinusSquare, faExclamationTriangle, faRedoAlt,
+  faCheckSquare, faTrashAlt, faFileUpload, faDownload, faPercentage
+} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -20,5 +23,6 @@ library.add(faCheckSquare)
 library.add(faTrashAlt)
 library.add(faFileUpload)
 library.add(faDownload)
+library.add(faPercentage)
 createApp(App).use(router).use(VueNumberFormat, { prefix: '', decimal: ',', thousand: '.' })
   .component('font-awesome-icon', FontAwesomeIcon).mount('#app')
