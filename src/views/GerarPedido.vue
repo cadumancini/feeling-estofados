@@ -441,12 +441,12 @@
                 <th class="fw-normal sm-header" style="width: 2%;"><small><font-awesome-icon icon="edit"/></small></th>
                 <th class="fw-normal sm-header" style="width: 4%;"><small>Cnj.</small></th>
                 <th class="fw-normal sm-header" style="width: 14%;"><small>Estilo</small></th>
-                <th class="fw-normal sm-header" style="width: 17%;"><small>Configuração</small></th>
+                <th class="fw-normal sm-header" style="width: 16%;"><small>Configuração</small></th>
                 <th class="fw-normal sm-header" style="width: 8%;"><small>Comp. (cm)</small></th>
                 <th class="fw-normal sm-header" style="width: 4%"><small>UN</small></th>
                 <th class="fw-normal sm-header" style="width: 6%;"><small>Desc. (%)</small></th>
                 <th class="fw-normal sm-header" style="width: 7%;"><small>Comiss. (%)</small></th>
-                <th class="fw-normal sm-header" style="width: 5%;"><small>Cond. Especial</small></th>
+                <th class="fw-normal sm-header" style="width: 6%;"><small>Cond. Especial</small></th>
                 <th class="fw-normal sm-header" style="width: 16%;"><small>Observações</small></th>
                 <th class="fw-normal sm-header" style="width: 8%;"><small>Vlr. Unit. (R$)</small></th>
                 <th class="fw-normal sm-header" style="width: 10%;"><small>Ação</small></th>
@@ -455,7 +455,9 @@
             <tbody v-for="item in itens" :key="item.codPro">
               <tr>
                 <td class="fw-normal">
-                  <button class="btn btn-sm btn-secondary sm" @click="setManipular(item)" :disabled="!item.seqIpd || enviadoEmpresa"><font-awesome-icon icon="edit"/></button>
+                  <button class="btn btn-sm btn-secondary sm" @click="setManipular(item)" :disabled="!item.seqIpd || enviadoEmpresa" data-bs-toggle="tooltip" data-bs-placement="top" title="Manipular estrutura">
+                    <font-awesome-icon icon="edit"/>
+                  </button>
                 </td>
                 <td class="fw-normal">
                   <div class="input-group input-group-sm">
@@ -495,7 +497,7 @@
                     <vue-mask class="form-control form-control-sm sm" :disabled="enviadoEmpresa" mask="00,00" :raw="false" :options="options" v-model="item.comiss"></vue-mask>
                   </small>
                 </td>
-                <td class="fw-normal">
+                <td class="fw-normal" data-bs-toggle="tooltip" data-bs-placement="top" title="Condições especiais">
                   <button class="btn btn-secondary dropdown-toggle sm btn-sm" :disabled="enviadoEmpresa" type="button" data-bs-toggle="dropdown"
                           aria-haspopup="true" aria-expanded="false">Selecione</button>
                   <div class="dropdown-menu">
@@ -539,11 +541,15 @@
                 </td>
 
                 <td class="d-flex justify-content-around">
-                  <label class="btn btn-sm btn-action btn-secondary sm" :disabled="!item.seqIpd || enviadoEmpresa">
+                  <label class="btn btn-sm btn-action btn-secondary sm" v-bind:class="{ disabled: (!item.seqIpd || enviadoEmpresa) }" data-bs-toggle="tooltip" data-bs-placement="top" title="Upload de anexo(s)">
                     <font-awesome-icon icon="file-upload"/><input type="file" ref="uploadArquivo" style="display: none;" @change="onUploadArquivo(item)"/>
                   </label>
-                  <button class="btn btn-sm btn-action btn-secondary sm" :disabled="enviadoEmpresa" @click="download(item)"><font-awesome-icon icon="download"/></button>
-                  <button class="btn btn-sm btn-action btn-danger sm" :disabled="enviadoEmpresa" @click="deleteItem(item)"><font-awesome-icon icon="trash-alt"/></button>
+                  <button class="btn btn-sm btn-action btn-secondary sm" :disabled="!item.seqIpd" @click="download(item)" data-bs-toggle="tooltip" data-bs-placement="top" title="Download de anexo(s)">
+                    <font-awesome-icon icon="download"/>
+                  </button>
+                  <button class="btn btn-sm btn-action btn-danger sm" :disabled="enviadoEmpresa" @click="deleteItem(item)" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir item">
+                    <font-awesome-icon icon="trash-alt"/>
+                  </button>
                 </td>
               </tr>
               <tr v-if="item.MANIPULAR">
@@ -1380,11 +1386,11 @@ export default {
               perDsc: Number(item.desc.toString().replace(',', '.')),
               perCom: Number(item.comiss.toString().replace(',', '.')),
               datEnt: datEntFmt,
-              cMed: item.cMed ? 'S' : 'N',
-              cDes: item.cDes ? 'S' : 'N',
-              cCon: item.cCon ? 'S' : 'N',
-              cPra: item.cPra ? 'S' : 'N',
-              cOut: item.cOut ? 'S' : 'N',
+              medEsp: item.cMed === true ? 'S' : 'N',
+              desEsp: item.cDes === true ? 'S' : 'N',
+              conEsp: item.cCon === true ? 'S' : 'N',
+              praEsp: item.cPra === true ? 'S' : 'N',
+              outEsp: item.cOut === true ? 'S' : 'N',
               obsIpd: item.obs
             }
           )
@@ -1628,13 +1634,11 @@ export default {
             item.derivacoesPossiveis = response.data.derivacoes
           })
       }
-      console.log(item.cMed)
     },
     checkDesconto (item) {
       if (document.getElementById('cbDesconto' + item.hash).checked) {
         alert('Descreva o critério e desconto aplicado para a condição especial nas observações do item.')
       }
-      console.log(item.cDes)
     },
     checkCondicao (item) {
       if (document.getElementById('cbCondicao' + item.hash).checked) {
