@@ -217,7 +217,19 @@ export default {
         dscCmp: equivalente.DSCEQI,
         codFam: this.$props.item.codFam
       }
-      this.trocar(itemTroca)
+      const token = sessionStorage.getItem('token')
+      axios.get('http://localhost:8080/itensMontagem?emp=' + this.codEmp + '&pro=' + itemTroca.cmpAtu + '&der=' + itemTroca.derAtu + '&token=' + token)
+        .then((response) => {
+          console.log('buscou montagens')
+          this.checkInvalidLoginResponse(response.data)
+          if (response.data.itensMontagem.length) {
+            itemTroca.itensMontagem = response.data.itensMontagem
+            this.trocar(itemTroca)
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
     cancelar () {
       this.$props.item.equivalenteSelecionado = null

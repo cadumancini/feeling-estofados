@@ -199,22 +199,25 @@ export default {
       this.trocas = []
       this.trocas.push(itemTroca)
       if (itemTroca.codFam === '02001' || itemTroca.codFam === '02002') {
-        const token = sessionStorage.getItem('token')
-        const codEmp = this.item.CODEMP
-        let itensMontagem = null
-        item.ACABADO.filhos.forEach(filho => this.analisarSeTrocarFilhos(item, filho, itemTroca))
-        axios.get('http://localhost:8080/itensMontagem?emp=' + codEmp + '&pro=' + itemTroca.cmpAtu + '&der=' + itemTroca.derAtu + '&token=' + token)
-          .then((response) => {
-            this.checkInvalidLoginResponse(response.data)
-            itensMontagem = response.data.itensMontagem
-            item.ACABADO.filhos.forEach(filho => this.analisarItensMontagem(item, filho, itensMontagem))
+        item.ACABADOS.forEach(acabado => {
+          if (acabado.filhos) {
+            acabado.filhos.forEach(filho => this.analisarSeTrocarFilhos(acabado, filho, itemTroca))
+          }
+        })
+        if (itemTroca.itensMontagem.length) {
+          item.ACABADOS.forEach(acabado => {
+            if (acabado.filhos) {
+              acabado.filhos.forEach(filho => this.analisarItensMontagem(acabado, filho, itemTroca.itensMontagem))
+            }
           })
-          .catch((err) => {
-            console.log(err)
-          })
+        }
       } else if (itemTroca.codFam === '05001') { // talhado
         // Ver se existem outros talhados com o mesmo agrupamento para trocar
-        item.ACABADO.filhos.forEach(filho => this.analisarSeTrocarTalhado(item, filho, itemTroca))
+        item.ACABADOS.forEach(acabado => {
+          if (acabado.filhos) {
+            acabado.filhos.forEach(filho => this.analisarSeTrocarTalhado(acabado, filho, itemTroca))
+          }
+        })
       }
       this.requestTroca(this.pedido, seqIpd, item)
     },
@@ -241,7 +244,6 @@ export default {
               dscCmp: filho.equivalentes[0].DSCEQI
             }
             this.trocas.push(objTroca)
-            console.log(this.trocas)
           }
         }
       }

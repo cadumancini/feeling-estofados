@@ -1023,9 +1023,6 @@ export default {
         alert('Favor escolher uma configuração!')
       }
     },
-    verificarConjunto () {
-      console.log('focus out')
-    },
     selectCliente (clienteClicked) {
       const formatter = new StringMask('99.999.999/0000-00')
       this.cliente = clienteClicked.CODCLI
@@ -1410,7 +1407,6 @@ export default {
             itens: itensPedido
           }
         )
-        console.log(body)
         const headers = { headers: { 'Content-Type': 'application/json' } }
         axios.post('http://localhost:8080/pedido/itens?token=' + token, body, headers)
           .then((response) => {
@@ -1610,7 +1606,6 @@ export default {
         responseType: 'blob'
       })
         .then((response) => {
-          console.log(response)
           if (response.status === 204) {
             alert('Nenhum arquivo disponível para download.')
           } else {
