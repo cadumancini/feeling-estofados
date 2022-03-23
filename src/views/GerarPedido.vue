@@ -440,15 +440,15 @@
               <tr class="table-dark">
                 <th class="fw-normal sm-header" style="width: 2%;"><small><font-awesome-icon icon="edit"/></small></th>
                 <th class="fw-normal sm-header" style="width: 4%;"><small>Cnj.</small></th>
-                <th class="fw-normal sm-header" style="width: 13%;"><small>Estilo</small></th>
-                <th class="fw-normal sm-header" style="width: 16%;"><small>Configuração</small></th>
+                <th class="fw-normal sm-header" style="width: 14%;"><small>Estilo</small></th>
+                <th class="fw-normal sm-header" style="width: 17%;"><small>Configuração</small></th>
                 <th class="fw-normal sm-header" style="width: 8%;"><small>Comp. (cm)</small></th>
                 <th class="fw-normal sm-header" style="width: 4%"><small>UN</small></th>
                 <th class="fw-normal sm-header" style="width: 6%;"><small>Desc. (%)</small></th>
-                <th class="fw-normal sm-header" style="width: 6%;"><small>Comiss. (%)</small></th>
-                <th class="fw-normal sm-header" style="width: 12%;"><small>Cond. Especial</small></th>
-                <th class="fw-normal sm-header" style="width: 13%;"><small>Observações</small></th>
-                <th class="fw-normal sm-header" style="width: 7%;"><small>Vlr. Unit. (R$)</small></th>
+                <th class="fw-normal sm-header" style="width: 7%;"><small>Comiss. (%)</small></th>
+                <th class="fw-normal sm-header" style="width: 5%;"><small>Cond. Especial</small></th>
+                <th class="fw-normal sm-header" style="width: 16%;"><small>Observações</small></th>
+                <th class="fw-normal sm-header" style="width: 8%;"><small>Vlr. Unit. (R$)</small></th>
                 <th class="fw-normal sm-header" style="width: 10%;"><small>Ação</small></th>
               </tr>
             </thead>
@@ -478,7 +478,7 @@
                 </td>
                 <td class="fw-normal">
                   <div class="input-group input-group-sm">
-                    <input :id="'inputComp'+item.hash" class="form-control sm" type="text" :disabled="item.condEsp !== 'M'" v-model="item.comp">
+                    <input :id="'inputComp'+item.hash" class="form-control sm" type="text" :disabled="!item.cMed" v-model="item.comp">
                     <button :id="`btnBuscaComps`+item.hash" disabled class="btn btn-secondary input-group-btn sm btn-busca" @click="buscaComps(item, item.codConfig)" data-bs-toggle="modal" data-bs-target="#compsModal">...</button>
                   </div>
                 </td>
@@ -496,14 +496,40 @@
                   </small>
                 </td>
                 <td class="fw-normal">
-                  <select id="inputGroupSelectCondEsp" :disabled="enviadoEmpresa" class="form-select form-select-sm sm" @change="handleCondicao(item)" v-model="item.condEsp">
-                    <option value=" "></option>
-                    <option value="M">Medida Especial</option>
-                    <option value="D">Desconto Especial</option>
-                    <option value="C">Condição de Pagto</option>
-                    <option value="P">Prazo Especial</option>
-                    <option value="O">Outras</option>
-                  </select>
+                  <button class="btn btn-secondary dropdown-toggle sm btn-sm" :disabled="enviadoEmpresa" type="button" data-bs-toggle="dropdown"
+                          aria-haspopup="true" aria-expanded="false">Selecione</button>
+                  <div class="dropdown-menu">
+                    <a class="dropdown-item">
+                      <div class="custom-control custom-checkbox sm">
+                        <input type="checkbox" class="custom-control-input" :id="'cbMedida'+item.hash" @change="checkMedida(item)" v-model="item.cMed">
+                        <label class="custom-control-label ps-1" :for="'cbMedida'+item.hash">Medida Especial</label>
+                      </div>
+                    </a>
+                    <a class="dropdown-item" href="#">
+                      <div class="custom-control custom-checkbox sm">
+                        <input type="checkbox" class="custom-control-input" :id="'cbDesconto'+item.hash" @change="checkDesconto(item)" v-model="item.cDes">
+                        <label class="custom-control-label ps-1" :for="'cbDesconto'+item.hash">Desconto Especial</label>
+                      </div>
+                    </a>
+                    <a class="dropdown-item" href="#">
+                      <div class="custom-control custom-checkbox sm">
+                        <input type="checkbox" class="custom-control-input" :id="'cbCondicao'+item.hash" @change="checkCondicao(item)" v-model="item.cCon">
+                        <label class="custom-control-label ps-1" :for="'cbCondicao'+item.hash">Condição de Pagto</label>
+                      </div>
+                    </a>
+                    <a class="dropdown-item" href="#">
+                      <div class="custom-control custom-checkbox sm">
+                        <input type="checkbox" class="custom-control-input" :id="'cbPrazo'+item.hash" @change="checkPrazo(item)" v-model="item.cPra">
+                        <label class="custom-control-label ps-1" :for="'cbPrazo'+item.hash">Prazo Especial</label>
+                      </div>
+                    </a>
+                    <a class="dropdown-item" href="#">
+                      <div class="custom-control custom-checkbox sm">
+                        <input type="checkbox" class="custom-control-input" :id="'cbOutras'+item.hash" @change="checkOutras(item)" v-model="item.cOut">
+                        <label class="custom-control-label ps-1" :for="'cbOutras'+item.hash">Outras</label>
+                      </div>
+                    </a>
+                  </div>
                 </td>
                 <td class="fw-normal"><small><input class="form-control form-control-sm sm" :disabled="enviadoEmpresa" type="text" v-model="item.obs"></small></td>
                 <td class="fw-normal">
@@ -1126,7 +1152,11 @@ export default {
         un: '',
         desc: 0,
         comiss: this.comissao,
-        condEsp: ' ',
+        cMed: false,
+        cDes: false,
+        cCon: false,
+        cPra: false,
+        cOut: false,
         obs: '',
         vlrUnit: '',
         hash: Math.floor(Math.random() * ((this.itens.length + 1) * 1000))
@@ -1258,27 +1288,6 @@ export default {
       this.manipulando = false
       this.observacoesPedido = ''
     },
-    handleCondicao (item) {
-      if (item.condEsp === 'M') {
-        alert('Informe o novo comprimento, em centímetros, para o produto. Produtos de medida especial tem acréscimo no valor de tabela.')
-        this.buscarDerivacoes(item.codConfig)
-          .then(response => {
-            item.derivacoesPossiveis = response.data.derivacoes
-          })
-        document.getElementById('inputComp' + item.hash).disabled = false
-      } else {
-        document.getElementById('inputComp' + item.hash).disabled = true
-        if (item.condEsp === 'D') {
-          alert('Descreva o critério e desconto aplicado para a condição especial nas observações do item.')
-        } else if (item.condEsp === 'C') {
-          alert('Descreva o critério e a condição de pagamento aplicado para a condição especial nas observações do item.')
-        } else if (item.condEsp === 'P') {
-          alert('Em dias corridos, descreva o prazo especial desejado nas observações do item.')
-        } else if (item.condEsp === 'O') {
-          alert('Descreva a condição especial nas observações do item.')
-        }
-      }
-    },
     salvarItens () {
       document.getElementById('closeModalSalvarItens').click()
       let temErro = false
@@ -1287,7 +1296,7 @@ export default {
           alert('Erro: Existe(m) produto(s) com quantidade sem preencher, ou menor que zero, ou maior que 99. Verifique!')
           temErro = true
         }
-        if (!item.codEstilo || !item.codConfig || (item.condEsp !== 'M' && !item.codComp)) {
+        if (!item.codEstilo || !item.codConfig || (!item.cMed && !item.codComp)) {
           alert('Erro: Existe(m) produto(s) faltando definir estilo, configuração ou comprimento. Verifique!')
           temErro = true
         }
@@ -1295,7 +1304,7 @@ export default {
           alert('Erro: Existe(m) produto(s) com número de conjunto menor que 1. Verifique!')
           temErro = true
         }
-        if ((item.condEsp === 'D' || item.condEsp === 'C' || item.condEsp === 'P' || item.condEsp === 'O') && (!item.obs)) {
+        if ((item.cDes || item.cCon || item.cPra || item.cOut === 'O') && (!item.obs)) {
           alert('Erro: Existe(m) produto(s) com condição especial que requer preenchimento de observação. Verifique!')
           temErro = true
         }
@@ -1307,7 +1316,7 @@ export default {
           alert('Erro: Existe(m) produto(s) com valor unitário zerado. Verifique!')
           temErro = true
         }
-        if (item.condEsp === 'M') {
+        if (item.cMed) {
           if (!item.comp) {
             alert('Erro: Existe(m) produto(s) com medida especial sem o comprimento preenchido. Verifique!')
             temErro = true
@@ -1364,14 +1373,18 @@ export default {
               codPro: item.codConfig,
               desPro: (item.config + ' ' + item.comp),
               codDer: item.codComp,
-              derEsp: item.condEsp === 'M' ? item.comp : '',
+              derEsp: item.cMed ? item.comp : '',
               seqIpd: item.seqIpd ? Number(item.seqIpd) : 0,
               qtdPed: item.un,
               preUni: Number(item.vlrUnit.replace('.', '').replace(',', '')) / 100,
               perDsc: Number(item.desc.toString().replace(',', '.')),
               perCom: Number(item.comiss.toString().replace(',', '.')),
               datEnt: datEntFmt,
-              conEsp: item.condEsp,
+              cMed: item.cMed ? 'S' : 'N',
+              cDes: item.cDes ? 'S' : 'N',
+              cCon: item.cCon ? 'S' : 'N',
+              cPra: item.cPra ? 'S' : 'N',
+              cOut: item.cOut ? 'S' : 'N',
               obsIpd: item.obs
             }
           )
@@ -1391,6 +1404,7 @@ export default {
             itens: itensPedido
           }
         )
+        console.log(body)
         const headers = { headers: { 'Content-Type': 'application/json' } }
         axios.post('http://localhost:8080/pedido/itens?token=' + token, body, headers)
           .then((response) => {
@@ -1475,11 +1489,20 @@ export default {
                     codConfig: item.CODPRO,
                     config: item.DESPRO,
                     codComp: item.CODDER,
-                    comp: item.CNDESP === 'M' ? item.LARDER : item.CODDER,
+                    comp: item.cMed ? item.LARDER : item.CODDER,
                     un: item.QTDPED,
                     desc: Number(item.PERDSC).toFixed(2).toLocaleString(),
                     comiss: Number(item.PERCOM).toFixed(2).toLocaleString(),
-                    condEsp: item.CNDESP,
+                    // eslint-disable-next-line no-unneeded-ternary
+                    cMed: item.CMED === 'S' ? true : false,
+                    // eslint-disable-next-line no-unneeded-ternary
+                    cDes: item.CDES === 'S' ? true : false,
+                    // eslint-disable-next-line no-unneeded-ternary
+                    cCon: item.CCON === 'S' ? true : false,
+                    // eslint-disable-next-line no-unneeded-ternary
+                    cPra: item.CPRA === 'S' ? true : false,
+                    // eslint-disable-next-line no-unneeded-ternary
+                    cOut: item.COUT === 'S' ? true : false,
                     datEnt: item.DATENT,
                     obs: item.OBSIPD,
                     vlrUnit: Number(item.VLRIPD).toFixed(2).toLocaleString(),
@@ -1596,6 +1619,37 @@ export default {
         .finally(() => {
           document.getElementsByTagName('body')[0].style.cursor = 'auto'
         })
+    },
+    checkMedida (item) {
+      if (document.getElementById('cbMedida' + item.hash).checked) {
+        alert('Informe o novo comprimento, em centímetros, para o produto. Produtos de medida especial tem acréscimo no valor de tabela.')
+        this.buscarDerivacoes(item.codConfig)
+          .then(response => {
+            item.derivacoesPossiveis = response.data.derivacoes
+          })
+      }
+      console.log(item.cMed)
+    },
+    checkDesconto (item) {
+      if (document.getElementById('cbDesconto' + item.hash).checked) {
+        alert('Descreva o critério e desconto aplicado para a condição especial nas observações do item.')
+      }
+      console.log(item.cDes)
+    },
+    checkCondicao (item) {
+      if (document.getElementById('cbCondicao' + item.hash).checked) {
+        alert('Descreva o critério e a condição de pagamento aplicado para a condição especial nas observações do item.')
+      }
+    },
+    checkPrazo (item) {
+      if (document.getElementById('cbPrazo' + item.hash).checked) {
+        alert('Em dias corridos, descreva o prazo especial desejado nas observações do item.')
+      }
+    },
+    checkOutras (item) {
+      if (document.getElementById('cbOutras' + item.hash).checked) {
+        alert('Descreva a condição especial nas observações do item.')
+      }
     }
   }
 }
