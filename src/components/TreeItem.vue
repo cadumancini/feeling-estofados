@@ -213,8 +213,8 @@ export default {
           this.checkInvalidLoginResponse(response.data)
           if (response.data.itensMontagem.length) {
             itemTroca.itensMontagem = response.data.itensMontagem
-            this.trocar(itemTroca)
           }
+          this.trocar(itemTroca)
         })
         .catch((err) => {
           console.log(err)
