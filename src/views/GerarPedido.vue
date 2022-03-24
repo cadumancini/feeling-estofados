@@ -441,13 +441,14 @@
                 <th class="fw-normal sm-header" style="width: 2%;"><small><font-awesome-icon icon="edit"/></small></th>
                 <th class="fw-normal sm-header" style="width: 4%;"><small>Cnj.</small></th>
                 <th class="fw-normal sm-header" style="width: 12%;"><small>Estilo</small></th>
-                <th class="fw-normal sm-header" style="width: 20%;"><small>Configuração</small></th>
-                <th class="fw-normal sm-header" style="width: 9%;"><small>Comp. (cm)</small></th>
+                <th class="fw-normal sm-header" style="width: 18%;"><small>Configuração</small></th>
+                <th class="fw-normal sm-header" style="width: 8%;"><small>Comp. (cm)</small></th>
                 <th class="fw-normal sm-header" style="width: 4%"><small>UN</small></th>
                 <th class="fw-normal sm-header" style="width: 6%;"><small>Cond. Especial</small></th>
-                <th class="fw-normal sm-header" style="width: 23%;"><small>Observações</small></th>
+                <th class="fw-normal sm-header" style="width: 20%;"><small>Observações</small></th>
                 <th class="fw-normal sm-header" style="width: 2%;"><small>%</small></th>
-                <th class="fw-normal sm-header" style="width: 8%;"><small>Vlr. Unit. (R$)</small></th>
+                <th class="fw-normal sm-header" style="width: 7%;"><small>Vlr. Unit. (R$)</small></th>
+                <th class="fw-normal sm-header" style="width: 7%;"><small>Vlr. Final (R$)</small></th>
                 <th class="fw-normal sm-header" style="width: 10%;"><small>Ação</small></th>
               </tr>
             </thead>
@@ -595,6 +596,11 @@
                 <td class="fw-normal">
                   <small class="sm">
                     <vue-mask class="form-control form-control-sm sm" :disabled="enviadoEmpresa" mask="000.000,00" :raw="false" :options="options" v-model="item.vlrUnit"></vue-mask>
+                  </small>
+                </td>
+                <td class="fw-normal">
+                  <small class="sm vlr-final">
+                    {{ item.vlrFinal }}
                   </small>
                 </td>
 
@@ -1239,6 +1245,7 @@ export default {
         cOut: false,
         obs: '',
         vlrUnit: '',
+        vlrFinal: '',
         temAnx: 'N',
         hash: Math.floor(Math.random() * ((this.itens.length + 1) * 1000))
       }
@@ -1605,6 +1612,12 @@ export default {
                     datEnt: item.DATENT,
                     obs: item.OBSIPD,
                     vlrUnit: Number(item.VLRIPD).toFixed(2).toLocaleString(),
+                    vlrFinal: Number(Number(item.VLRIPD) *
+                      (Number(item.PERDS1) > 0 ? ((100 - Number(item.PERDS1)) / 100) : 1) *
+                      (Number(item.PERDS2) > 0 ? ((100 - Number(item.PERDS2)) / 100) : 1) *
+                      (Number(item.PERDS3) > 0 ? ((100 - Number(item.PERDS3)) / 100) : 1) *
+                      (Number(item.PERDS4) > 0 ? ((100 - Number(item.PERDS4)) / 100) : 1) *
+                      (Number(item.PERDS5) > 0 ? ((100 - Number(item.PERDS5)) / 100) : 1)).toFixed(2).toLocaleString(),
                     temAnx: item.TEMANX,
                     hash: Math.floor(Math.random() * ((this.itens.length + 1) * 1000)),
                     derivacoesPossiveis: derivacoesPossiveis
@@ -1613,10 +1626,17 @@ export default {
                 this.itens.sort(this.compareSeqIpd)
                 this.totalKg = parseFloat(parseFloat(this.totalKg) + parseFloat(item.PESIPD)).toFixed(2)
                 this.totalM3 = parseFloat(parseFloat(this.totalM3) + parseFloat(item.VOLIPD)).toFixed(2)
-                this.totalValor = parseFloat(parseFloat(this.totalValor) + parseFloat(parseInt(item.QTDPED) * parseFloat(item.VLRIPD))).toFixed(2)
+                this.totalValor = parseFloat(parseFloat(this.totalValor) + parseFloat(parseInt(item.QTDPED) * parseFloat(
+                  Number(Number(item.VLRIPD) *
+                  (Number(item.PERDS1) > 0 ? ((100 - Number(item.PERDS1)) / 100) : 1) *
+                  (Number(item.PERDS2) > 0 ? ((100 - Number(item.PERDS2)) / 100) : 1) *
+                  (Number(item.PERDS3) > 0 ? ((100 - Number(item.PERDS3)) / 100) : 1) *
+                  (Number(item.PERDS4) > 0 ? ((100 - Number(item.PERDS4)) / 100) : 1) *
+                  (Number(item.PERDS5) > 0 ? ((100 - Number(item.PERDS5)) / 100) : 1))
+                ))).toFixed(2)
                 this.ipiValor = parseFloat(parseFloat(this.ipiValor) + parseFloat(item.IPIIPD)).toFixed(2)
                 this.icmsValor = parseFloat(parseFloat(this.icmsValor) + parseFloat(item.ICMIPD)).toFixed(2)
-                this.nfValor = parseFloat(parseFloat(this.nfValor) + parseFloat(item.NFVIPD)).toFixed(2)
+                this.nfValor = parseFloat(parseFloat(this.totalValor) + parseFloat(this.ipiValor) + parseFloat(this.icmsValor)).toFixed(2)
               })
           })
         })
@@ -1805,5 +1825,9 @@ export default {
   }
   .param-rt {
     padding-left: 3.3rem !important;
+  }
+  .vlr-final {
+    position: absolute;
+    padding-top: 6px;
   }
 </style>
