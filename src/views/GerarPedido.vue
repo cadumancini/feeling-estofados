@@ -1580,7 +1580,7 @@ export default {
                     codConfig: item.CODPRO,
                     config: item.DESPRO,
                     codComp: item.CODDER,
-                    comp: item.cMed ? item.LARDER : item.CODDER,
+                    comp: item.CMED === 'S' ? item.LARDER : item.CODDER,
                     un: item.QTDPED,
                     desc: Number(item.PERDSC).toFixed(2).toLocaleString(),
                     desc1: Number(item.PERDS1).toFixed(2).toLocaleString(),
