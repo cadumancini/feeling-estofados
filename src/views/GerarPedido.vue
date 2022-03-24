@@ -57,6 +57,7 @@
               <div class="input-group input-group-sm">
                 <span class="input-group-text">Frete</span>
                 <input id="frete" class="form-control" type="text" disabled v-model="frete">
+                <button id="btnBuscaFretes" :disabled="enviadoEmpresa || cliente === ''" class="btn btn-secondary input-group-btn btn-busca" @click="buscaFretes" data-bs-toggle="modal" data-bs-target="#fretesModal">...</button>
               </div>
             </div>
             <div class="col-3">
@@ -237,6 +238,42 @@
               </div>
               <div v-else>
                 <label>Buscando transportadoras ...</label>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fechar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Fretes -->
+      <div class="modal fade" id="fretesModal" tabindex="-1" aria-labelledby="fretesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="fretesModalLabel">Seleção de Frete</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalFretes"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3" v-if="fretes != null">
+                <table class="table table-striped table-hover table-bordered table-sm table-responsive">
+                  <thead>
+                    <tr>
+                      <th class="sm-header" scope="col">Código</th>
+                      <th class="sm-header" scope="col">Descrição</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="freteRow in fretes" :key="freteRow.CIFFOB" class="mouseHover" @click="selectFrete(freteRow)">
+                      <th class="fw-normal" scope="row">{{ freteRow.CIFFOB }}</th>
+                      <th class="fw-normal">{{ freteRow.DESFRE }}</th>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div v-else>
+                <label>Buscando fretes ...</label>
               </div>
             </div>
             <div class="modal-footer">
@@ -822,6 +859,7 @@ export default {
     return {
       clientes: null,
       transportadoras: null,
+      fretes: null,
       estilos: null,
       configs: null,
       comps: null,
@@ -946,6 +984,16 @@ export default {
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
             document.getElementById('btnBuscaTransportadoras').disabled = false
           })
+      }
+    },
+    buscaFretes () {
+      if (this.fretes === null) {
+        this.fretes = [
+          { CIFFOB: 'C', DESFRE: 'Por conta do emitente (PAGO)' },
+          { CIFFOB: 'F', DESFRE: 'Por conta do destinatário (A PAGAR)' },
+          { CIFFOB: 'T', DESFRE: 'Por conta de terceiros' },
+          { CIFFOB: 'X', DESFRE: 'Sem frete' }
+        ]
       }
     },
     buscaPedidosCliente () {
@@ -1103,7 +1151,6 @@ export default {
       this.endereco = clienteClicked.ENDCPL
       this.cidadeUF = clienteClicked.CIDEST
       this.inscrEst = clienteClicked.INSEST
-      this.frete = 'FOB'
       this.empresasCliente = []
       document.getElementById('closeModalClientes').click()
       this.buscarDadosCliente(this.cliente, false)
@@ -1112,6 +1159,10 @@ export default {
       this.codTransportadora = transportadoraClicked.CODTRA
       this.transportadora = transportadoraClicked.NOMTRA
       document.getElementById('closeModalTransportadoras').click()
+    },
+    selectFrete (freteClicked) {
+      this.frete = freteClicked.CIFFOB
+      document.getElementById('closeModalFretes').click()
     },
     selectPedidoCliente (pedidoClienteClicked) {
       this.numPed = pedidoClienteClicked.NUMPED
@@ -1184,6 +1235,7 @@ export default {
           this.checkInvalidLoginResponse(response.data)
           this.dadosCliente = response.data.dadosCliente
           if (this.dadosCliente.length > 0) {
+            this.frete = this.dadosCliente[0].CIFFOB
             this.desc1 = Number(this.dadosCliente[0].PERDS1).toFixed(2).toLocaleString()
             this.desc2 = Number(this.dadosCliente[0].PERDS2).toFixed(2).toLocaleString()
             this.desc3 = Number(this.dadosCliente[0].PERDS3).toFixed(2).toLocaleString()
@@ -1284,7 +1336,7 @@ export default {
               pedCli: this.pedCli !== '' ? this.pedCli : 0,
               codRep: this.codRepresentada,
               codTra: this.codTransportadora,
-              cifFob: 'F',
+              cifFob: this.frete,
               obsPed: this.observacoesPedido,
               codCpg: this.codCondPagamento
             },
@@ -1551,7 +1603,7 @@ export default {
           this.checkInvalidLoginResponse(response.data.pedido)
           this.prevFaturamento = response.data.pedido[0].DATENT
           this.condPagamento = response.data.pedido[0].DESCPG
-          this.frete = response.data.pedido[0].CIFFOB === 'F' ? 'FOB' : 'CIF'
+          this.frete = response.data.pedido[0].CIFFOB
           this.codTransportadora = response.data.pedido[0].CODTRA
           this.codRepresentada = response.data.pedido[0].CODREP
           this.enviadoEmpresa = (response.data.pedido[0].SITPED === '3' || response.data.pedido[0].SITPED === '4' || response.data.pedido[0].SITPED === '5')
