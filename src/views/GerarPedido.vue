@@ -602,7 +602,7 @@
                   <label class="btn btn-sm btn-action btn-secondary sm" v-bind:class="{ disabled: (!item.seqIpd || enviadoEmpresa) }" data-bs-toggle="tooltip" data-bs-placement="top" title="Upload de anexo(s)">
                     <font-awesome-icon icon="file-upload"/><input type="file" ref="uploadArquivo" style="display: none;" @change="onUploadArquivo(item)"/>
                   </label>
-                  <button class="btn btn-sm btn-action btn-secondary sm" :disabled="!item.seqIpd" @click="download(item)" data-bs-toggle="tooltip" data-bs-placement="top" title="Download de anexo(s)">
+                  <button class="btn btn-sm btn-action btn-secondary sm" :disabled="item.temAnx === 'N'" @click="download(item)" data-bs-toggle="tooltip" data-bs-placement="top" title="Download de anexo(s)">
                     <font-awesome-icon icon="download"/>
                   </button>
                   <button class="btn btn-sm btn-action btn-danger sm" :disabled="enviadoEmpresa" @click="deleteItem(item)" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir item">
@@ -1239,6 +1239,7 @@ export default {
         cOut: false,
         obs: '',
         vlrUnit: '',
+        temAnx: 'N',
         hash: Math.floor(Math.random() * ((this.itens.length + 1) * 1000))
       }
       this.itens.push(item)
@@ -1604,6 +1605,7 @@ export default {
                     datEnt: item.DATENT,
                     obs: item.OBSIPD,
                     vlrUnit: Number(item.VLRIPD).toFixed(2).toLocaleString(),
+                    temAnx: item.TEMANX,
                     hash: Math.floor(Math.random() * ((this.itens.length + 1) * 1000)),
                     derivacoesPossiveis: derivacoesPossiveis
                   }
@@ -1680,6 +1682,7 @@ export default {
       axios.post('http://localhost:8080/uploadArquivo?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&ipd=' + item.seqIpd + '&token=' + token, this.formData, { headers: headers })
         .then((response) => {
           if (response.data === 'OK') {
+            item.temAnx = 'S'
             alert('Arquivo enviado com sucesso!')
           } else {
             alert(response.data)
