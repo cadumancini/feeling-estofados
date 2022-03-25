@@ -2,7 +2,7 @@
   <div class="gerarPedido">
     <Navbar/>
     <div class="mx-3">
-      <div class="row mb-3">
+      <div class="row mb-1">
         <div class="col-6">
           <span class="fw-bold fs-4">Geração de Pedido</span>
         </div>
@@ -671,7 +671,7 @@
         <div class="row">
           <div class="col-2">
             <div class="input-group input-group-sm">
-              <span class="input-group-text">Total (Kg)</span>
+              <span class="input-group-text">Total (Kg - Bru. | Líq.)</span>
               <input id="totalKg" class="form-control" type="text" disabled v-model="totalKg">
             </div>
           </div>
@@ -914,7 +914,7 @@ export default {
       numPed: '',
       pedCli: '',
       enviadoEmpresa: false,
-      totalKg: 0,
+      totalKg: '',
       totalM3: 0,
       totalValor: 0,
       ipiValor: 0,
@@ -1153,6 +1153,10 @@ export default {
       this.cidadeUF = clienteClicked.CIDEST
       this.inscrEst = clienteClicked.INSEST
       this.empresasCliente = []
+      this.empresasCliente.splice(0)
+      while (this.empresasCliente.length > 0) {
+        this.empresasCliente.pop()
+      }
       document.getElementById('closeModalClientes').click()
       this.buscarDadosCliente(this.cliente, false)
     },
@@ -1419,8 +1423,16 @@ export default {
       this.representada = ''
       this.empresa = ''
       this.empresasCliente = []
+      this.empresasCliente.splice(0)
+      while (this.empresasCliente.length > 0) {
+        this.empresasCliente.pop()
+      }
       this.numPed = ''
       this.itens = []
+      this.itens.splice(0)
+      while (this.itens.length > 0) {
+        this.itens.pop()
+      }
       this.pedCli = ''
       this.enviadoEmpresa = false
       this.prevFaturamento = ''
@@ -1434,6 +1446,12 @@ export default {
       this.guelta = ''
       this.manipulando = false
       this.observacoesPedido = ''
+      this.totalKg = ''
+      this.totalM3 = 0
+      this.totalValor = 0
+      this.ipiValor = 0
+      this.icmsValor = 0
+      this.nfValor = 0
     },
     salvarItens () {
       document.getElementById('closeModalSalvarItens').click()
@@ -1513,6 +1531,10 @@ export default {
         var mes = (new Date(datEnt).getMonth() + 1).toString().padStart(2, '0') // +1 pois no getMonth Janeiro começa com zero.
         var ano = new Date(datEnt).getFullYear()
         var datEntFmt = dia + '/' + mes + '/' + ano
+        itensPedido.splice(0)
+        while (itensPedido.length > 0) {
+          itensPedido.pop()
+        }
         this.itens.forEach(item => {
           itensPedido.push(
             {
@@ -1618,6 +1640,10 @@ export default {
     carregarItens () {
       const token = sessionStorage.getItem('token')
       this.itens = []
+      this.itens.splice(0)
+      while (this.itens.length > 0) {
+        this.itens.pop()
+      }
       this.totalKg = parseFloat(0)
       this.totalM3 = parseFloat(0)
       this.totalValor = parseFloat(0)
@@ -1717,10 +1743,10 @@ export default {
         axios.post('http://192.168.1.168:8080/enviarPedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
-            if (response.data.pesoTotal) {
+            if (response.data.pesoTotalBruto) {
               alert('Pedido enviado à empresa com sucesso!')
               this.enviadoEmpresa = true
-              this.totalKg = parseFloat(response.data.pesoTotal).toFixed(2)
+              this.totalKg = parseFloat(response.data.pesoTotalBruto).toFixed(2) + ' | ' + parseFloat(response.data.pesoTotalLiq).toFixed(2)
               this.totalM3 = parseFloat(response.data.volumeTotal).toFixed(2)
             } else {
               alert(response.data)
