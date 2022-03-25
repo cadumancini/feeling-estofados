@@ -38,7 +38,7 @@
           </div>
         </div>
         <div v-if="!manipulando">
-          <div class="row mb-3">
+          <div class="row mb-2">
             <div class="col-3">
               <div class="input-group input-group-sm">
                 <span class="input-group-text">Nº Pedido</span>
@@ -67,7 +67,7 @@
               </div>
             </div>
           </div>
-          <div class="row mb-3">
+          <div class="row mb-2">
             <div class="col-3">
               <div class="input-group input-group-sm">
                 <span class="input-group-text">Pedido Cliente</span>
@@ -89,7 +89,7 @@
               </div>
             </div>
           </div>
-          <div class="row mb-3">
+          <div class="row mb-2">
             <div class="col-3">
               <div class="input-group input-group-sm">
                 <span class="input-group-text">Cliente</span>
@@ -116,7 +116,7 @@
               </div>
             </div>
           </div>
-          <div class="row mb-3">
+          <div class="row mb-2">
             <div class="col-4">
               <div class="input-group input-group-sm">
                 <span class="input-group-text">Endereço</span>
@@ -931,6 +931,7 @@ export default {
     if (!sessionStorage.getItem('token')) {
       this.$router.push({ name: 'Login' })
     }
+    this.excluirRascunho()
   },
   methods: {
     checkInvalidLoginResponse (response) {
@@ -1567,6 +1568,7 @@ export default {
               respostaPedido = result['S:Envelope']['S:Body']['ns2:GravarPedidos_13Response'].result.respostaPedido
               if (respostaPedido.retorno === 'OK') {
                 alert('Itens salvos com sucesso!')
+                this.manipulando = false
                 this.carregarCabecalho()
                 this.carregarItens()
               } else {
