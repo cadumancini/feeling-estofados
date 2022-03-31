@@ -952,7 +952,11 @@ export default {
             this.checkInvalidLoginResponse(response.data)
             this.clientes = response.data.clientes
             this.clientes.forEach(cliente => {
-              const formatter = new StringMask('99.999.999/0000-00')
+              const formatter = new StringMask('00.000.000/0000-00')
+              cliente.CGCCPF = cliente.CGCCPF.replace('.', '').replace('-', '').replace('/', '')
+              for (let i = cliente.CGCCPF.length; i < 14; i++) {
+                cliente.CGCCPF = '0' + cliente.CGCCPF
+              }
               cliente.CNPJ = formatter.apply(cliente.CGCCPF)
             })
             this.clientesFiltrados = response.data.clientes
