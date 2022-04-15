@@ -37,113 +37,111 @@
             </div>
           </div>
         </div>
-        <div v-if="!manipulando">
-          <div class="row mb-2">
-            <div class="col-3">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">Nº Pedido</span>
-                <input id="numPed" class="form-control" type="text" disabled v-model="numPed">
-                <button id="btnBuscaPedidos" class="btn btn-secondary input-group-btn btn-busca" @click="buscaPedidos" data-bs-toggle="modal" data-bs-target="#pedidosModal">...</button>
-              </div>
-            </div>
-            <div class="col-3">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">Transportadora</span>
-                <input id="transportadora" class="form-control" type="text" disabled v-model="transportadora">
-                <button id="btnBuscaTransportadoras" :disabled="enviadoEmpresa || cliente === ''" class="btn btn-secondary input-group-btn btn-busca" @click="buscaTransportadoras" data-bs-toggle="modal" data-bs-target="#transportadorasModal">...</button>
-              </div>
-            </div>
-            <div class="col-3">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">Frete</span>
-                <input id="frete" class="form-control" type="text" disabled v-model="frete">
-                <button id="btnBuscaFretes" :disabled="enviadoEmpresa || cliente === ''" class="btn btn-secondary input-group-btn btn-busca" @click="buscaFretes" data-bs-toggle="modal" data-bs-target="#fretesModal">...</button>
-              </div>
-            </div>
-            <div class="col-3">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">Previsão faturamento</span>
-                <input id="prevFaturamento" class="form-control" type="text" disabled v-model="prevFaturamento">
-              </div>
+        <div class="row mb-2">
+          <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Nº Pedido</span>
+              <input id="numPed" class="form-control" type="text" disabled v-model="numPed">
+              <button id="btnBuscaPedidos" class="btn btn-secondary input-group-btn btn-busca" @click="buscaPedidos" data-bs-toggle="modal" data-bs-target="#pedidosModal">...</button>
             </div>
           </div>
-          <div class="row mb-2">
-            <div class="col-3">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">Pedido Cliente</span>
-                <input id="pedCli" class="form-control" :disabled="enviadoEmpresa" type="text" v-model="pedCli" v-on:keyup="normalizarPedidoCliente">
-                <button id="btnBuscaPedidosCliente" :disabled="enviadoEmpresa" class="btn btn-secondary input-group-btn btn-busca" @click="buscaPedidosCliente" data-bs-toggle="modal" data-bs-target="#pedidosClienteModal">...</button>
-              </div>
-            </div>
-            <div class="col-5">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">Representada</span>
-                <input id="representada" class="form-control" type="text" disabled v-model="representada">
-              </div>
-            </div>
-            <div class="col-4">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">Condição de pagamento</span>
-                <input class="form-control" type="text" disabled v-bind:class="{ 'white-bg': (!enviadoEmpresa) }" v-model="condPagamento" placeholder="Clique ao lado para selecionar">
-                <button id="btnBuscaCondicoesPagto" :disabled="enviadoEmpresa" class="btn btn-secondary input-group-btn btn-busca" @click="buscaCondicoesPagto" data-bs-toggle="modal" data-bs-target="#condicoesPagtoModal">...</button>
-              </div>
+          <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Transportadora</span>
+              <input id="transportadora" class="form-control" type="text" disabled v-model="transportadora">
+              <button id="btnBuscaTransportadoras" :disabled="enviadoEmpresa || cliente === ''" class="btn btn-secondary input-group-btn btn-busca" @click="buscaTransportadoras" data-bs-toggle="modal" data-bs-target="#transportadorasModal">...</button>
             </div>
           </div>
-          <div class="row mb-2">
-            <div class="col-3">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">Cliente</span>
-                <input id="nomCli" class="form-control" type="text" disabled v-bind:class="{ 'white-bg': (!enviadoEmpresa) }" v-model="nomCli" placeholder="Clique ao lado para selecionar">
-                <button id="btnBuscaClientes" class="btn btn-secondary input-group-btn btn-busca" :disabled="enviadoEmpresa" @click="buscaClientes" data-bs-toggle="modal" data-bs-target="#clientesModal">...</button>
-              </div>
-            </div>
-            <div class="col-3">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">E-mail</span>
-                <input id="email" class="form-control" type="text" disabled v-model="email">
-              </div>
-            </div>
-            <div class="col-3">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">Fone</span>
-                <input id="telefone" class="form-control" type="text" disabled v-model="telefone">
-              </div>
-            </div>
-            <div class="col-3">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">CNPJ</span>
-                <input id="cnpj" class="form-control" type="text" disabled v-model="cnpj">
-              </div>
+          <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Frete</span>
+              <input id="frete" class="form-control" type="text" disabled v-model="frete">
+              <button id="btnBuscaFretes" :disabled="enviadoEmpresa || cliente === ''" class="btn btn-secondary input-group-btn btn-busca" @click="buscaFretes" data-bs-toggle="modal" data-bs-target="#fretesModal">...</button>
             </div>
           </div>
-          <div class="row mb-2">
-            <div class="col-4">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">Endereço</span>
-                <input id="endereco" class="form-control" type="text" disabled v-model="endereco">
-              </div>
-            </div>
-            <div class="col-4">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">Cidade/UF</span>
-                <input id="cidadeUF" class="form-control" type="text" disabled v-model="cidadeUF">
-              </div>
-            </div>
-            <div class="col-4">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">Insc. Est.</span>
-                <input id="inscrEst" class="form-control" type="text" disabled v-model="inscrEst">
-              </div>
+          <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Previsão faturamento</span>
+              <input id="prevFaturamento" class="form-control" type="text" disabled v-model="prevFaturamento">
             </div>
           </div>
-          <div class="row">
-            <div class="col-12">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">Observações</span>
-                <input id="observacoesPedido" class="form-control" :disabled="enviadoEmpresa"
-                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                maxlength="200" type="text" v-model="observacoesPedido">
-              </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Pedido Cliente</span>
+              <input id="pedCli" class="form-control" :disabled="enviadoEmpresa" type="text" v-model="pedCli" v-on:keyup="normalizarPedidoCliente">
+              <button id="btnBuscaPedidosCliente" :disabled="enviadoEmpresa" class="btn btn-secondary input-group-btn btn-busca" @click="buscaPedidosCliente" data-bs-toggle="modal" data-bs-target="#pedidosClienteModal">...</button>
+            </div>
+          </div>
+          <div class="col-5">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Representada</span>
+              <input id="representada" class="form-control" type="text" disabled v-model="representada">
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Condição de pagamento</span>
+              <input class="form-control" type="text" disabled v-bind:class="{ 'white-bg': (!enviadoEmpresa) }" v-model="condPagamento" placeholder="Clique ao lado para selecionar">
+              <button id="btnBuscaCondicoesPagto" :disabled="enviadoEmpresa" class="btn btn-secondary input-group-btn btn-busca" @click="buscaCondicoesPagto" data-bs-toggle="modal" data-bs-target="#condicoesPagtoModal">...</button>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Cliente</span>
+              <input id="nomCli" class="form-control" type="text" disabled v-bind:class="{ 'white-bg': (!enviadoEmpresa) }" v-model="nomCli" placeholder="Clique ao lado para selecionar">
+              <button id="btnBuscaClientes" class="btn btn-secondary input-group-btn btn-busca" :disabled="enviadoEmpresa" @click="buscaClientes" data-bs-toggle="modal" data-bs-target="#clientesModal">...</button>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">E-mail</span>
+              <input id="email" class="form-control" type="text" disabled v-model="email">
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Fone</span>
+              <input id="telefone" class="form-control" type="text" disabled v-model="telefone">
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">CNPJ</span>
+              <input id="cnpj" class="form-control" type="text" disabled v-model="cnpj">
+            </div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-4">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Endereço</span>
+              <input id="endereco" class="form-control" type="text" disabled v-model="endereco">
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Cidade/UF</span>
+              <input id="cidadeUF" class="form-control" type="text" disabled v-model="cidadeUF">
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Insc. Est.</span>
+              <input id="inscrEst" class="form-control" type="text" disabled v-model="inscrEst">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Observações</span>
+              <input id="observacoesPedido" class="form-control" :disabled="enviadoEmpresa"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              maxlength="200" type="text" v-model="observacoesPedido">
             </div>
           </div>
         </div>
