@@ -1219,6 +1219,8 @@ export default {
     selectConfig (configClicked) {
       this.itemSelecionado.config = configClicked.DESPRO
       this.itemSelecionado.codConfig = configClicked.CODPRO
+      this.itemSelecionado.medMin = parseInt(Number(configClicked.MEDMIN) * 100)
+      this.itemSelecionado.medMax = parseInt(Number(configClicked.MEDMAX) * 100)
       document.getElementById('closeModalConfigs').click()
       document.getElementById('btnBuscaComps' + this.itemSelecionado.hash).disabled = false
       this.itemSelecionado.comp = ''
@@ -1487,6 +1489,9 @@ export default {
           if (!item.comp) {
             alert('Erro: Existe(m) produto(s) com medida especial sem o comprimento preenchido. Verifique!')
             temErro = true
+          } else if ((Number(item.comp) < Number(item.medMin)) || (Number(item.comp) > Number(item.medMax))) {
+            alert('Erro: O produto "' + item.config + '" está com medida especial fora do mínimo (' + item.medMin + ' cm) e máximo (' + item.medMax + ' cm). Verifique!')
+            temErro = true
           } else {
             let compMaisProximo = ''
             let menorDistancia = 1000000
@@ -1674,6 +1679,8 @@ export default {
                     codComp: item.CODDER,
                     comp: item.CMED === 'S' ? item.LARDER : item.CODDER,
                     un: item.QTDPED,
+                    medMin: parseInt(Number(item.MEDMIN) * 100),
+                    medMax: parseInt(Number(item.MEDMAX) * 100),
                     desc: Number(item.PERDSC).toFixed(2).toLocaleString(),
                     desc1: Number(item.PERDS1).toFixed(2).toLocaleString(),
                     desc2: Number(item.PERDS2).toFixed(2).toLocaleString(),
