@@ -1159,6 +1159,7 @@ export default {
       while (this.empresasCliente.length > 0) {
         this.empresasCliente.pop()
       }
+      this.empresasCliente.length = 0
       document.getElementById('closeModalClientes').click()
       this.buscarDadosCliente(this.cliente, false)
     },
@@ -1431,12 +1432,14 @@ export default {
       while (this.empresasCliente.length > 0) {
         this.empresasCliente.pop()
       }
+      this.empresasCliente.length = 0
       this.numPed = ''
       this.itens = []
       this.itens.splice(0)
       while (this.itens.length > 0) {
         this.itens.pop()
       }
+      this.itens.length = 0
       this.pedCli = ''
       this.enviadoEmpresa = false
       this.prevFaturamento = ''
@@ -1542,6 +1545,7 @@ export default {
         while (itensPedido.length > 0) {
           itensPedido.pop()
         }
+        itensPedido.length = 0
         this.itens.forEach(item => {
           itensPedido.push(
             {
@@ -1653,6 +1657,7 @@ export default {
       while (this.itens.length > 0) {
         this.itens.pop()
       }
+      this.itens.length = 0
       this.totalKg = parseFloat(0)
       this.totalM3 = parseFloat(0)
       this.totalValor = parseFloat(0)
