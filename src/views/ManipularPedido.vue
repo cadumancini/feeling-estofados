@@ -131,7 +131,6 @@ export default {
         component.agpMod = node.codAgp
         component.derMod = node.codDer
         const token = sessionStorage.getItem('token')
-        // if (component.exiCmp !== 'S') {
         if (component.codDer !== 'GM') {
           await axios.get('http://192.168.1.168:8080/equivalentes?emp=' + this.item.CODEMP + '&modelo=' + component.codMod + '&componente=' + component.codPro + '&derivacao=' + component.codDer + '&token=' + token)
             .then((response) => {
@@ -172,7 +171,6 @@ export default {
       }
     },
     checkItems (pai, filho) {
-      // if ((filho.codDer === 'G' || filho.proGen === 'S') && filho.exiCmp !== 'S') {
       if ((filho.codDer === 'G' || filho.proGen === 'S') && filho.codDer !== 'GM') {
         pai.temG = true
       }
@@ -185,7 +183,6 @@ export default {
       if (filho.temG || filho.trocar) {
         pai.trocar = true
       }
-      // if ((filho.codDer === 'G' || filho.proGen === 'S') && filho.exiCmp !== 'S') {
       if ((filho.codDer === 'G' || filho.proGen === 'S') && filho.codDer !== 'GM') {
         pai.temG = true
       }
@@ -195,13 +192,14 @@ export default {
       const seqIpd = item.SEQIPD
       this.trocas = []
       this.trocas.push(itemTroca)
-      if (itemTroca.codFam === '02001' || itemTroca.codFam === '02002') {
+      // if (itemTroca.codFam === '02001' || itemTroca.codFam === '02002') {
+      if (itemTroca.agpMod !== ' ') {
         item.ACABADOS.forEach(acabado => {
           if (acabado.filhos) {
             acabado.filhos.forEach(filho => this.analisarSeTrocarFilhos(acabado, filho, itemTroca))
           }
         })
-        if (itemTroca.itensMontagem.length) {
+        if (itemTroca.itensMontagem && itemTroca.itensMontagem.length) {
           item.ACABADOS.forEach(acabado => {
             if (acabado.filhos) {
               acabado.filhos.forEach(filho => this.analisarItensMontagem(acabado, filho, itemTroca.itensMontagem))
@@ -252,7 +250,6 @@ export default {
       itensMontagem.forEach(itemMontagem => {
         if (pai.numOri <= 320 &&
         filho.codPro === itemMontagem.CODCMP &&
-        // (filho.codDer === 'G' || filho.proGen === 'S')) {
         (filho.codDer === 'GM' || filho.proGen === 'S')) {
           const objTroca = {
             codNiv: filho.codNiv,
