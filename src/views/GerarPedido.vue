@@ -2,7 +2,7 @@
   <div class="gerarPedido">
     <Navbar/>
     <div class="mx-3">
-      <div class="row mb-3">
+      <div class="row mb-1">
         <div class="col-6">
           <span class="fw-bold fs-4">Geração de Pedido</span>
         </div>
@@ -33,116 +33,115 @@
           </div>
           <div class="col-6">
             <div class="float-end">
-              <button id="btnSalvar" class="btn btn-secondary btn-sm" :disabled="numPed !== ''" data-bs-toggle="modal" data-bs-target="#confirmaPedidoModal">Salvar</button>
+              <button id="btnSalvar" class="btn btn-secondary btn-sm" :disabled="enviadoEmpresa" data-bs-toggle="modal" data-bs-target="#confirmaPedidoModal">Salvar</button>
             </div>
           </div>
         </div>
-        <div v-if="!manipulando">
-          <div class="row mb-3">
-            <div class="col-3">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">Nº Pedido</span>
-                <input id="numPed" class="form-control" type="text" disabled v-model="numPed">
-                <button id="btnBuscaPedidos" class="btn btn-secondary input-group-btn" @click="buscaPedidos" data-bs-toggle="modal" data-bs-target="#pedidosModal">...</button>
-              </div>
-            </div>
-            <div class="col-3">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">Transportadora</span>
-                <input id="transportadora" class="form-control" type="text" disabled v-model="transportadora">
-              </div>
-            </div>
-            <div class="col-3">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">Frete</span>
-                <input id="frete" class="form-control" type="text" disabled v-model="frete">
-              </div>
-            </div>
-            <div class="col-3">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">Previsão faturamento</span>
-                <input id="prevFaturamento" class="form-control" type="text" disabled v-model="prevFaturamento">
-              </div>
+        <div class="row mb-2">
+          <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Nº Pedido</span>
+              <input id="numPed" class="form-control" type="text" disabled v-model="numPed">
+              <button id="btnBuscaPedidos" class="btn btn-secondary input-group-btn btn-busca" @click="buscaPedidos" data-bs-toggle="modal" data-bs-target="#pedidosModal">...</button>
             </div>
           </div>
-          <div class="row mb-3">
-            <div class="col-3">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">Pedido Cliente</span>
-                <input id="pedCli" class="form-control" :disabled="numPed !== ''" type="text" v-model="pedCli">
-                <button id="btnBuscaPedidosCliente" :disabled="numPed !== ''" class="btn btn-secondary input-group-btn" @click="buscaPedidosCliente" data-bs-toggle="modal" data-bs-target="#pedidosClienteModal">...</button>
-              </div>
-            </div>
-            <div class="col-5">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">Representada</span>
-                <input id="representada" class="form-control" type="text" disabled v-model="representada">
-              </div>
-            </div>
-            <div class="col-4">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">Condição de pagamento</span>
-                <!-- <input class="form-control" type="text" disabled v-model="condPagamento"> -->
-                <input class="form-control" type="text" disabled v-bind:class="{ 'white-bg': (!numPed) }" v-model="condPagamento" placeholder="Clique ao lado para selecionar">
-                <button id="btnBuscaCondicoesPagto" :disabled="numPed !== ''" class="btn btn-secondary input-group-btn" @click="buscaCondicoesPagto" data-bs-toggle="modal" data-bs-target="#condicoesPagtoModal">...</button>
-              </div>
+          <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Transportadora</span>
+              <input id="transportadora" class="form-control" type="text" disabled v-model="transportadora">
+              <button id="btnBuscaTransportadoras" :disabled="enviadoEmpresa || cliente === ''" class="btn btn-secondary input-group-btn btn-busca" @click="buscaTransportadoras" data-bs-toggle="modal" data-bs-target="#transportadorasModal">...</button>
             </div>
           </div>
-          <div class="row mb-3">
-            <div class="col-3">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">Cliente</span>
-                <input id="nomCli" class="form-control" type="text" disabled v-bind:class="{ 'white-bg': (!numPed) }" v-model="nomCli" placeholder="Clique ao lado para selecionar">
-                <button id="btnBuscaClientes" class="btn btn-secondary input-group-btn" :disabled="numPed !== ''" @click="buscaClientes" data-bs-toggle="modal" data-bs-target="#clientesModal">...</button>
-              </div>
-            </div>
-            <div class="col-3">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">E-mail</span>
-                <input id="email" class="form-control" type="text" disabled v-model="email">
-              </div>
-            </div>
-            <div class="col-3">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">Fone</span>
-                <input id="telefone" class="form-control" type="text" disabled v-model="telefone">
-              </div>
-            </div>
-            <div class="col-3">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">CNPJ</span>
-                <input id="cnpj" class="form-control" type="text" disabled v-model="cnpj">
-              </div>
+          <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Frete</span>
+              <input id="frete" class="form-control" type="text" disabled v-model="frete">
+              <button id="btnBuscaFretes" :disabled="enviadoEmpresa || cliente === ''" class="btn btn-secondary input-group-btn btn-busca" @click="buscaFretes" data-bs-toggle="modal" data-bs-target="#fretesModal">...</button>
             </div>
           </div>
-          <div class="row mb-3">
-            <div class="col-4">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">Endereço</span>
-                <input id="endereco" class="form-control" type="text" disabled v-model="endereco">
-              </div>
-            </div>
-            <div class="col-4">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">Cidade/UF</span>
-                <input id="cidadeUF" class="form-control" type="text" disabled v-model="cidadeUF">
-              </div>
-            </div>
-            <div class="col-4">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">Insc. Est.</span>
-                <input id="inscrEst" class="form-control" type="text" disabled v-model="inscrEst">
-              </div>
+          <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Previsão faturamento</span>
+              <input id="prevFaturamento" class="form-control" type="text" disabled v-model="prevFaturamento">
             </div>
           </div>
-          <div class="row">
-            <div class="col-12">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text">Observações</span>
-                <input id="observacoesPedido" class="form-control" :disabled="numPed !== ''"
-                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                maxlength="200" type="text" v-model="observacoesPedido">
-              </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Pedido Cliente</span>
+              <input id="pedCli" class="form-control" :disabled="enviadoEmpresa" type="text" v-model="pedCli" v-on:keyup="normalizarPedidoCliente">
+              <button id="btnBuscaPedidosCliente" :disabled="enviadoEmpresa" class="btn btn-secondary input-group-btn btn-busca" @click="buscaPedidosCliente" data-bs-toggle="modal" data-bs-target="#pedidosClienteModal">...</button>
+            </div>
+          </div>
+          <div class="col-5">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Representada</span>
+              <input id="representada" class="form-control" type="text" disabled v-model="representada">
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Condição de pagamento</span>
+              <input class="form-control" type="text" disabled v-bind:class="{ 'white-bg': (!enviadoEmpresa) }" v-model="condPagamento" placeholder="Clique ao lado para selecionar">
+              <button id="btnBuscaCondicoesPagto" :disabled="enviadoEmpresa" class="btn btn-secondary input-group-btn btn-busca" @click="buscaCondicoesPagto" data-bs-toggle="modal" data-bs-target="#condicoesPagtoModal">...</button>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Cliente</span>
+              <input id="nomCli" class="form-control" type="text" disabled v-bind:class="{ 'white-bg': (!enviadoEmpresa) }" v-model="nomCli" placeholder="Clique ao lado para selecionar">
+              <button id="btnBuscaClientes" class="btn btn-secondary input-group-btn btn-busca" :disabled="enviadoEmpresa" @click="buscaClientes" data-bs-toggle="modal" data-bs-target="#clientesModal">...</button>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">E-mail</span>
+              <input id="email" class="form-control" type="text" disabled v-model="email">
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Fone</span>
+              <input id="telefone" class="form-control" type="text" disabled v-model="telefone">
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">CNPJ</span>
+              <input id="cnpj" class="form-control" type="text" disabled v-model="cnpj">
+            </div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-4">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Endereço</span>
+              <input id="endereco" class="form-control" type="text" disabled v-model="endereco">
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Cidade/UF</span>
+              <input id="cidadeUF" class="form-control" type="text" disabled v-model="cidadeUF">
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Insc. Est.</span>
+              <input id="inscrEst" class="form-control" type="text" disabled v-model="inscrEst">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Observações</span>
+              <input id="observacoesPedido" class="form-control" :disabled="enviadoEmpresa"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              maxlength="200" type="text" v-model="observacoesPedido">
             </div>
           </div>
         </div>
@@ -169,7 +168,7 @@
 
       <!-- Modal Clientes -->
       <div class="modal fade" id="clientesModal" tabindex="-1" aria-labelledby="clientesModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-dialog modal-dialog-scrollable modal-xl">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="clientesModalLabel">Busca de Clientes</h5>
@@ -177,17 +176,22 @@
             </div>
             <div class="modal-body">
               <div class="mb-3" v-if="clientes != null">
+                <span>Buscar por: </span>
+                <input type="radio" id="filtroDesc" checked v-model="clientesOpcaoFiltro" name="opcaoFiltroCliente" value="desc">
+                <label class="ps-1 pe-2" for="filtroDesc">Descrição</label>
+                <input type="radio" id="filtroCnpj" v-model="clientesOpcaoFiltro" name="opcaoFiltroCliente" value="cnpj">
+                <label class="ps-1" for="filtroCnpj">CNPJ (apenas números)</label>
                 <input type="text" class="form-control mb-3" v-on:keyup="filtrarClientes" v-model="clientesFiltro" placeholder="Digite para buscar na tabela abaixo">
                 <table class="table table-striped table-hover table-bordered table-sm table-responsive">
                   <thead>
                     <tr>
-                      <th scope="col">Código</th>
-                      <th scope="col">Cliente</th>
+                      <th scope="col">CNPJ</th>
+                      <th scope="col">Descrição</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="clienteRow in clientesFiltrados" :key="clienteRow.CODCLI" class="mouseHover" @click="selectCliente(clienteRow)">
-                      <th class="fw-normal" scope="row">{{ clienteRow.CODCLI }}</th>
+                      <th class="fw-normal" scope="row">{{ clienteRow.CNPJ }}</th>
                       <th class="fw-normal">{{ clienteRow.NOMCLI }}</th>
                     </tr>
                   </tbody>
@@ -195,6 +199,79 @@
               </div>
               <div v-else>
                 <label>Buscando clientes ...</label>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fechar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Transportadoras -->
+      <div class="modal fade" id="transportadorasModal" tabindex="-1" aria-labelledby="transportadorasModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="transportadorasModalLabel">Busca de Transportadoras</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalTransportadoras"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3" v-if="transportadoras != null">
+                <input type="text" class="form-control mb-3" v-on:keyup="filtrarTransportadoras" v-model="transportadorasFiltro" placeholder="Digite para buscar a transportadora na tabela abaixo">
+                <table class="table table-striped table-hover table-bordered table-sm table-responsive">
+                  <thead>
+                    <tr>
+                      <th class="sm-header" scope="col">Código</th>
+                      <th class="sm-header" scope="col">Transportadora</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="transportadoraRow in transportadorasFiltradas" :key="transportadoraRow.CODTRA" class="mouseHover" @click="selectTransportadora(transportadoraRow)">
+                      <th class="fw-normal sm" scope="row">{{ transportadoraRow.CODTRA }}</th>
+                      <th class="fw-normal sm">{{ transportadoraRow.NOMTRA }}</th>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div v-else>
+                <label>Buscando transportadoras ...</label>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fechar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Fretes -->
+      <div class="modal fade" id="fretesModal" tabindex="-1" aria-labelledby="fretesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="fretesModalLabel">Seleção de Frete</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalFretes"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3" v-if="fretes != null">
+                <table class="table table-striped table-hover table-bordered table-sm table-responsive">
+                  <thead>
+                    <tr>
+                      <th class="sm-header" scope="col">Código</th>
+                      <th class="sm-header" scope="col">Descrição</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="freteRow in fretes" :key="freteRow.CIFFOB" class="mouseHover" @click="selectFrete(freteRow)">
+                      <th class="fw-normal" scope="row">{{ freteRow.CIFFOB }}</th>
+                      <th class="fw-normal">{{ freteRow.DESFRE }}</th>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div v-else>
+                <label>Buscando fretes ...</label>
               </div>
             </div>
             <div class="modal-footer">
@@ -398,22 +475,24 @@
               <tr class="table-dark">
                 <th class="fw-normal sm-header" style="width: 2%;"><small><font-awesome-icon icon="edit"/></small></th>
                 <th class="fw-normal sm-header" style="width: 4%;"><small>Cnj.</small></th>
-                <th class="fw-normal sm-header" style="width: 14%;"><small>Estilo</small></th>
+                <th class="fw-normal sm-header" style="width: 12%;"><small>Estilo</small></th>
                 <th class="fw-normal sm-header" style="width: 18%;"><small>Configuração</small></th>
-                <th class="fw-normal sm-header" style="width: 9%;"><small>Comp. (cm)</small></th>
+                <th class="fw-normal sm-header" style="width: 8%;"><small>Comp. (cm)</small></th>
                 <th class="fw-normal sm-header" style="width: 4%"><small>UN</small></th>
-                <th class="fw-normal sm-header" style="width: 4%;"><small>Desc. (%)</small></th>
-                <th class="fw-normal sm-header" style="width: 5%;"><small>Comiss. (%)</small></th>
-                <th class="fw-normal sm-header" style="width: 14%;"><small>Cond. Especial</small></th>
-                <th class="fw-normal sm-header" style="width: 18%;"><small>Observações</small></th>
-                <th class="fw-normal sm-header" style="width: 6%;"><small>Vlr. Unit. (R$)</small></th>
-                <th class="fw-normal sm-header" style="width: 4%;"><small>Ação</small></th>
+                <th class="fw-normal sm-header" style="width: 6%;"><small>Cond. Especial</small></th>
+                <th class="fw-normal sm-header" style="width: 20%;"><small>Observações</small></th>
+                <th class="fw-normal sm-header" style="width: 2%;"><small>%</small></th>
+                <th class="fw-normal sm-header" style="width: 7%;"><small>Vlr. Unit. (R$)</small></th>
+                <th class="fw-normal sm-header" style="width: 7%;"><small>Vlr. Final (R$)</small></th>
+                <th class="fw-normal sm-header" style="width: 10%;"><small>Ação</small></th>
               </tr>
             </thead>
             <tbody v-for="item in itens" :key="item.codPro">
               <tr>
                 <td class="fw-normal">
-                  <button class="btn btn-sm btn-secondary sm" @click="setManipular(item)" :disabled="!item.seqIpd || enviadoEmpresa"><font-awesome-icon icon="edit"/></button>
+                  <button class="btn btn-sm btn-secondary sm" @click="setManipular(item)" :disabled="!item.seqIpd || enviadoEmpresa" data-bs-toggle="tooltip" data-bs-placement="top" title="Manipular estrutura">
+                    <font-awesome-icon icon="edit"/>
+                  </button>
                 </td>
                 <td class="fw-normal">
                   <div class="input-group input-group-sm">
@@ -425,51 +504,155 @@
                 <td class="fw-normal">
                   <div class="input-group input-group-sm">
                     <input class="form-control sm" type="text" disabled v-model="item.estilo">
-                    <button :id="`btnBuscaEstilos`+item.hash" :disabled="enviadoEmpresa" class="btn btn-secondary input-group-btn sm" @click="buscaEstilos(item)" data-bs-toggle="modal" data-bs-target="#estilosModal">...</button>
+                    <button :id="`btnBuscaEstilos`+item.hash" :disabled="enviadoEmpresa" class="btn btn-secondary input-group-btn sm btn-busca" @click="buscaEstilos(item)" data-bs-toggle="modal" data-bs-target="#estilosModal">...</button>
                   </div>
                 </td>
                 <td class="fw-normal">
                   <div class="input-group input-group-sm">
                     <input class="form-control sm" type="text" disabled v-model="item.config">
-                    <button :id="`btnBuscaConfigs`+item.hash" disabled class="btn btn-secondary input-group-btn sm" @click="buscaConfigs(item, item.codEstilo)" data-bs-toggle="modal" data-bs-target="#configsModal">...</button>
+                    <button :id="`btnBuscaConfigs`+item.hash" disabled class="btn btn-secondary input-group-btn sm btn-busca" @click="buscaConfigs(item, item.codEstilo)" data-bs-toggle="modal" data-bs-target="#configsModal">...</button>
                   </div>
                 </td>
                 <td class="fw-normal">
                   <div class="input-group input-group-sm">
-                    <input :id="'inputComp'+item.hash" class="form-control sm" type="text" :disabled="item.condEsp !== 'M'" v-model="item.comp">
-                    <button :id="`btnBuscaComps`+item.hash" disabled class="btn btn-secondary input-group-btn sm" @click="buscaComps(item, item.codConfig)" data-bs-toggle="modal" data-bs-target="#compsModal">...</button>
+                    <input :id="'inputComp'+item.hash" class="form-control sm" type="text" :disabled="!item.cMed" v-model="item.comp">
+                    <button :id="`btnBuscaComps`+item.hash" disabled class="btn btn-secondary input-group-btn sm btn-busca" @click="buscaComps(item, item.codConfig)" data-bs-toggle="modal" data-bs-target="#compsModal">...</button>
                   </div>
                 </td>
                 <td class="fw-normal"><input class="form-control form-control-sm sm"
                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   maxlength="2" type="number" v-model="item.un"></td>
-                <td class="fw-normal">
-                  <small class="sm">
-                    <vue-mask class="form-control form-control-sm sm" :disabled="enviadoEmpresa" mask="00,00" :raw="false" :options="options" v-model="item.desc"></vue-mask>
-                  </small>
-                </td>
-                <td class="fw-normal"><small class="sm">{{item.comiss}}</small></td>
-                <td class="fw-normal">
-                  <select id="inputGroupSelectCondEsp" :disabled="enviadoEmpresa" class="form-select form-select-sm sm" @change="handleCondicao(item)" v-model="item.condEsp">
-                    <option value=" "></option>
-                    <option value="M">Medida Especial</option>
-                    <option value="D">Desconto Especial</option>
-                    <option value="C">Condição de Pagto</option>
-                    <option value="P">Prazo Especial</option>
-                    <option value="O">Outras</option>
-                  </select>
+                <td class="fw-normal" data-bs-toggle="tooltip" data-bs-placement="top" title="Condições especiais">
+                  <button class="btn btn-secondary dropdown-toggle sm btn-sm" :disabled="enviadoEmpresa" type="button" data-bs-toggle="dropdown"
+                          aria-haspopup="true" aria-expanded="false">Selecione</button>
+                  <div class="dropdown-menu">
+                    <a class="dropdown-item">
+                      <div class="custom-control custom-checkbox sm">
+                        <input type="checkbox" class="custom-control-input" :id="'cbMedida'+item.hash" @change="checkMedida(item)" v-model="item.cMed">
+                        <label class="custom-control-label ps-1" :for="'cbMedida'+item.hash">Medida Especial</label>
+                      </div>
+                    </a>
+                    <a class="dropdown-item" href="#">
+                      <div class="custom-control custom-checkbox sm">
+                        <input type="checkbox" class="custom-control-input" :id="'cbDesconto'+item.hash" @change="checkDesconto(item)" v-model="item.cDes">
+                        <label class="custom-control-label ps-1" :for="'cbDesconto'+item.hash">Desconto Especial</label>
+                      </div>
+                    </a>
+                    <a class="dropdown-item" href="#">
+                      <div class="custom-control custom-checkbox sm">
+                        <input type="checkbox" class="custom-control-input" :id="'cbCondicao'+item.hash" @change="checkCondicao(item)" v-model="item.cCon">
+                        <label class="custom-control-label ps-1" :for="'cbCondicao'+item.hash">Condição de Pagto</label>
+                      </div>
+                    </a>
+                    <a class="dropdown-item" href="#">
+                      <div class="custom-control custom-checkbox sm">
+                        <input type="checkbox" class="custom-control-input" :id="'cbPrazo'+item.hash" @change="checkPrazo(item)" v-model="item.cPra">
+                        <label class="custom-control-label ps-1" :for="'cbPrazo'+item.hash">Prazo Especial</label>
+                      </div>
+                    </a>
+                    <a class="dropdown-item" href="#">
+                      <div class="custom-control custom-checkbox sm">
+                        <input type="checkbox" class="custom-control-input" :id="'cbOutras'+item.hash" @change="checkOutras(item)" v-model="item.cOut">
+                        <label class="custom-control-label ps-1" :for="'cbOutras'+item.hash">Outras</label>
+                      </div>
+                    </a>
+                  </div>
                 </td>
                 <td class="fw-normal"><small><input class="form-control form-control-sm sm" :disabled="enviadoEmpresa" type="text" v-model="item.obs"></small></td>
+                <td data-bs-toggle="tooltip" data-bs-placement="top" title="Parâmetros comerciais">
+                  <button class="btn btn-sm btn-secondary sm" :disabled="enviadoEmpresa" data-bs-toggle="modal" :data-bs-target="`#paramsModal-`+item.hash">
+                    <font-awesome-icon icon="percentage"/>
+                  </button>
+                  <!-- Modal Params -->
+                  <div class="modal fade" :id="`paramsModal-`+item.hash" tabindex="-1" aria-labelledby="paramsModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable modal-sm">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="paramsModalLabel">Parâmetros Comerciais</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          <div class="row mb-3">
+                            <div class="input-group input-group-sm">
+                              <span class="input-group-text param-comercial ps-4">1º Desc. (%)</span>
+                              <vue-mask class="form-control form-control-sm sm" mask="00,00" :raw="false" :options="options" v-model="item.desc1"></vue-mask>
+                            </div>
+                          </div>
+                          <div class="row mb-3">
+                            <div class="input-group input-group-sm">
+                              <span class="input-group-text param-comercial ps-4">2º Desc. (%)</span>
+                              <vue-mask class="form-control form-control-sm sm" mask="00,00" :raw="false" :options="options" v-model="item.desc2"></vue-mask>
+                            </div>
+                          </div>
+                          <div class="row mb-3">
+                            <div class="input-group input-group-sm">
+                              <span class="input-group-text param-comercial ps-4">3º Desc. (%)</span>
+                              <vue-mask class="form-control form-control-sm sm" mask="00,00" :raw="false" :options="options" v-model="item.desc3"></vue-mask>
+                            </div>
+                          </div>
+                          <div class="row mb-3">
+                            <div class="input-group input-group-sm">
+                              <span class="input-group-text param-comercial ps-4">4º Desc. (%)</span>
+                              <vue-mask class="form-control form-control-sm sm" mask="00,00" :raw="false" :options="options" v-model="item.desc4"></vue-mask>
+                            </div>
+                          </div>
+                          <div class="row mb-3">
+                            <div class="input-group input-group-sm">
+                              <span class="input-group-text param-comercial ps-4">5º Desc. (%)</span>
+                              <vue-mask class="form-control form-control-sm sm" mask="00,00" :raw="false" :options="options" v-model="item.desc5"></vue-mask>
+                            </div>
+                          </div>
+                          <div class="row mb-3">
+                            <div class="input-group input-group-sm">
+                              <span class="input-group-text param-comercial param-guelta">Guelta (%)</span>
+                              <vue-mask class="form-control form-control-sm sm" mask="00,00" :raw="false" :options="options" v-model="item.guelta"></vue-mask>
+                            </div>
+                          </div>
+                          <div class="row mb-3">
+                            <div class="input-group input-group-sm">
+                              <span class="input-group-text param-comercial param-rt">RT (R$)</span>
+                              <vue-mask class="form-control form-control-sm sm" mask="000.000,00" :raw="false" :options="options" v-model="item.rt"></vue-mask>
+                            </div>
+                          </div>
+                          <div class="row mb-3">
+                            <div class="input-group input-group-sm">
+                              <span class="input-group-text param-comercial ps-3">Comissão (%)</span>
+                              <vue-mask class="form-control form-control-sm sm" mask="00,00" :raw="false" :options="options" v-model="item.comiss"></vue-mask>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Confirmar</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
                 <td class="fw-normal">
                   <small class="sm">
                     <vue-mask class="form-control form-control-sm sm" :disabled="enviadoEmpresa" mask="000.000,00" :raw="false" :options="options" v-model="item.vlrUnit"></vue-mask>
                   </small>
                 </td>
+                <td class="fw-normal">
+                  <small class="sm vlr-final">
+                    {{ item.vlrFinal }}
+                  </small>
+                </td>
 
-                <td><button class="btn btn-sm btn-danger sm" :disabled="enviadoEmpresa" @click="deleteItem(item)">Excluir</button></td>
+                <td class="d-flex justify-content-around">
+                  <label class="btn btn-sm btn-action btn-secondary sm" v-bind:class="{ disabled: (!item.seqIpd || enviadoEmpresa) }" data-bs-toggle="tooltip" data-bs-placement="top" title="Upload de anexo(s)">
+                    <font-awesome-icon icon="file-upload"/><input type="file" ref="uploadArquivo" style="display: none;" @change="onUploadArquivo(item)"/>
+                  </label>
+                  <button class="btn btn-sm btn-action btn-secondary sm" :disabled="item.temAnx === 'N'" @click="download(item)" data-bs-toggle="tooltip" data-bs-placement="top" title="Download de anexo(s)">
+                    <font-awesome-icon icon="download"/>
+                  </button>
+                  <button class="btn btn-sm btn-action btn-danger sm" :disabled="enviadoEmpresa" @click="deleteItem(item)" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir item">
+                    <font-awesome-icon icon="trash-alt"/>
+                  </button>
+                </td>
               </tr>
               <tr v-if="item.MANIPULAR">
-                <td colspan="12">
+                <td colspan="7">
                   <ManipularPedido ref="manipularPedido" :numPed="numPed" :seqIpd="{
                                                                               CODEMP: empresa,
                                                                               NUMPED: numPed,
@@ -486,7 +669,7 @@
         <div class="row">
           <div class="col-2">
             <div class="input-group input-group-sm">
-              <span class="input-group-text">Total (Kg)</span>
+              <span class="input-group-text">Total (Kg - Bru. | Líq.)</span>
               <input id="totalKg" class="form-control" type="text" disabled v-model="totalKg">
             </div>
           </div>
@@ -519,6 +702,11 @@
               <span class="input-group-text">NF (R$)</span>
               <input id="nfValor" class="form-control" type="text" disabled v-model="nfValor">
             </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <span class="sm fw-bold fst-italic">* O total em peso e cubagem serão carregados ao enviar o pedido à empresa.</span>
           </div>
         </div>
       </div>
@@ -668,11 +856,14 @@ export default {
   data () {
     return {
       clientes: null,
+      transportadoras: null,
+      fretes: null,
       estilos: null,
       configs: null,
       comps: null,
       condicoesPagto: null,
       clientesFiltrados: null,
+      transportadorasFiltradas: null,
       pedidosClienteFiltrados: null,
       pedidosFiltrados: null,
       estilosFiltrados: null,
@@ -685,6 +876,8 @@ export default {
       codCondPagamento: '',
       condPagamento: '',
       clientesFiltro: '',
+      transportadorasFiltro: '',
+      clientesOpcaoFiltro: 'desc',
       pedidosClienteFiltro: '',
       pedidosFiltro: '',
       estilosFiltro: '',
@@ -703,6 +896,13 @@ export default {
       transportadora: '',
       codRepresentada: '',
       representada: '',
+      comissao: '',
+      desc1: '',
+      desc2: '',
+      desc3: '',
+      desc4: '',
+      desc5: '',
+      guelta: '',
       empresa: '',
       observacoesPedido: '',
       empresasCliente: [],
@@ -712,13 +912,14 @@ export default {
       numPed: '',
       pedCli: '',
       enviadoEmpresa: false,
-      totalKg: 0,
+      totalKg: '',
       totalM3: 0,
       totalValor: 0,
       ipiValor: 0,
       icmsValor: 0,
       nfValor: 0,
       manipulando: false,
+      formData: null,
       options: {
         reverse: true
       }
@@ -728,6 +929,7 @@ export default {
     if (!sessionStorage.getItem('token')) {
       this.$router.push({ name: 'Login' })
     }
+    this.excluirRascunho()
   },
   methods: {
     checkInvalidLoginResponse (response) {
@@ -743,10 +945,18 @@ export default {
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
         document.getElementById('btnBuscaClientes').disabled = true
         const token = sessionStorage.getItem('token')
-        axios.get('http://localhost:8080/clientes?token=' + token)
+        axios.get('http://192.168.1.168:8080/clientes?token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             this.clientes = response.data.clientes
+            this.clientes.forEach(cliente => {
+              const formatter = new StringMask('00.000.000/0000-00')
+              cliente.CGCCPF = cliente.CGCCPF.replace('.', '').replace('-', '').replace('/', '')
+              for (let i = cliente.CGCCPF.length; i < 14; i++) {
+                cliente.CGCCPF = '0' + cliente.CGCCPF
+              }
+              cliente.CNPJ = formatter.apply(cliente.CGCCPF)
+            })
             this.clientesFiltrados = response.data.clientes
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
             document.getElementById('btnBuscaClientes').disabled = false
@@ -758,6 +968,37 @@ export default {
           })
       }
     },
+    buscaTransportadoras () {
+      this.transportadorasFiltro = ''
+      if (this.transportadoras === null) {
+        document.getElementsByTagName('body')[0].style.cursor = 'wait'
+        document.getElementById('btnBuscaTransportadoras').disabled = true
+        const token = sessionStorage.getItem('token')
+        axios.get('http://192.168.1.168:8080/transportadoras?token=' + token)
+          .then((response) => {
+            this.checkInvalidLoginResponse(response.data)
+            this.transportadoras = response.data.transportadoras
+            this.transportadorasFiltradas = response.data.transportadoras
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+          .finally(() => {
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
+            document.getElementById('btnBuscaTransportadoras').disabled = false
+          })
+      }
+    },
+    buscaFretes () {
+      if (this.fretes === null) {
+        this.fretes = [
+          { CIFFOB: 'C', DESFRE: 'Por conta do emitente (PAGO)' },
+          { CIFFOB: 'F', DESFRE: 'Por conta do destinatário (A PAGAR)' },
+          { CIFFOB: 'T', DESFRE: 'Por conta de terceiros' },
+          { CIFFOB: 'X', DESFRE: 'Sem frete' }
+        ]
+      }
+    },
     buscaPedidosCliente () {
       if (this.cliente !== '') {
         this.pedidosCliente = null
@@ -765,7 +1006,7 @@ export default {
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
         document.getElementById('btnBuscaPedidosCliente').disabled = true
         const token = sessionStorage.getItem('token')
-        axios.get('http://localhost:8080/pedidosCliente?cli=' + this.cliente + '&token=' + token)
+        axios.get('http://192.168.1.168:8080/pedidosCliente?cli=' + this.cliente + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             this.pedidosCliente = response.data.pedidos
@@ -786,7 +1027,7 @@ export default {
       document.getElementsByTagName('body')[0].style.cursor = 'wait'
       document.getElementById('btnBuscaPedidos').disabled = true
       const token = sessionStorage.getItem('token')
-      axios.get('http://localhost:8080/pedidos?token=' + token)
+      axios.get('http://192.168.1.168:8080/pedidos?token=' + token)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           this.pedidos = response.data.pedidos
@@ -807,7 +1048,7 @@ export default {
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
         document.getElementById('btnBuscaCondicoesPagto').disabled = true
         const token = sessionStorage.getItem('token')
-        axios.get('http://localhost:8080/condicoesPagto?emp=' + this.empresa + '&token=' + token)
+        axios.get('http://192.168.1.168:8080/condicoesPagto?emp=' + this.empresa + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             this.condicoesPagto = response.data.condicoes
@@ -831,11 +1072,18 @@ export default {
       document.getElementById('btnBuscaConfigs' + item.hash).disabled = true
       document.getElementById('btnBuscaComps' + item.hash).disabled = true
       const token = sessionStorage.getItem('token')
-      axios.get('http://localhost:8080/estilos?emp=1&token=' + token)
+      axios.get('http://192.168.1.168:8080/estilos?emp=1&token=' + token)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           this.estilos = response.data.estilos
-          this.estilosFiltrados = response.data.estilos
+          if (item.cnj !== '' && item.cnj !== ' ') {
+            this.itens.forEach(ipd => {
+              if (ipd.hash !== item.hash && ipd.cnj === item.cnj && ipd.codEstilo) {
+                this.estilos = this.estilos.filter(estilo => estilo.CODCPR === ipd.codEstilo)
+              }
+            })
+          }
+          this.estilosFiltrados = this.estilos
           document.getElementsByTagName('body')[0].style.cursor = 'auto'
           document.getElementById('btnBuscaEstilos' + item.hash).disabled = false
         })
@@ -854,7 +1102,7 @@ export default {
         document.getElementById('btnBuscaConfigs' + item.hash).disabled = true
         document.getElementById('btnBuscaComps' + item.hash).disabled = true
         const token = sessionStorage.getItem('token')
-        axios.get('http://localhost:8080/produtosPorEstilo?emp=1&estilo=' + estilo + '&token=' + token)
+        axios.get('http://192.168.1.168:8080/produtosPorEstilo?emp=1&estilo=' + estilo + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             this.configs = response.data.produtos
@@ -879,7 +1127,7 @@ export default {
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
         document.getElementById('btnBuscaComps' + item.hash).disabled = true
         const token = sessionStorage.getItem('token')
-        axios.get('http://localhost:8080/derivacoesPorProduto?emp=1&produto=' + config + '&token=' + token)
+        axios.get('http://192.168.1.168:8080/derivacoesPorProduto?emp=1&produto=' + config + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             this.comps = response.data.derivacoes
@@ -906,10 +1154,23 @@ export default {
       this.endereco = clienteClicked.ENDCPL
       this.cidadeUF = clienteClicked.CIDEST
       this.inscrEst = clienteClicked.INSEST
-      this.frete = 'FOB'
       this.empresasCliente = []
+      this.empresasCliente.splice(0)
+      while (this.empresasCliente.length > 0) {
+        this.empresasCliente.pop()
+      }
+      this.empresasCliente.length = 0
       document.getElementById('closeModalClientes').click()
       this.buscarDadosCliente(this.cliente, false)
+    },
+    selectTransportadora (transportadoraClicked) {
+      this.codTransportadora = transportadoraClicked.CODTRA
+      this.transportadora = transportadoraClicked.NOMTRA
+      document.getElementById('closeModalTransportadoras').click()
+    },
+    selectFrete (freteClicked) {
+      this.frete = freteClicked.CIFFOB
+      document.getElementById('closeModalFretes').click()
     },
     selectPedidoCliente (pedidoClienteClicked) {
       this.numPed = pedidoClienteClicked.NUMPED
@@ -959,6 +1220,8 @@ export default {
     selectConfig (configClicked) {
       this.itemSelecionado.config = configClicked.DESPRO
       this.itemSelecionado.codConfig = configClicked.CODPRO
+      this.itemSelecionado.medMin = parseInt(Number(configClicked.MEDMIN) * 100)
+      this.itemSelecionado.medMax = parseInt(Number(configClicked.MEDMAX) * 100)
       document.getElementById('closeModalConfigs').click()
       document.getElementById('btnBuscaComps' + this.itemSelecionado.hash).disabled = false
       this.itemSelecionado.comp = ''
@@ -977,11 +1240,19 @@ export default {
     },
     buscarDadosCliente (codCli, apenasEmpresas) {
       const token = sessionStorage.getItem('token')
-      axios.get('http://localhost:8080/dadosCliente?token=' + token + '&codCli=' + codCli)
+      axios.get('http://192.168.1.168:8080/dadosCliente?token=' + token + '&codCli=' + codCli)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           this.dadosCliente = response.data.dadosCliente
           if (this.dadosCliente.length > 0) {
+            this.frete = this.dadosCliente[0].CIFFOB
+            this.desc1 = Number(this.dadosCliente[0].PERDS1).toFixed(2).toLocaleString()
+            this.desc2 = Number(this.dadosCliente[0].PERDS2).toFixed(2).toLocaleString()
+            this.desc3 = Number(this.dadosCliente[0].PERDS3).toFixed(2).toLocaleString()
+            this.desc4 = Number(this.dadosCliente[0].PERDS4).toFixed(2).toLocaleString()
+            this.desc5 = Number(this.dadosCliente[0].PERDS5).toFixed(2).toLocaleString()
+            this.guelta = Number(this.dadosCliente[0].PERGUE).toFixed(2).toLocaleString()
+            this.comissao = Number(this.dadosCliente[0].PERCOM).toFixed(2).toLocaleString()
             if (!apenasEmpresas) {
               this.codTransportadora = this.dadosCliente[0].CODTRA
               this.transportadora = this.dadosCliente[0].NOMTRA
@@ -995,7 +1266,7 @@ export default {
             })
 
             const token = sessionStorage.getItem('token')
-            axios.get('http://localhost:8080/pedidosCliente?cli=' + this.cliente + '&token=' + token)
+            axios.get('http://192.168.1.168:8080/pedidosCliente?cli=' + this.cliente + '&token=' + token)
               .then((response) => {
                 this.checkInvalidLoginResponse(response.data)
                 this.pedidosCliente = response.data.pedidos
@@ -1019,12 +1290,25 @@ export default {
         estilo: '',
         config: '',
         comp: '',
-        un: 1,
+        un: '',
         desc: 0,
-        comiss: '',
-        condEsp: ' ',
+        desc1: this.desc1,
+        desc2: this.desc2,
+        desc3: this.desc3,
+        desc4: this.desc4,
+        desc5: this.desc5,
+        guelta: this.guelta,
+        rt: Number(0).toFixed(2).toLocaleString(),
+        comiss: this.comissao,
+        cMed: false,
+        cDes: false,
+        cCon: false,
+        cPra: false,
+        cOut: false,
         obs: '',
         vlrUnit: '',
+        vlrFinal: '',
+        temAnx: 'N',
         hash: Math.floor(Math.random() * ((this.itens.length + 1) * 1000))
       }
       this.itens.push(item)
@@ -1045,11 +1329,10 @@ export default {
         alert('Favor preencher o campo Pedido Cliente!')
       } else if (this.condPagamento === '') {
         alert('Favor selecionar uma Condição de Pagamento!')
-      } else if (this.pedidosCliente && this.pedidosCliente.some(pedido => pedido.PEDCLI === this.pedCli)) {
+      } else if (this.pedidosCliente && this.pedidosCliente.some(pedido => pedido.PEDCLI === this.pedCli && pedido.NUMPED !== this.numPed)) {
         alert('Valor para Pedido Cliente já utilizado. Utilize outro valor.')
       } else {
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
-        document.getElementById('btnSalvar').disabled = true
         var parseString = require('xml2js').parseString
         var respostaPedido = null
         const token = sessionStorage.getItem('token')
@@ -1058,20 +1341,20 @@ export default {
             pedido: {
               codEmp: this.empresa,
               codFil: 1,
-              numPed: 0,
+              numPed: this.numPed > 0 ? this.numPed : 0,
               codCli: this.cliente,
               pedCli: this.pedCli !== '' ? this.pedCli : 0,
               codRep: this.codRepresentada,
               codTra: this.codTransportadora,
-              cifFob: 'F',
+              cifFob: this.frete,
               obsPed: this.observacoesPedido,
               codCpg: this.codCondPagamento
             },
-            itens: this.itens
+            itens: []
           }
         )
         const headers = { headers: { 'Content-Type': 'application/json' } }
-        axios.put('http://localhost:8080/pedido?token=' + token, body, headers)
+        axios.put('http://192.168.1.168:8080/pedido?token=' + token, body, headers)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             parseString(response.data, { explicitArray: false }, (err, result) => {
@@ -1083,29 +1366,32 @@ export default {
                 alert(respostaPedido.retorno)
               } else {
                 this.numPed = respostaPedido.numPed
-                document.getElementById('pedCli').disabled = true
-                document.getElementById('nomCli').disabled = true
-                document.getElementById('btnBuscaPedidosCliente').disabled = true
-                document.getElementById('btnBuscaClientes').disabled = true
-                alert('Pedido ' + this.numPed + ' gerado com sucesso!')
-                this.itens = []
+                alert('Pedido ' + this.numPed + ' gerado/atualizado com sucesso!')
+                this.carregarItens()
               }
             })
-            document.getElementsByTagName('body')[0].style.cursor = 'auto'
-            document.getElementById('btnSalvar').disabled = false
           })
           .catch((err) => {
-            document.getElementsByTagName('body')[0].style.cursor = 'auto'
-            document.getElementById('btnSalvar').disabled = false
             console.log(err)
+          })
+          .finally(() => {
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
           })
       }
     },
     filtrarClientes () {
-      this.clientesFiltrados = this.clientes.filter(cliente => cliente.NOMCLI.toUpperCase().startsWith(this.clientesFiltro.toUpperCase()))
+      if (this.clientesOpcaoFiltro === 'desc') {
+        this.clientesFiltrados = this.clientes.filter(cliente => cliente.NOMCLI.toUpperCase().startsWith(this.clientesFiltro.toUpperCase()))
+      } else {
+        this.clientesFiltrados = this.clientes.filter(cliente => cliente.CNPJ.replace('.', '').replace('-', '').replace('/', '').toUpperCase()
+          .startsWith(this.clientesFiltro.replace('.', '').replace('-', '').replace('/', '').toUpperCase()))
+      }
     },
     filtrarPedidosCliente () {
       this.pedidosClienteFiltrados = this.pedidosCliente.filter(pedido => pedido.PEDCLI.toUpperCase().startsWith(this.pedidosClienteFiltro.toUpperCase()))
+    },
+    filtrarTransportadoras () {
+      this.transportadorasFiltradas = this.transportadoras.filter(transp => transp.NOMTRA.toUpperCase().startsWith(this.transportadorasFiltro.toUpperCase()))
     },
     filtrarPedidos () {
       this.pedidosFiltrados = this.pedidos.filter(pedido => pedido.NUMPED.toUpperCase().startsWith(this.pedidosFiltro.toUpperCase()))
@@ -1121,6 +1407,9 @@ export default {
     },
     filtrarCondicoesPagto () {
       this.condicoesPagtoFiltrados = this.condicoesPagto.filter(cond => cond.DESCPG.toUpperCase().startsWith(this.condicoesPagtoFiltro.toUpperCase()))
+    },
+    normalizarPedidoCliente () {
+      this.pedCli = this.pedCli.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     },
     excluirRascunho () {
       document.getElementById('closeModalExclusaoRascunho').click()
@@ -1139,53 +1428,55 @@ export default {
       this.representada = ''
       this.empresa = ''
       this.empresasCliente = []
+      this.empresasCliente.splice(0)
+      while (this.empresasCliente.length > 0) {
+        this.empresasCliente.pop()
+      }
+      this.empresasCliente.length = 0
       this.numPed = ''
       this.itens = []
+      this.itens.splice(0)
+      while (this.itens.length > 0) {
+        this.itens.pop()
+      }
+      this.itens.length = 0
       this.pedCli = ''
       this.enviadoEmpresa = false
       this.prevFaturamento = ''
       this.condPagamento = ''
+      this.comissao = ''
+      this.desc1 = ''
+      this.desc2 = ''
+      this.desc3 = ''
+      this.desc4 = ''
+      this.desc5 = ''
+      this.guelta = ''
       this.manipulando = false
       this.observacoesPedido = ''
-    },
-    handleCondicao (item) {
-      if (item.condEsp === 'M') {
-        alert('Informe o novo comprimento, em centímetros, para o produto. Produtos de medida especial tem acréscimo no valor de tabela.')
-        this.buscarDerivacoes(item.codConfig)
-          .then(response => {
-            item.derivacoesPossiveis = response.data.derivacoes
-          })
-        document.getElementById('inputComp' + item.hash).disabled = false
-      } else {
-        document.getElementById('inputComp' + item.hash).disabled = true
-        if (item.condEsp === 'D') {
-          alert('Descreva o critério e desconto aplicado para a condição especial nas observações do item.')
-        } else if (item.condEsp === 'C') {
-          alert('Descreva o critério e a condição de pagamento aplicado para a condição especial nas observações do item.')
-        } else if (item.condEsp === 'P') {
-          alert('Em dias corridos, descreva o prazo especial desejado nas observações do item.')
-        } else if (item.condEsp === 'O') {
-          alert('Descreva a condição especial nas observações do item.')
-        }
-      }
+      this.totalKg = ''
+      this.totalM3 = 0
+      this.totalValor = 0
+      this.ipiValor = 0
+      this.icmsValor = 0
+      this.nfValor = 0
     },
     salvarItens () {
       document.getElementById('closeModalSalvarItens').click()
       let temErro = false
       this.itens.forEach(item => {
-        if (item.un < 1 || item.un > 99) {
-          alert('Erro: Existe(m) produto(s) com quantidade menor que zero ou maior que 99. Verifique!')
+        if (item.un === '' || item.un < 1 || item.un > 99) {
+          alert('Erro: Existe(m) produto(s) com quantidade sem preencher, ou menor que zero, ou maior que 99. Verifique!')
           temErro = true
         }
-        if (!item.codEstilo || !item.codConfig || (item.condEsp !== 'M' && !item.codComp)) {
+        if (!item.codEstilo || !item.codConfig || (!item.cMed && !item.codComp)) {
           alert('Erro: Existe(m) produto(s) faltando definir estilo, configuração ou comprimento. Verifique!')
           temErro = true
         }
-        if (item.cnj !== '' && item.cnj < 1) {
+        if (item.cnj !== '' && item.cnj !== ' ' && item.cnj < 1) {
           alert('Erro: Existe(m) produto(s) com número de conjunto menor que 1. Verifique!')
           temErro = true
         }
-        if ((item.condEsp === 'D' || item.condEsp === 'C' || item.condEsp === 'P' || item.condEsp === 'O') && (!item.obs)) {
+        if ((item.cDes || item.cCon || item.cPra || item.cOut === 'O') && (!item.obs)) {
           alert('Erro: Existe(m) produto(s) com condição especial que requer preenchimento de observação. Verifique!')
           temErro = true
         }
@@ -1197,9 +1488,12 @@ export default {
           alert('Erro: Existe(m) produto(s) com valor unitário zerado. Verifique!')
           temErro = true
         }
-        if (item.condEsp === 'M') {
+        if (item.cMed) {
           if (!item.comp) {
             alert('Erro: Existe(m) produto(s) com medida especial sem o comprimento preenchido. Verifique!')
+            temErro = true
+          } else if ((Number(item.comp) < Number(item.medMin)) || (Number(item.comp) > Number(item.medMax))) {
+            alert('Erro: O produto "' + item.config + '" está com medida especial fora do mínimo (' + item.medMin + ' cm) e máximo (' + item.medMax + ' cm). Verifique!')
             temErro = true
           } else {
             let compMaisProximo = ''
@@ -1231,7 +1525,7 @@ export default {
       let estiloIni = itensChecarCnj[0].codEstilo
       let temErro = false
       itensChecarCnj.forEach(item => {
-        if (item.cnj !== '' && item.cnj === cnjIni && item.codEstilo !== estiloIni) {
+        if (item.cnj !== '' && item.cnj !== ' ' && item.cnj === cnjIni && item.codEstilo !== estiloIni) {
           alert('Erro: Existe(m) produto(s) com o mesmo número do conjunto (conj. ' + item.cnj + ') mas com estilos diferentes. Verifique!')
           temErro = true
         }
@@ -1247,20 +1541,36 @@ export default {
         var mes = (new Date(datEnt).getMonth() + 1).toString().padStart(2, '0') // +1 pois no getMonth Janeiro começa com zero.
         var ano = new Date(datEnt).getFullYear()
         var datEntFmt = dia + '/' + mes + '/' + ano
+        itensPedido.splice(0)
+        while (itensPedido.length > 0) {
+          itensPedido.pop()
+        }
+        itensPedido.length = 0
         this.itens.forEach(item => {
           itensPedido.push(
             {
-              numCnj: item.cnj,
+              numCnj: item.cnj === '' ? ' ' : item.cnj,
               codPro: item.codConfig,
               desPro: (item.config + ' ' + item.comp),
               codDer: item.codComp,
-              derEsp: item.condEsp === 'M' ? item.comp : '',
-              seqIpd: 0,
+              derEsp: item.cMed ? item.comp : '',
+              seqIpd: item.seqIpd ? Number(item.seqIpd) : 0,
               qtdPed: item.un,
               preUni: Number(item.vlrUnit.replace('.', '').replace(',', '')) / 100,
-              perDsc: Number(item.desc.toString().replace(',', '.')),
+              perDs1: Number(item.desc1.toString().replace(',', '.')),
+              perDs2: Number(item.desc2.toString().replace(',', '.')),
+              perDs3: Number(item.desc3.toString().replace(',', '.')),
+              perDs4: Number(item.desc4.toString().replace(',', '.')),
+              perDs5: Number(item.desc5.toString().replace(',', '.')),
+              perGue: Number(item.guelta.toString().replace(',', '.')),
+              vlrRet: Number(item.rt.replace('.', '').replace(',', '')) / 100,
+              perCom: Number(item.comiss.toString().replace(',', '.')),
               datEnt: datEntFmt,
-              conEsp: item.condEsp,
+              medEsp: item.cMed === true ? 'S' : 'N',
+              desEsp: item.cDes === true ? 'S' : 'N',
+              conEsp: item.cCon === true ? 'S' : 'N',
+              praEsp: item.cPra === true ? 'S' : 'N',
+              outEsp: item.cOut === true ? 'S' : 'N',
               obsIpd: item.obs
             }
           )
@@ -1281,7 +1591,7 @@ export default {
           }
         )
         const headers = { headers: { 'Content-Type': 'application/json' } }
-        axios.post('http://localhost:8080/pedido/itens?token=' + token, body, headers)
+        axios.post('http://192.168.1.168:8080/pedido/itens?token=' + token, body, headers)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             parseString(response.data, { explicitArray: false }, (err, result) => {
@@ -1291,8 +1601,11 @@ export default {
               respostaPedido = result['S:Envelope']['S:Body']['ns2:GravarPedidos_13Response'].result.respostaPedido
               if (respostaPedido.retorno === 'OK') {
                 alert('Itens salvos com sucesso!')
+                this.manipulando = false
                 this.carregarCabecalho()
                 this.carregarItens()
+              } else if (respostaPedido.gridPro.retorno.length) {
+                alert(respostaPedido.gridPro.retorno)
               } else {
                 alert(respostaPedido.retorno)
               }
@@ -1309,7 +1622,7 @@ export default {
     },
     buscarDerivacoes (config) {
       const token = sessionStorage.getItem('token')
-      return axios.get('http://localhost:8080/derivacoesPorProduto?emp=1&produto=' + config + '&token=' + token)
+      return axios.get('http://192.168.1.168:8080/derivacoesPorProduto?emp=1&produto=' + config + '&token=' + token)
     },
     compare (a, b) {
       if (a.cnj < b.cnj) {
@@ -1322,12 +1635,12 @@ export default {
     },
     carregarCabecalho () {
       const token = sessionStorage.getItem('token')
-      axios.get('http://localhost:8080/pedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + token)
+      axios.get('http://192.168.1.168:8080/pedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + token)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data.pedido)
           this.prevFaturamento = response.data.pedido[0].DATENT
           this.condPagamento = response.data.pedido[0].DESCPG
-          this.frete = response.data.pedido[0].CIFFOB === 'F' ? 'FOB' : 'CIF'
+          this.frete = response.data.pedido[0].CIFFOB
           this.codTransportadora = response.data.pedido[0].CODTRA
           this.codRepresentada = response.data.pedido[0].CODREP
           this.enviadoEmpresa = (response.data.pedido[0].SITPED === '3' || response.data.pedido[0].SITPED === '4' || response.data.pedido[0].SITPED === '5')
@@ -1340,13 +1653,18 @@ export default {
     carregarItens () {
       const token = sessionStorage.getItem('token')
       this.itens = []
+      this.itens.splice(0)
+      while (this.itens.length > 0) {
+        this.itens.pop()
+      }
+      this.itens.length = 0
       this.totalKg = parseFloat(0)
       this.totalM3 = parseFloat(0)
       this.totalValor = parseFloat(0)
       this.ipiValor = parseFloat(0)
       this.icmsValor = parseFloat(0)
       this.nfValor = parseFloat(0)
-      axios.get('http://localhost:8080/itensPedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + token)
+      axios.get('http://192.168.1.168:8080/itensPedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + token)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           response.data.itens.forEach(item => {
@@ -1364,14 +1682,39 @@ export default {
                     codConfig: item.CODPRO,
                     config: item.DESPRO,
                     codComp: item.CODDER,
-                    comp: item.CNDESP === 'M' ? item.LARDER : item.CODDER,
+                    comp: item.CMED === 'S' ? item.LARDER : item.CODDER,
                     un: item.QTDPED,
+                    medMin: parseInt(Number(item.MEDMIN) * 100),
+                    medMax: parseInt(Number(item.MEDMAX) * 100),
                     desc: Number(item.PERDSC).toFixed(2).toLocaleString(),
-                    comiss: Number(item.PERCOM).toFixed(2).toLocaleString().replace('.', ','),
-                    condEsp: item.CNDESP,
+                    desc1: Number(item.PERDS1).toFixed(2).toLocaleString(),
+                    desc2: Number(item.PERDS2).toFixed(2).toLocaleString(),
+                    desc3: Number(item.PERDS3).toFixed(2).toLocaleString(),
+                    desc4: Number(item.PERDS4).toFixed(2).toLocaleString(),
+                    desc5: Number(item.PERDS5).toFixed(2).toLocaleString(),
+                    guelta: Number(item.PERGUE).toFixed(2).toLocaleString(),
+                    rt: Number(item.VLRRET).toFixed(2).toLocaleString(),
+                    comiss: Number(item.PERCOM).toFixed(2).toLocaleString(),
+                    // eslint-disable-next-line no-unneeded-ternary
+                    cMed: item.CMED === 'S' ? true : false,
+                    // eslint-disable-next-line no-unneeded-ternary
+                    cDes: item.CDES === 'S' ? true : false,
+                    // eslint-disable-next-line no-unneeded-ternary
+                    cCon: item.CCON === 'S' ? true : false,
+                    // eslint-disable-next-line no-unneeded-ternary
+                    cPra: item.CPRA === 'S' ? true : false,
+                    // eslint-disable-next-line no-unneeded-ternary
+                    cOut: item.COUT === 'S' ? true : false,
                     datEnt: item.DATENT,
                     obs: item.OBSIPD,
                     vlrUnit: Number(item.VLRIPD).toFixed(2).toLocaleString(),
+                    vlrFinal: Number(Number(item.VLRIPD) *
+                      (Number(item.PERDS1) > 0 ? ((100 - Number(item.PERDS1)) / 100) : 1) *
+                      (Number(item.PERDS2) > 0 ? ((100 - Number(item.PERDS2)) / 100) : 1) *
+                      (Number(item.PERDS3) > 0 ? ((100 - Number(item.PERDS3)) / 100) : 1) *
+                      (Number(item.PERDS4) > 0 ? ((100 - Number(item.PERDS4)) / 100) : 1) *
+                      (Number(item.PERDS5) > 0 ? ((100 - Number(item.PERDS5)) / 100) : 1)).toFixed(2).toLocaleString(),
+                    temAnx: item.TEMANX,
                     hash: Math.floor(Math.random() * ((this.itens.length + 1) * 1000)),
                     derivacoesPossiveis: derivacoesPossiveis
                   }
@@ -1379,10 +1722,17 @@ export default {
                 this.itens.sort(this.compareSeqIpd)
                 this.totalKg = parseFloat(parseFloat(this.totalKg) + parseFloat(item.PESIPD)).toFixed(2)
                 this.totalM3 = parseFloat(parseFloat(this.totalM3) + parseFloat(item.VOLIPD)).toFixed(2)
-                this.totalValor = parseFloat(parseFloat(this.totalValor) + parseFloat(parseInt(item.QTDPED) * parseFloat(item.VLRIPD))).toFixed(2)
+                this.totalValor = parseFloat(parseFloat(this.totalValor) + parseFloat(parseInt(item.QTDPED) * parseFloat(
+                  Number(Number(item.VLRIPD) *
+                  (Number(item.PERDS1) > 0 ? ((100 - Number(item.PERDS1)) / 100) : 1) *
+                  (Number(item.PERDS2) > 0 ? ((100 - Number(item.PERDS2)) / 100) : 1) *
+                  (Number(item.PERDS3) > 0 ? ((100 - Number(item.PERDS3)) / 100) : 1) *
+                  (Number(item.PERDS4) > 0 ? ((100 - Number(item.PERDS4)) / 100) : 1) *
+                  (Number(item.PERDS5) > 0 ? ((100 - Number(item.PERDS5)) / 100) : 1))
+                ))).toFixed(2)
                 this.ipiValor = parseFloat(parseFloat(this.ipiValor) + parseFloat(item.IPIIPD)).toFixed(2)
                 this.icmsValor = parseFloat(parseFloat(this.icmsValor) + parseFloat(item.ICMIPD)).toFixed(2)
-                this.nfValor = parseFloat(parseFloat(this.nfValor) + parseFloat(item.NFVIPD)).toFixed(2)
+                this.nfValor = parseFloat(parseFloat(this.totalValor) + parseFloat(this.ipiValor) + parseFloat(this.icmsValor)).toFixed(2)
               })
           })
         })
@@ -1406,12 +1756,14 @@ export default {
       } else {
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
         const token = sessionStorage.getItem('token')
-        axios.post('http://localhost:8080/enviarPedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + token)
+        axios.post('http://192.168.1.168:8080/enviarPedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
-            if (response.data === 'OK') {
+            if (response.data.pesoTotalBruto) {
               alert('Pedido enviado à empresa com sucesso!')
               this.enviadoEmpresa = true
+              this.totalKg = parseFloat(response.data.pesoTotalBruto).toFixed(2) + ' | ' + parseFloat(response.data.pesoTotalLiq).toFixed(2)
+              this.totalM3 = parseFloat(response.data.volumeTotal).toFixed(2)
             } else {
               alert(response.data)
             }
@@ -1432,6 +1784,86 @@ export default {
           this.manipulando = true
         }
       })
+    },
+    onUploadArquivo (item) {
+      document.getElementsByTagName('body')[0].style.cursor = 'wait'
+      const file = this.$refs.uploadArquivo.files[0]
+      this.formData = new FormData()
+      this.formData.append('file', file)
+      const headers = {
+        Accept: 'application/json',
+        'Content-Type': 'multipart/form-data'
+      }
+      const token = sessionStorage.getItem('token')
+      axios.post('http://192.168.1.168:8080/uploadArquivo?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&ipd=' + item.seqIpd + '&token=' + token, this.formData, { headers: headers })
+        .then((response) => {
+          if (response.data === 'OK') {
+            item.temAnx = 'S'
+            alert('Arquivo enviado com sucesso!')
+          } else {
+            alert(response.data)
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+        .finally(() => {
+          document.getElementsByTagName('body')[0].style.cursor = 'auto'
+        })
+    },
+    download (item) {
+      document.getElementsByTagName('body')[0].style.cursor = 'wait'
+      const token = sessionStorage.getItem('token')
+      axios.get('http://192.168.1.168:8080/downloadArquivo?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&ipd=' + item.seqIpd + '&token=' + token)
+      axios({
+        url: 'http://192.168.1.168:8080/downloadArquivo?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&ipd=' + item.seqIpd + '&token=' + token, // your url
+        method: 'GET',
+        responseType: 'blob'
+      })
+        .then((response) => {
+          if (response.status === 204) {
+            alert('Nenhum arquivo disponível para download.')
+          } else {
+            const url = window.URL.createObjectURL(new Blob([response.data]))
+            const link = document.createElement('a')
+            link.href = url
+            link.setAttribute('download', this.numPed + '-' + item.seqIpd + '.zip')
+            document.body.appendChild(link)
+            link.click()
+          }
+        })
+        .finally(() => {
+          document.getElementsByTagName('body')[0].style.cursor = 'auto'
+        })
+    },
+    checkMedida (item) {
+      if (document.getElementById('cbMedida' + item.hash).checked) {
+        alert('Informe o novo comprimento, em centímetros, para o produto. Produtos de medida especial tem acréscimo no valor de tabela.')
+        this.buscarDerivacoes(item.codConfig)
+          .then(response => {
+            item.derivacoesPossiveis = response.data.derivacoes
+          })
+      }
+    },
+    checkDesconto (item) {
+      if (document.getElementById('cbDesconto' + item.hash).checked) {
+        alert('Descreva o critério e desconto aplicado para a condição especial nas observações do item.')
+      }
+    },
+    checkCondicao (item) {
+      if (document.getElementById('cbCondicao' + item.hash).checked) {
+        alert('Descreva o critério e a condição de pagamento aplicado para a condição especial nas observações do item.')
+      }
+    },
+    checkPrazo (item) {
+      if (document.getElementById('cbPrazo' + item.hash).checked) {
+        alert('Em dias corridos, descreva o prazo especial desejado nas observações do item.')
+      }
+    },
+    checkOutras (item) {
+      if (document.getElementById('cbOutras' + item.hash).checked) {
+        alert('Descreva a condição especial nas observações do item.')
+      }
     }
   }
 }
@@ -1443,7 +1875,6 @@ export default {
   }
   .gerarPedido {
     height: 100%;
-    background-color: #f5f5f5;
   }
   .mouseHover {
     cursor: pointer;
@@ -1459,6 +1890,14 @@ export default {
     color: #fff;
     background-color: #93999e;
   }
+  .btn-action {
+    width: 2rem;
+    margin-left: 1px;
+    margin-right: 1px;
+  }
+  .btn-busca {
+    width: 1.75rem !important;
+  }
   .sm {
     font-size: 0.8rem !important;
   }
@@ -1473,5 +1912,18 @@ export default {
   }
   .white-bg {
     background-color: white !important;
+  }
+  .param-comercial {
+    width: 7rem;
+  }
+  .param-guelta {
+    padding-left: 2.2rem !important;
+  }
+  .param-rt {
+    padding-left: 3.3rem !important;
+  }
+  .vlr-final {
+    position: absolute;
+    padding-top: 6px;
   }
 </style>

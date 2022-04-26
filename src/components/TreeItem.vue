@@ -1,25 +1,18 @@
 <template>
-  <tr style="padding-left: 10px" id="node" v-show="(/^[1][.]\d+(?!.)/.test(item.codNiv) && (item.codNiv === '1.0' || item.filhoPodeTrocar || item.temG || item.trocar)) || (item.exiCmp !== 'S' && ((item.codDer === 'G' || item.proGen === 'S' || item.podeTrocar) || item.temG || item.filhoPodeTrocar))" v-bind:class="{ trocar: (item.codDer === 'G' || item.proGen === 'S'), temG: item.temG, atencao: item.trocar, filhoPodeTrocar: item.filhoPodeTrocar }">
+  <tr style="padding-left: 10px" id="node" v-show="(/^[1][.]\d+(?!.)/.test(item.codNiv) && (item.codFam === '140012' || item.codFam === '05001' || item.trocar)) || (item.codDer !== 'GM' && ((item.codDer === 'G' || item.proGen === 'S' || item.podeTrocar || item.codFam === '05001')))" v-bind:class="{ trocar: (item.codDer === 'G' || item.proGen === 'S'), temG: item.temG, atencao: item.trocar, filhoPodeTrocar: item.filhoPodeTrocar }">
     <th class="fw-normal">
-      <font-awesome-icon v-if="((item.filhos && (item.temG || item.filhoPodeTrocar)) && isOpen)" icon="minus-square" @click="toggleOpen" class="contract pointer"/>
-      <font-awesome-icon v-else-if="((item.filhos && (item.temG || item.filhoPodeTrocar)) && !isOpen)" icon="plus-square" @click="toggleOpen" class="expand pointer"/>
+      <font-awesome-icon v-if="((item.filhos && (item.temG || item.filhoPodeTrocar)) && isOpen)" icon="minus-square" @click="toggleOpen" class="expand pointer" v-bind:class="{ warning: (item.temG || item.trocar) }" />
+      <font-awesome-icon v-else-if="((item.filhos && (item.temG || item.filhoPodeTrocar)) && !isOpen)" icon="plus-square" @click="toggleOpen" class="expand pointer" v-bind:class="{ warning: (item.temG || item.trocar) }" />
     </th>
-    <th class="fw-normal indent font-small" :style="cssVars">{{ item.codNiv }}</th>
-    <th class="fw-normal indent font-small" :style="cssVars">{{ item.codPro }}</th>
-    <th class="fw-normal font-small">{{ item.codDer }}</th>
-    <th class="fw-normal font-small" v-if="item.codFam === '02001' && item.codDer !== 'G'">{{ item.codRef }}</th>
-      <th class="fw-normal font-small" v-else>{{ item.desPro }} {{ item.desDer }}</th>
+    <th class="fw-normal font-small" v-if="(item.codFam === '02001' || item.codFam === '02002') && item.codDer !== 'G'"><span class="indent pipe" :style="cssVars">|</span><span class="dash">&#8213;&#8213;&#8213;&#8213;&#8213;&#8213;</span><span class="pe-2">></span>{{ item.codRef }}</th>
+    <th class="fw-normal font-small" v-else><span class="indent pipe" :style="cssVars">|</span><span class="dash">&#8213;&#8213;&#8213;&#8213;&#8213;&#8213;</span><span class="pe-2">></span>{{ item.desPro }} {{ item.desDer }}</th>
+
     <th class="fw-normal font-small">{{ item.qtdCon }}</th>
     <th class="fw-normal font-small">{{ item.uniMed }}</th>
     <th class="fw-normal align-center exchange" v-if="item.codDer === 'G' || item.proGen === 'S' || item.podeTrocar">
       <font-awesome-icon class="pointer" icon="redo-alt" @click="buscarOpcoes(item)" data-bs-toggle="modal" :data-bs-target="`#modal-`+item.hashModal"/>
     </th>
     <th v-else></th>
-
-    <th class="fw-normal align-center">
-      <font-awesome-icon v-if="(item.temG || item.trocar)" icon="exclamation-triangle" class="warning"/>
-      <font-awesome-icon v-else-if="/^[1][.]\d+(?!.)/.test(item.codNiv)" icon="check-square" class="success"/>
-    </th>
 
     <!-- Modal -->
     <div class="modal fade" :id="`modal-`+item.hashModal" tabindex="-1" aria-labelledby="equivalentesModalLabel" aria-hidden="true">
@@ -31,6 +24,7 @@
           </div>
           <div class="modal-body">
             <div class="mb-3" v-if="item.equivalentes !== []">
+              <input type="text" class="form-control mb-3" v-on:keyup="filtrarEquivalentes(item)" v-model="equivalentesFiltro" placeholder="Digite para buscar por referência na tabela abaixo">
               <table class="table table-striped table-hover table-bordered table-sm table-responsive">
                 <thead>
                   <tr>
@@ -41,8 +35,9 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="equivalenteRow in item.equivalentes" :key="equivalenteRow.CODPRO" class="mouseHover pointer" @click="selecionarEquivalente(equivalenteRow)">
-                    <th class="fw-normal" scope="row">{{ equivalenteRow.CODPRO }}</th>
+                  <!-- eslint-disable-next-line vue/require-v-for-key -->
+                  <tr v-for="equivalenteRow in item.equivalentesFiltrados" class="mouseHover pointer" @click="selecionarEquivalente(equivalenteRow)">
+                    <th class="fw-normal">{{ equivalenteRow.CODPRO }}</th>
                     <th class="fw-normal">{{ equivalenteRow.CODDER }}</th>
                     <th class="fw-normal">{{ equivalenteRow.CODREF }}</th>
                     <th class="fw-normal">{{ equivalenteRow.DSCEQI }}</th>
@@ -76,7 +71,7 @@
     :key="index"
     :item="child"
     :codEmp="codEmp"
-    :level="(child.exiCmp !== 'S' && ((child.codDer === 'G' || child.proGen === 'S' || child.podeTrocar) || child.temG || child.filhoPodeTrocar)) ? level + 1 : level"
+    :level="(child.codDer !== 'GM' && ((child.codDer === 'G' || child.proGen === 'S' || child.podeTrocar || child.codFam === '05001'))) ? level + 1 : level"
     @trocar="trocar"/>
 </template>
 
@@ -87,7 +82,8 @@ export default {
   props: ['item', 'level', 'codEmp'],
   data () {
     return {
-      isOpen: true
+      isOpen: true,
+      equivalentesFiltro: ''
     }
   },
   created () {
@@ -95,11 +91,6 @@ export default {
     this.$props.item.hashModal = Math.floor(Math.random() * (niv * 1000))
     this.$props.item.equivalentes = []
     this.$props.item.equivalenteSelecionado = null
-    if (this.item.filhos) {
-      if (this.item.temG || this.item.filhoPodeTrocar) {
-        this.isOpen = false
-      }
-    }
   },
   computed: {
     cssVars () {
@@ -122,14 +113,16 @@ export default {
     async buscarOpcoes (item) {
       const token = sessionStorage.getItem('token')
       item.equivalentes = []
+      item.equivalentesFiltrados = []
       this.$props.item.equivalenteSelecionado = null
       item.equivalenteSelecionado = null
       document.getElementsByTagName('body')[0].style.cursor = 'wait'
       if (item.proGen === 'S') {
-        await axios.get('http://localhost:8080/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&derivacao=' + item.codDer + '&token=' + token)
+        await axios.get('http://192.168.1.168:8080/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&derivacao=' + item.codDer + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
+            item.equivalentesFiltrados = response.data.equivalentes
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
           })
           .catch((err) => {
@@ -137,16 +130,19 @@ export default {
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
           })
       } else if (item.podeTrocar && item.codDer !== 'G') {
-        await axios.get('http://localhost:8080/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&derivacao=' + item.codDer + '&token=' + token)
+        await axios.get('http://192.168.1.168:8080/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&derivacao=' + item.codDer + '&token=' + token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
+            item.equivalentesFiltrados = response.data.equivalentes
             if (!item.equivalentes.length) {
               item.equivalentes = []
-              axios.get('http://localhost:8080/derivacoesPossiveis?emp=' + this.codEmp + '&pro=' + item.codPro + '&mod=' + item.codMod + '&derMod=' + item.derMod + '&token=' + token)
+              item.equivalentesFiltrados = []
+              axios.get('http://192.168.1.168:8080/derivacoesPossiveis?emp=' + this.codEmp + '&pro=' + item.codPro + '&mod=' + item.codMod + '&derMod=' + item.derMod + '&token=' + token)
                 .then((response) => {
                   this.checkInvalidLoginResponse(response.data)
                   item.equivalentes = response.data.derivacoes
+                  item.equivalentesFiltrados = response.data.derivacoes
                   document.getElementsByTagName('body')[0].style.cursor = 'auto'
                 })
                 .catch((err) => {
@@ -161,16 +157,19 @@ export default {
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
           })
       } else {
-        await axios.get('http://localhost:8080/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&derivacao=' + item.codDer + '&token=' + token)
+        await axios.get('http://192.168.1.168:8080/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&derivacao=' + item.codDer + '&token=' + token)
           .then(async (response) => {
             this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
+            item.equivalentesFiltrados = response.data.equivalentes
             if (!item.equivalentes.length) {
               item.equivalentes = []
-              await axios.get('http://localhost:8080/derivacoesPossiveis?emp=' + this.codEmp + '&pro=' + item.codPro + '&mod=' + item.codMod + '&derMod=' + item.derMod + '&token=' + token)
+              item.equivalentesFiltrados = []
+              await axios.get('http://192.168.1.168:8080/derivacoesPossiveis?emp=' + this.codEmp + '&pro=' + item.codPro + '&mod=' + item.codMod + '&derMod=' + item.derMod + '&token=' + token)
                 .then((response) => {
                   this.checkInvalidLoginResponse(response.data)
                   item.equivalentes = response.data.derivacoes
+                  item.equivalentesFiltrados = response.data.derivacoes
                   document.getElementsByTagName('body')[0].style.cursor = 'auto'
                 })
                 .catch((err) => {
@@ -186,6 +185,10 @@ export default {
           })
       }
     },
+    filtrarEquivalentes (item) {
+      item.equivalentesFiltrados = []
+      item.equivalentesFiltrados = item.equivalentes.filter(equiv => equiv.CODREF.toUpperCase().startsWith(this.equivalentesFiltro.toUpperCase()))
+    },
     selecionarEquivalente (equivalente) {
       this.$props.item.equivalenteSelecionado = equivalente
     },
@@ -194,6 +197,7 @@ export default {
       const itemTroca = {
         codNiv: this.$props.item.codNiv,
         codMod: this.$props.item.codMod,
+        codAgp: this.$props.item.codAgp,
         agpMod: this.$props.item.agpMod,
         derMod: this.$props.item.derMod,
         cmpAnt: this.$props.item.codPro,
@@ -203,7 +207,18 @@ export default {
         dscCmp: equivalente.DSCEQI,
         codFam: this.$props.item.codFam
       }
-      this.trocar(itemTroca)
+      const token = sessionStorage.getItem('token')
+      axios.get('http://192.168.1.168:8080/itensMontagem?emp=' + this.codEmp + '&pro=' + itemTroca.cmpAtu + '&der=' + itemTroca.derAtu + '&token=' + token)
+        .then((response) => {
+          this.checkInvalidLoginResponse(response.data)
+          if (response.data.itensMontagem.length) {
+            itemTroca.itensMontagem = response.data.itensMontagem
+          }
+          this.trocar(itemTroca)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
     cancelar () {
       this.$props.item.equivalenteSelecionado = null
@@ -248,5 +263,10 @@ export default {
   }
   .font-small {
     font-size: small;
+  }
+  .pipe {
+    position: relative;
+    top: -6px;
+    left: 2px;
   }
 </style>
