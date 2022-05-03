@@ -1463,56 +1463,64 @@ export default {
     salvarItens () {
       document.getElementById('closeModalSalvarItens').click()
       let temErro = false
-      this.itens.forEach(item => {
-        if (item.un === '' || item.un < 1 || item.un > 99) {
-          alert('Erro: Existe(m) produto(s) com quantidade sem preencher, ou menor que zero, ou maior que 99. Verifique!')
-          temErro = true
-        }
-        if (!item.codEstilo || !item.codConfig || (!item.cMed && !item.codComp)) {
-          alert('Erro: Existe(m) produto(s) faltando definir estilo, configuração ou comprimento. Verifique!')
-          temErro = true
-        }
-        if (item.cnj !== '' && item.cnj !== ' ' && item.cnj < 1) {
-          alert('Erro: Existe(m) produto(s) com número de conjunto menor que 1. Verifique!')
-          temErro = true
-        }
-        if ((item.cDes || item.cCon || item.cPra || item.cOut === 'O') && (!item.obs)) {
-          alert('Erro: Existe(m) produto(s) com condição especial que requer preenchimento de observação. Verifique!')
-          temErro = true
-        }
-        if (item.desc === '') {
-          alert('Erro: Existe(m) produto(s) com desconto em branco. Verifique!')
-          temErro = true
-        }
-        if (item.vlrUnit === 0 || item.vlrUnit === '') {
-          alert('Erro: Existe(m) produto(s) com valor unitário zerado. Verifique!')
-          temErro = true
-        }
-        if (item.cMed) {
-          if (!item.comp) {
-            alert('Erro: Existe(m) produto(s) com medida especial sem o comprimento preenchido. Verifique!')
+      let BreakException
+      try {
+        this.itens.forEach(item => {
+          if (item.un === '' || item.un < 1 || item.un > 99) {
+            alert('Erro: Existe(m) produto(s) com quantidade sem preencher, ou menor que zero, ou maior que 99. Verifique!')
             temErro = true
-          } else if ((Number(item.comp) < Number(item.medMin)) || (Number(item.comp) > Number(item.medMax))) {
-            alert('Erro: O produto "' + item.config + '" está com medida especial fora do mínimo (' + item.medMin + ' cm) e máximo (' + item.medMax + ' cm). Verifique!')
-            temErro = true
-          } else {
-            let compMaisProximo = ''
-            let menorDistancia = 1000000
-            compMaisProximo = item.derivacoesPossiveis[0].CODDER
-            item.derivacoesPossiveis.forEach(comp => {
-              if (comp.CODDER !== compMaisProximo) {
-                let distancia = Number(comp.CODDER) - Number(item.comp)
-                if (distancia < 0) distancia *= -1
-                if (distancia <= menorDistancia) {
-                  menorDistancia = distancia
-                  compMaisProximo = comp.CODDER
-                }
-              }
-            })
-            item.codComp = compMaisProximo
           }
-        }
-      })
+          if (!item.codEstilo || !item.codConfig || (!item.cMed && !item.codComp)) {
+            alert('Erro: Existe(m) produto(s) faltando definir estilo, configuração ou comprimento. Verifique!')
+            temErro = true
+          }
+          if (item.cnj !== '' && item.cnj !== ' ' && item.cnj < 1) {
+            alert('Erro: Existe(m) produto(s) com número de conjunto menor que 1. Verifique!')
+            temErro = true
+          }
+          if ((item.cDes || item.cCon || item.cPra || item.cOut === 'O') && (!item.obs)) {
+            alert('Erro: Existe(m) produto(s) com condição especial que requer preenchimento de observação. Verifique!')
+            temErro = true
+          }
+          if (item.desc === '') {
+            alert('Erro: Existe(m) produto(s) com desconto em branco. Verifique!')
+            temErro = true
+          }
+          if (Number(item.vlrUnit) === 0 || item.vlrUnit === '') {
+            alert('Erro: Existe(m) produto(s) com valor unitário zerado. Verifique!')
+            temErro = true
+          }
+          if (item.cMed) {
+            if (!item.comp) {
+              alert('Erro: Existe(m) produto(s) com medida especial sem o comprimento preenchido. Verifique!')
+              temErro = true
+            } else if ((Number(item.comp) < Number(item.medMin)) || (Number(item.comp) > Number(item.medMax))) {
+              alert('Erro: O produto "' + item.config + '" está com medida especial fora do mínimo (' + item.medMin + ' cm) e máximo (' + item.medMax + ' cm). Verifique!')
+              temErro = true
+            } else {
+              let compMaisProximo = ''
+              let menorDistancia = 1000000
+              compMaisProximo = item.derivacoesPossiveis[0].CODDER
+              item.derivacoesPossiveis.forEach(comp => {
+                if (comp.CODDER !== compMaisProximo) {
+                  let distancia = Number(comp.CODDER) - Number(item.comp)
+                  if (distancia < 0) distancia *= -1
+                  if (distancia <= menorDistancia) {
+                    menorDistancia = distancia
+                    compMaisProximo = comp.CODDER
+                  }
+                }
+              })
+              item.codComp = compMaisProximo
+            }
+          }
+          if (temErro) {
+            throw BreakException
+          }
+        })
+      } catch (e) {
+        if (e !== BreakException) throw e
+      }
       if (!temErro) {
         this.enviarItens()
       }
