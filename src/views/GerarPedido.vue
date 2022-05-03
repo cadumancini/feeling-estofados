@@ -1708,7 +1708,7 @@ export default {
                     datEnt: item.DATENT,
                     obs: item.OBSIPD,
                     vlrUnit: Number(item.VLRIPD).toFixed(2).toLocaleString(),
-                    vlrFinal: Number(Number(item.VLRIPD) *
+                    vlrFinal: Number(Number(item.QTDPED) * Number(item.VLRIPD) *
                       (Number(item.PERDS1) > 0 ? ((100 - Number(item.PERDS1)) / 100) : 1) *
                       (Number(item.PERDS2) > 0 ? ((100 - Number(item.PERDS2)) / 100) : 1) *
                       (Number(item.PERDS3) > 0 ? ((100 - Number(item.PERDS3)) / 100) : 1) *
