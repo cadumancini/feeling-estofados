@@ -1253,6 +1253,8 @@ export default {
             this.desc5 = Number(this.dadosCliente[0].PERDS5).toFixed(2).toLocaleString()
             this.guelta = Number(this.dadosCliente[0].PERGUE).toFixed(2).toLocaleString()
             this.comissao = Number(this.dadosCliente[0].PERCOM).toFixed(2).toLocaleString()
+            this.codCondPagamento = this.dadosCliente[0].CODCPG
+            this.condPagamento = this.dadosCliente[0].DESCPG
             if (!apenasEmpresas) {
               this.codTransportadora = this.dadosCliente[0].CODTRA
               this.transportadora = this.dadosCliente[0].NOMTRA
