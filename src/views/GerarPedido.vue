@@ -1797,7 +1797,8 @@ export default {
     },
     onUploadArquivo (item) {
       document.getElementsByTagName('body')[0].style.cursor = 'wait'
-      const file = this.$refs.uploadArquivo.files[0]
+      // const file = this.$refs.uploadArquivo.files[0]
+      const file = event.target.files[0]
       this.formData = new FormData()
       this.formData.append('file', file)
       const headers = {
