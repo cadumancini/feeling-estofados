@@ -914,6 +914,9 @@ export default {
       enviadoEmpresa: false,
       totalKg: '',
       totalM3: 0,
+      totalPesLiq: 0,
+      totalPesBru: 0,
+      totalVolDer: 0,
       totalValor: 0,
       ipiValor: 0,
       icmsValor: 0,
@@ -1730,8 +1733,11 @@ export default {
                   }
                 )
                 this.itens.sort(this.compareSeqIpd)
-                this.totalKg = parseFloat(parseFloat(this.totalKg) + parseFloat(item.PESIPD)).toFixed(2)
-                this.totalM3 = parseFloat(parseFloat(this.totalM3) + parseFloat(item.VOLIPD)).toFixed(2)
+                this.totalPesLiq = parseFloat(parseFloat(this.totalPesLiq) + parseFloat(item.PESLIQ)).toFixed(2)
+                this.totalPesBru = parseFloat(parseFloat(this.totalPesBru) + parseFloat(item.PESBRU)).toFixed(2)
+                this.totalVolDer = parseFloat(parseFloat(this.totalVolDer) + parseFloat(item.VOLDER)).toFixed(2)
+                this.totalKg = this.totalPesLiq + ' | ' + this.totalPesBru
+                this.totalM3 = this.totalVolDer
                 this.totalValor = parseFloat(parseFloat(this.totalValor) + parseFloat(parseInt(item.QTDPED) * parseFloat(
                   Number(Number(item.VLRIPD) *
                   (Number(item.PERDS1) > 0 ? ((100 - Number(item.PERDS1)) / 100) : 1) *
