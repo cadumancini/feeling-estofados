@@ -4,7 +4,7 @@
       <font-awesome-icon v-if="((item.filhos && (item.temG || item.filhoPodeTrocar)) && isOpen)" icon="minus-square" @click="toggleOpen" class="expand pointer" v-bind:class="{ warning: (item.temG || item.trocar) }" />
       <font-awesome-icon v-else-if="((item.filhos && (item.temG || item.filhoPodeTrocar)) && !isOpen)" icon="plus-square" @click="toggleOpen" class="expand pointer" v-bind:class="{ warning: (item.temG || item.trocar) }" />
     </th>
-    <th class="fw-normal font-small" v-if="(item.codFam === '02001' || item.codFam === '02002') && item.codDer !== 'G'"><span class="indent pipe" :style="cssVars">|</span><span class="dash">&#8213;&#8213;&#8213;&#8213;&#8213;&#8213;</span><span class="pe-2">></span>{{ item.codRef }}</th>
+    <th class="fw-normal font-small" v-if="(item.codFam === '02001' || item.codFam === '02002' || item.codFam === '02003') && item.codDer !== 'G'"><span class="indent pipe" :style="cssVars">|</span><span class="dash">&#8213;&#8213;&#8213;&#8213;&#8213;&#8213;</span><span class="pe-2">></span>{{ item.codRef }}</th>
     <th class="fw-normal font-small" v-else><span class="indent pipe" :style="cssVars">|</span><span class="dash">&#8213;&#8213;&#8213;&#8213;&#8213;&#8213;</span><span class="pe-2">></span>{{ item.desPro }} {{ item.desDer }}</th>
 
     <th class="fw-normal font-small">{{ item.qtdCon }}</th>
