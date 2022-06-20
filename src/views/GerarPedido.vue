@@ -1548,17 +1548,18 @@ export default {
         }
       })
       if (!temErro) {
-        var hoje = new Date()
-        var datEnt75 = hoje.setDate(hoje.getDate() + 75)
-        var dia = new Date(datEnt75).getDate().toString().padStart(2, '0')
-        var mes = (new Date(datEnt75).getMonth() + 1).toString().padStart(2, '0') // +1 pois no getMonth Janeiro começa com zero.
-        var ano = new Date(datEnt75).getFullYear()
-        var datEntFmt75 = dia + '/' + mes + '/' + ano
-        var datEnt60 = hoje.setDate(hoje.getDate() + 60)
-        dia = new Date(datEnt60).getDate().toString().padStart(2, '0')
-        mes = (new Date(datEnt60).getMonth() + 1).toString().padStart(2, '0') // +1 pois no getMonth Janeiro começa com zero.
-        ano = new Date(datEnt60).getFullYear()
-        var datEntFmt60 = dia + '/' + mes + '/' + ano
+        var hoje75 = new Date()
+        var datEnt75 = hoje75.setDate(hoje75.getDate() + 75)
+        var dia75 = new Date(datEnt75).getDate().toString().padStart(2, '0')
+        var mes75 = (new Date(datEnt75).getMonth() + 1).toString().padStart(2, '0') // +1 pois no getMonth Janeiro começa com zero.
+        var ano75 = new Date(datEnt75).getFullYear()
+        var datEntFmt75 = dia75 + '/' + mes75 + '/' + ano75
+        var hoje60 = new Date()
+        var datEnt60 = hoje60.setDate(hoje60.getDate() + 60)
+        var dia60 = new Date(datEnt60).getDate().toString().padStart(2, '0')
+        var mes60 = (new Date(datEnt60).getMonth() + 1).toString().padStart(2, '0') // +1 pois no getMonth Janeiro começa com zero.
+        var ano60 = new Date(datEnt60).getFullYear()
+        var datEntFmt60 = dia60 + '/' + mes60 + '/' + ano60
         itensPedido.splice(0)
         while (itensPedido.length > 0) {
           itensPedido.pop()
