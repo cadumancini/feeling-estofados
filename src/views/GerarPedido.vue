@@ -1549,11 +1549,16 @@ export default {
       })
       if (!temErro) {
         var hoje = new Date()
-        var datEnt = hoje.setDate(hoje.getDate() + 75)
-        var dia = new Date(datEnt).getDate().toString().padStart(2, '0')
-        var mes = (new Date(datEnt).getMonth() + 1).toString().padStart(2, '0') // +1 pois no getMonth Janeiro começa com zero.
-        var ano = new Date(datEnt).getFullYear()
-        var datEntFmt = dia + '/' + mes + '/' + ano
+        var datEnt75 = hoje.setDate(hoje.getDate() + 75)
+        var dia = new Date(datEnt75).getDate().toString().padStart(2, '0')
+        var mes = (new Date(datEnt75).getMonth() + 1).toString().padStart(2, '0') // +1 pois no getMonth Janeiro começa com zero.
+        var ano = new Date(datEnt75).getFullYear()
+        var datEntFmt75 = dia + '/' + mes + '/' + ano
+        var datEnt60 = hoje.setDate(hoje.getDate() + 60)
+        dia = new Date(datEnt60).getDate().toString().padStart(2, '0')
+        mes = (new Date(datEnt60).getMonth() + 1).toString().padStart(2, '0') // +1 pois no getMonth Janeiro começa com zero.
+        ano = new Date(datEnt60).getFullYear()
+        var datEntFmt60 = dia + '/' + mes + '/' + ano
         itensPedido.splice(0)
         while (itensPedido.length > 0) {
           itensPedido.pop()
@@ -1578,7 +1583,7 @@ export default {
               perGue: Number(item.guelta.toString().replace(',', '.')),
               vlrRet: Number(item.rt.replace('.', '').replace(',', '')) / 100,
               perCom: Number(item.comiss.toString().replace(',', '.')),
-              datEnt: datEntFmt,
+              datEnt: (item.cMed === true || item.cOut === true) ? datEntFmt75 : datEntFmt60,
               medEsp: item.cMed === true ? 'S' : 'N',
               desEsp: item.cDes === true ? 'S' : 'N',
               conEsp: item.cCon === true ? 'S' : 'N',
