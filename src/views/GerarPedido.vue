@@ -1548,12 +1548,12 @@ export default {
         }
       })
       if (!temErro) {
-        var hoje75 = new Date()
-        var datEnt75 = hoje75.setDate(hoje75.getDate() + 75)
-        var dia75 = new Date(datEnt75).getDate().toString().padStart(2, '0')
-        var mes75 = (new Date(datEnt75).getMonth() + 1).toString().padStart(2, '0') // +1 pois no getMonth Janeiro começa com zero.
-        var ano75 = new Date(datEnt75).getFullYear()
-        var datEntFmt75 = dia75 + '/' + mes75 + '/' + ano75
+        var hoje45 = new Date()
+        var datEnt45 = hoje45.setDate(hoje45.getDate() + 75)
+        var dia45 = new Date(datEnt45).getDate().toString().padStart(2, '0')
+        var mes45 = (new Date(datEnt45).getMonth() + 1).toString().padStart(2, '0') // +1 pois no getMonth Janeiro começa com zero.
+        var ano45 = new Date(datEnt45).getFullYear()
+        var datEntFmt45 = dia45 + '/' + mes45 + '/' + ano45
         var hoje60 = new Date()
         var datEnt60 = hoje60.setDate(hoje60.getDate() + 60)
         var dia60 = new Date(datEnt60).getDate().toString().padStart(2, '0')
@@ -1584,7 +1584,7 @@ export default {
               perGue: Number(item.guelta.toString().replace(',', '.')),
               vlrRet: Number(item.rt.replace('.', '').replace(',', '')) / 100,
               perCom: Number(item.comiss.toString().replace(',', '.')),
-              datEnt: (item.cMed === true || item.cOut === true) ? datEntFmt75 : datEntFmt60,
+              datEnt: (item.cMed === true || item.cOut === true) ? datEntFmt60 : datEntFmt45,
               medEsp: item.cMed === true ? 'S' : 'N',
               desEsp: item.cDes === true ? 'S' : 'N',
               conEsp: item.cCon === true ? 'S' : 'N',
