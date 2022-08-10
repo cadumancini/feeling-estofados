@@ -544,12 +544,12 @@
                         <label class="custom-control-label ps-1" :for="'cbCondicao'+item.hash">Condição de Pagto</label>
                       </div>
                     </a>
-                    <a class="dropdown-item" href="#">
+                    <!-- <a class="dropdown-item" href="#">
                       <div class="custom-control custom-checkbox sm">
                         <input type="checkbox" class="custom-control-input" :id="'cbPrazo'+item.hash" @change="checkPrazo(item)" v-model="item.cPra">
                         <label class="custom-control-label ps-1" :for="'cbPrazo'+item.hash">Prazo Especial</label>
                       </div>
-                    </a>
+                    </a> -->
                     <a class="dropdown-item" href="#">
                       <div class="custom-control custom-checkbox sm">
                         <input type="checkbox" class="custom-control-input" :id="'cbOutras'+item.hash" @change="checkOutras(item)" v-model="item.cOut">
@@ -1548,18 +1548,23 @@ export default {
         }
       })
       if (!temErro) {
-        var hoje45 = new Date()
-        var datEnt45 = hoje45.setDate(hoje45.getDate() + 75)
-        var dia45 = new Date(datEnt45).getDate().toString().padStart(2, '0')
-        var mes45 = (new Date(datEnt45).getMonth() + 1).toString().padStart(2, '0') // +1 pois no getMonth Janeiro começa com zero.
-        var ano45 = new Date(datEnt45).getFullYear()
-        var datEntFmt45 = dia45 + '/' + mes45 + '/' + ano45
-        var hoje60 = new Date()
-        var datEnt60 = hoje60.setDate(hoje60.getDate() + 60)
-        var dia60 = new Date(datEnt60).getDate().toString().padStart(2, '0')
-        var mes60 = (new Date(datEnt60).getMonth() + 1).toString().padStart(2, '0') // +1 pois no getMonth Janeiro começa com zero.
-        var ano60 = new Date(datEnt60).getFullYear()
-        var datEntFmt60 = dia60 + '/' + mes60 + '/' + ano60
+        // var hoje45 = new Date()
+        // var datEnt45 = hoje45.setDate(hoje45.getDate() + 75)
+        // var dia45 = new Date(datEnt45).getDate().toString().padStart(2, '0')
+        // var mes45 = (new Date(datEnt45).getMonth() + 1).toString().padStart(2, '0') // +1 pois no getMonth Janeiro começa com zero.
+        // var ano45 = new Date(datEnt45).getFullYear()
+        // var datEntFmt45 = dia45 + '/' + mes45 + '/' + ano45
+        // var hoje60 = new Date()
+        // var datEnt60 = hoje60.setDate(hoje60.getDate() + 60)
+        // var dia60 = new Date(datEnt60).getDate().toString().padStart(2, '0')
+        // var mes60 = (new Date(datEnt60).getMonth() + 1).toString().padStart(2, '0') // +1 pois no getMonth Janeiro começa com zero.
+        // var ano60 = new Date(datEnt60).getFullYear()
+        // var datEntFmt60 = dia60 + '/' + mes60 + '/' + ano60
+        var hoje = new Date()
+        var diaHoje = new Date(hoje).getDate().toString().padStart(2, '0')
+        var mesHoje = (new Date(hoje).getMonth() + 1).toString().padStart(2, '0') // +1 pois no getMonth Janeiro começa com zero.
+        var anoHoje = new Date(hoje).getFullYear()
+        var datEntFmtHoje = diaHoje + '/' + mesHoje + '/' + anoHoje
         itensPedido.splice(0)
         while (itensPedido.length > 0) {
           itensPedido.pop()
@@ -1584,7 +1589,8 @@ export default {
               perGue: Number(item.guelta.toString().replace(',', '.')),
               vlrRet: Number(item.rt.replace('.', '').replace(',', '')) / 100,
               perCom: Number(item.comiss.toString().replace(',', '.')),
-              datEnt: (item.cMed === true || item.cOut === true) ? datEntFmt60 : datEntFmt45,
+              // datEnt: (item.cMed === true || item.cOut === true) ? datEntFmt60 : datEntFmt45,
+              datEnt: datEntFmtHoje,
               medEsp: item.cMed === true ? 'S' : 'N',
               desEsp: item.cDes === true ? 'S' : 'N',
               conEsp: item.cCon === true ? 'S' : 'N',
@@ -1878,11 +1884,11 @@ export default {
         alert('Descreva o critério e a condição de pagamento aplicado para a condição especial nas observações do item.')
       }
     },
-    checkPrazo (item) {
-      if (document.getElementById('cbPrazo' + item.hash).checked) {
-        alert('Em dias corridos, descreva o prazo especial desejado nas observações do item.')
-      }
-    },
+    // checkPrazo (item) {
+    //   if (document.getElementById('cbPrazo' + item.hash).checked) {
+    //     alert('Em dias corridos, descreva o prazo especial desejado nas observações do item.')
+    //   }
+    // },
     checkOutras (item) {
       if (document.getElementById('cbOutras' + item.hash).checked) {
         alert('Descreva a condição especial nas observações do item.')
