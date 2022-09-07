@@ -35,12 +35,15 @@ export default {
     return {
       pedido: 0,
       item: {},
-      trocas: []
+      trocas: [],
+      trocou: false,
+      exclusivos: []
     }
   },
   created () {
     this.pedido = this.numPed
     this.item = this.seqIpd
+    this.trocou = false
     this.manipularItem()
   },
   methods: {
@@ -74,10 +77,102 @@ export default {
           this.item.ACABADO = this.item.ALLCOMPONENTS[0] // inserindo primeiro (produto pai) no objeto
           this.item.ACABADOS = this.item.ALLCOMPONENTS.filter(comp => /^[1][.]\d+(?!.)/.test(comp.codNiv))
         })
-        this.parseAllComponentsIntoFullProduct(this.item)
+        await this.parseAllComponentsIntoFullProduct(this.item)
         this.item.PRODUCTFOUND = true
         document.getElementsByTagName('body')[0].style.cursor = 'auto'
+        // if (this.trocou) {
+        await this.montarArrayExclusivos()
+        await this.enviarStringExclusivos()
+        // }
       }
+    },
+    async montarArrayExclusivos () {
+      this.exclusivos = []
+      this.exclusivos.splice(0)
+      while (this.exclusivos.length > 0) {
+        this.exclusivos.pop()
+      }
+      const codfil = 1
+      const token = sessionStorage.getItem('token')
+      await axios.get('http://localhost:8080/trocas?emp=' + this.item.CODEMP + '&fil=' + codfil + '&ped=' + this.pedido + '&ipd=' + this.item.SEQIPD + '&token=' + token)
+        .then((response) => {
+          if (response.data.trocas.length) {
+            const trocas = response.data.trocas
+            this.item.ACABADOS.forEach(acabado => {
+              if (acabado.filhos) {
+                acabado.filhos.forEach(filho => this.analisarFilhosParaString(acabado, filho, trocas, acabado))
+              }
+            })
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+      // this.trocou = false
+    },
+    analisarFilhosParaString (pai, filho, trocas, dono) {
+      // if (pai.filhos || (pai.temG && pai.filhoPodeTrocar)) { // TERMINAR CONDICOES
+      if (((/^[1][.]\d+(?!.)/.test(pai.codNiv) && (pai.codFam === '14001' || pai.codFam === '05001' || pai.trocar))) || (pai.filhoPodeTrocar)) {
+        dono = pai
+      }
+      trocas.forEach(troca => {
+        if (troca.CODPRO === pai.codPro && troca.CODDER === pai.codDer && troca.CODCMP === filho.codPro && troca.DERCMP === filho.codDer && filho.exiCmp !== 'S' && filho.numOri < 320 && filho.codFam !== '01034') {
+          // console.log('Excl: ' + filho.codPro + ' - ' + filho.desPro + ' - der. ' + filho.codDer + ' - Dono: ' + dono.codPro + ' | ' + dono.desNfv + ' ' + dono.desDer + ' | der. ' + dono.codDer)
+          this.exclusivos.push({
+            codPro: dono.codPro,
+            codDer: dono.codDer,
+            desPro: dono.desNfv + ' ' + dono.desDer,
+            codCmp: (filho.codFam === '02001' || filho.codFam === '02002' || filho.codFam === '02003') ? filho.codRef : filho.codPro,
+            derCmp: filho.codDer,
+            desCmp: (filho.codFam === '02001' || filho.codFam === '02002' || filho.codFam === '02003') ? (filho.codRef + ' * ' + filho.desDer) : (filho.desNfv + ' ' + filho.desDer + ' * ' + filho.codDer),
+            oriPai: dono.numOri
+          })
+        }
+      })
+
+      if (filho.filhos) {
+        filho.filhos.forEach(neto => this.analisarFilhosParaString(filho, neto, trocas, dono))
+      }
+    },
+    async enviarStringExclusivos () {
+      this.exclusivos.sort(this.compareNumOri)
+      let stringExclusivos = ''
+      let paiAtual = null
+      this.exclusivos.forEach(excl => {
+        if (paiAtual === null || paiAtual !== (excl.codPro + excl.codDer)) {
+          if (paiAtual !== null) {
+            stringExclusivos += ' | '
+          }
+          paiAtual = (excl.codPro + excl.codDer)
+          stringExclusivos += excl.desPro + ' * ' + excl.codDer + ' : '
+        } else {
+          stringExclusivos += ' / '
+        }
+        stringExclusivos += excl.desCmp
+      })
+      const codfil = 1
+      const token = sessionStorage.getItem('token')
+      const formData = new FormData()
+      formData.append('exclusivos', stringExclusivos)
+      axios.post('http://localhost:8080/enviarStringExclusivos?emp=' + this.item.CODEMP + '&fil=' + codfil + '&ped=' + this.pedido + '&ipd=' + this.item.SEQIPD + '&token=' + token, formData)
+        .then((response) => {
+          this.checkInvalidLoginResponse(response.data)
+          if (response.data !== 'OK') {
+            console.log(response.data)
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    compareNumOri (a, b) {
+      if (a.oriPai > b.oriPai) {
+        return -1
+      }
+      if (a.oriPai < b.oriPai) {
+        return 1
+      }
+      return 0
     },
     async parseAllComponentsIntoFullProduct (item) {
       this.item.ACABADOS.forEach(async acabado => {
@@ -307,6 +402,7 @@ export default {
           } else {
             alert(requestResponse)
           }
+          this.trocou = true
           this.manipularItem(item)
           this.manipularItem(item)
         })
