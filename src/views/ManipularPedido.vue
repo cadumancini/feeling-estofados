@@ -37,7 +37,8 @@ export default {
       item: {},
       trocas: [],
       trocou: false,
-      exclusivos: []
+      exclusivos: [],
+      embalado: null
     }
   },
   created () {
@@ -80,10 +81,10 @@ export default {
         await this.parseAllComponentsIntoFullProduct(this.item)
         this.item.PRODUCTFOUND = true
         document.getElementsByTagName('body')[0].style.cursor = 'auto'
-        // if (this.trocou) {
-        await this.montarArrayExclusivos()
-        await this.enviarStringExclusivos()
-        // }
+        if (this.trocou) {
+          await this.montarArrayExclusivos()
+          await this.enviarStringExclusivos()
+        }
       }
     },
     async montarArrayExclusivos () {
@@ -99,6 +100,9 @@ export default {
           if (response.data.trocas.length) {
             const trocas = response.data.trocas
             this.item.ACABADOS.forEach(acabado => {
+              if (acabado.codFam === '15001') {
+                this.embalado = acabado
+              }
               if (acabado.filhos) {
                 acabado.filhos.forEach(filho => this.analisarFilhosParaString(acabado, filho, trocas, acabado))
               }
@@ -108,16 +112,24 @@ export default {
         .catch((err) => {
           console.log(err)
         })
-      // this.trocou = false
     },
     analisarFilhosParaString (pai, filho, trocas, dono) {
-      // if (pai.filhos || (pai.temG && pai.filhoPodeTrocar)) { // TERMINAR CONDICOES
-      if (((/^[1][.]\d+(?!.)/.test(pai.codNiv) && (pai.codFam === '14001' || pai.codFam === '05001' || pai.trocar))) || (pai.filhoPodeTrocar)) {
+      if (/^[1][.]\d+(?!.)/.test(pai.codNiv) || (pai.codFam === '14001' || pai.codFam === '05001' || pai.trocar)) {
         dono = pai
       }
       trocas.forEach(troca => {
-        if (troca.CODPRO === pai.codPro && troca.CODDER === pai.codDer && troca.CODCMP === filho.codPro && troca.DERCMP === filho.codDer && filho.exiCmp !== 'S' && filho.numOri < 320 && filho.codFam !== '01034') {
-          // console.log('Excl: ' + filho.codPro + ' - ' + filho.desPro + ' - der. ' + filho.codDer + ' - Dono: ' + dono.codPro + ' | ' + dono.desNfv + ' ' + dono.desDer + ' | der. ' + dono.codDer)
+        if (dono.codFam === '14001' && this.embalado !== null && troca.CODFAM === '15001') {
+          this.exclusivos.push({
+            codPro: dono.codPro,
+            codDer: dono.codDer,
+            desPro: dono.desNfv + ' ' + dono.desDer,
+            codCmp: this.embalado.codPro,
+            derCmp: this.embalado.codDer,
+            desCmp: (this.embalado.desNfv + ' ' + this.embalado.desDer + ' * ' + this.embalado.codDer),
+            oriPai: dono.numOri
+          })
+          this.embalado = null
+        } else if (troca.CODPRO === pai.codPro && troca.CODDER === pai.codDer && troca.CODCMP === filho.codPro && troca.DERCMP === filho.codDer && filho.exiCmp !== 'S' && filho.numOri < 320 && filho.codFam !== '01034') {
           this.exclusivos.push({
             codPro: dono.codPro,
             codDer: dono.codDer,
@@ -164,6 +176,7 @@ export default {
         .catch((err) => {
           console.log(err)
         })
+      this.trocou = false
     },
     compareNumOri (a, b) {
       if (a.oriPai > b.oriPai) {
