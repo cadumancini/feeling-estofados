@@ -156,7 +156,7 @@ export default {
             stringExclusivos += ' | '
           }
           paiAtual = (excl.codPro + excl.codDer)
-          stringExclusivos += excl.desPro + ' * ' + excl.codDer + ' : '
+          stringExclusivos += excl.desPro + ' : '
         } else {
           stringExclusivos += ' / '
         }
