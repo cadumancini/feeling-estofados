@@ -136,7 +136,7 @@ export default {
             desPro: dono.desNfv + ' ' + dono.desDer,
             codCmp: (filho.codFam === '02001' || filho.codFam === '02002' || filho.codFam === '02003') ? filho.codRef : filho.codPro,
             derCmp: filho.codDer,
-            desCmp: (filho.codFam === '02001' || filho.codFam === '02002' || filho.codFam === '02003') ? (filho.codRef + ' * ' + filho.desDer) : (filho.desNfv + ' ' + filho.desDer + ' * ' + filho.codDer),
+            desCmp: (filho.codFam === '02001' || filho.codFam === '02002' || filho.codFam === '02003') ? filho.codRef : (filho.desNfv + ' ' + filho.desDer),
             oriPai: dono.numOri
           })
         }
