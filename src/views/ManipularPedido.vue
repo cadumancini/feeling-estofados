@@ -125,7 +125,7 @@ export default {
             desPro: dono.desNfv + ' ' + dono.desDer,
             codCmp: this.embalado.codPro,
             derCmp: this.embalado.codDer,
-            desCmp: (this.embalado.desNfv + ' ' + this.embalado.desDer + ' * ' + this.embalado.codDer),
+            desCmp: (this.embalado.desNfv + ' ' + this.embalado.desDer),
             oriPai: dono.numOri
           })
           this.embalado = null
