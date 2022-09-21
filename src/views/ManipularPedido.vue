@@ -66,7 +66,7 @@ export default {
 
         var parseString = require('xml2js').parseString
         var json = null
-        const response = await axios.get('http://192.168.1.168:8080/estrutura?emp=' + this.item.CODEMP + '&fil=1&pro=' + this.item.CODPRO +
+        const response = await axios.get('http://192.168.1.168:8081/estrutura?emp=' + this.item.CODEMP + '&fil=1&pro=' + this.item.CODPRO +
           '&der=' + this.item.CODDER + '&ped=' + this.pedido + '&ipd=' + this.item.SEQIPD + '&token=' + token)
         this.checkInvalidLoginResponse(response.data)
         parseString(response.data, { explicitArray: false }, (err, result) => {
@@ -95,7 +95,7 @@ export default {
       }
       const codfil = 1
       const token = sessionStorage.getItem('token')
-      await axios.get('http://192.168.1.168:8080/trocas?emp=' + this.item.CODEMP + '&fil=' + codfil + '&ped=' + this.pedido + '&ipd=' + this.item.SEQIPD + '&token=' + token)
+      await axios.get('http://192.168.1.168:8081/trocas?emp=' + this.item.CODEMP + '&fil=' + codfil + '&ped=' + this.pedido + '&ipd=' + this.item.SEQIPD + '&token=' + token)
         .then((response) => {
           if (response.data.trocas.length) {
             const trocas = response.data.trocas
@@ -166,7 +166,7 @@ export default {
       const token = sessionStorage.getItem('token')
       const formData = new FormData()
       formData.append('exclusivos', stringExclusivos)
-      axios.post('http://192.168.1.168:8080/enviarStringExclusivos?emp=' + this.item.CODEMP + '&fil=' + codfil + '&ped=' + this.pedido + '&ipd=' + this.item.SEQIPD + '&token=' + token, formData)
+      axios.post('http://192.168.1.168:8081/enviarStringExclusivos?emp=' + this.item.CODEMP + '&fil=' + codfil + '&ped=' + this.pedido + '&ipd=' + this.item.SEQIPD + '&token=' + token, formData)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           if (response.data !== 'OK') {
@@ -195,13 +195,13 @@ export default {
         // ver se o pai pode ser trocado
         if (acabado.exiCmp !== 'S') {
           const token = sessionStorage.getItem('token')
-          await axios.get('http://192.168.1.168:8080/equivalentes?emp=' + this.item.CODEMP + '&modelo=' + this.item.CODPRO + '&componente=' + acabado.codPro + '&derivacao=' + acabado.codDer + '&token=' + token)
+          await axios.get('http://192.168.1.168:8081/equivalentes?emp=' + this.item.CODEMP + '&modelo=' + this.item.CODPRO + '&componente=' + acabado.codPro + '&derivacao=' + acabado.codDer + '&token=' + token)
             .then((response) => {
               this.checkInvalidLoginResponse(response.data)
               if (response.data.equivalentes.length) {
                 acabado.podeTrocar = true
               } else {
-                axios.get('http://192.168.1.168:8080/derivacoesPossiveis?emp=' + this.item.CODEMP + '&pro=' + this.item.CODPRO + '&mod=' + acabado.codMod + '&derMod=' + acabado.derMod + '&token=' + token)
+                axios.get('http://192.168.1.168:8081/derivacoesPossiveis?emp=' + this.item.CODEMP + '&pro=' + this.item.CODPRO + '&mod=' + acabado.codMod + '&derMod=' + acabado.derMod + '&token=' + token)
                   .then((response) => {
                     this.checkInvalidLoginResponse(response.data)
                     if (response.data.derivacoes.length) {
@@ -240,7 +240,7 @@ export default {
         component.derMod = node.codDer
         const token = sessionStorage.getItem('token')
         if (component.codDer !== 'GM') {
-          await axios.get('http://192.168.1.168:8080/equivalentes?emp=' + this.item.CODEMP + '&modelo=' + component.codMod + '&componente=' + component.codPro + '&derivacao=' + component.codDer + '&token=' + token)
+          await axios.get('http://192.168.1.168:8081/equivalentes?emp=' + this.item.CODEMP + '&modelo=' + component.codMod + '&componente=' + component.codPro + '&derivacao=' + component.codDer + '&token=' + token)
             .then((response) => {
               this.checkInvalidLoginResponse(response.data)
               if (response.data.equivalentes.length) {
@@ -248,7 +248,7 @@ export default {
                 component.podeTrocar = true
                 node.filhoPodeTrocar = true
               } else {
-                axios.get('http://192.168.1.168:8080/derivacoesPossiveis?emp=' + this.item.CODEMP + '&pro=' + component.codPro + '&mod=' + component.codMod + '&derMod=' + component.derMod + '&token=' + token)
+                axios.get('http://192.168.1.168:8081/derivacoesPossiveis?emp=' + this.item.CODEMP + '&pro=' + component.codPro + '&mod=' + component.codMod + '&derMod=' + component.derMod + '&token=' + token)
                   .then((response) => {
                     this.checkInvalidLoginResponse(response.data)
                     if (response.data.derivacoes.length) {
@@ -406,7 +406,7 @@ export default {
       const token = sessionStorage.getItem('token')
       const codEmp = this.item.CODEMP
       const codFil = 1
-      return axios.post('http://192.168.1.168:8080/equivalente?emp=' + codEmp + '&fil=' + codFil + '&ped=' + numPed + '&ipd=' + seqIpd + '&token=' + token, this.trocas)
+      return axios.post('http://192.168.1.168:8081/equivalente?emp=' + codEmp + '&fil=' + codFil + '&ped=' + numPed + '&ipd=' + seqIpd + '&token=' + token, this.trocas)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           const requestResponse = response.data
