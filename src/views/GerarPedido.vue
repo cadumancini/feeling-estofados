@@ -640,7 +640,7 @@
                 </td>
 
                 <td class="d-flex justify-content-around">
-                  <label class="btn btn-sm btn-action btn-secondary sm" v-bind:class="{ disabled: (!item.seqIpd || enviadoEmpresa) }" data-bs-toggle="tooltip" data-bs-placement="top" title="Upload de anexo(s)">
+                  <label class="btn btn-sm btn-action btn-secondary sm" v-bind:class="{ disabled: (!item.seqIpd || !enviadoEmpresa) }" data-bs-toggle="tooltip" data-bs-placement="top" title="Upload de anexo(s)">
                     <font-awesome-icon icon="file-upload"/><input type="file" ref="uploadArquivo" style="display: none;" @change="onUploadArquivo(item)"/>
                   </label>
                   <button class="btn btn-sm btn-action btn-secondary sm" :disabled="item.temAnx === 'N'" @click="download(item)" data-bs-toggle="tooltip" data-bs-placement="top" title="Download de anexo(s)">
