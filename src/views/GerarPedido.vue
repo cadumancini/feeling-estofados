@@ -74,13 +74,19 @@
               <button id="btnBuscaPedidosCliente" :disabled="enviadoEmpresa" class="btn btn-secondary input-group-btn btn-busca" @click="buscaPedidosCliente" data-bs-toggle="modal" data-bs-target="#pedidosClienteModal">...</button>
             </div>
           </div>
-          <div class="col-5">
+          <div class="col-2">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Pedido Representante</span>
+              <input id="pedRep" class="form-control" :disabled="enviadoEmpresa" type="text" v-model="pedRep" v-on:keyup="normalizarPedidoRepresentante">
+            </div>
+          </div>
+          <div class="col-4">
             <div class="input-group input-group-sm">
               <span class="input-group-text">Representada</span>
               <input id="representada" class="form-control" type="text" disabled v-model="representada">
             </div>
           </div>
-          <div class="col-4">
+          <div class="col-3">
             <div class="input-group input-group-sm">
               <span class="input-group-text">Condição de pagamento</span>
               <input class="form-control" type="text" disabled v-bind:class="{ 'white-bg': (!enviadoEmpresa) }" v-model="condPagamento" placeholder="Clique ao lado para selecionar">
@@ -905,6 +911,7 @@ export default {
       itemSelecionado: null,
       numPed: '',
       pedCli: '',
+      pedRep: '',
       enviadoEmpresa: false,
       totalKg: '',
       totalM3: 0,
@@ -1180,6 +1187,7 @@ export default {
       const formatter = new StringMask('99.999.999/0000-00')
       this.numPed = pedidoClicked.NUMPED
       this.pedCli = pedidoClicked.PEDCLI
+      this.pedRep = pedidoClicked.PEDREP
       this.empresa = pedidoClicked.CODEMP
       this.cliente = pedidoClicked.CODCLI
       this.nomCli = pedidoClicked.NOMCLI
@@ -1342,6 +1350,7 @@ export default {
               numPed: this.numPed > 0 ? this.numPed : 0,
               codCli: this.cliente,
               pedCli: this.pedCli !== '' ? this.pedCli : 0,
+              pedRep: this.pedRep !== '' ? this.pedRep : 0,
               codRep: this.codRepresentada,
               codTra: this.codTransportadora,
               cifFob: this.frete,
@@ -1409,6 +1418,9 @@ export default {
     normalizarPedidoCliente () {
       this.pedCli = this.pedCli.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     },
+    normalizarPedidoRepresentante () {
+      this.pedRep = this.pedRep.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    },
     excluirRascunho () {
       document.getElementById('closeModalExclusaoRascunho').click()
       this.cliente = ''
@@ -1439,6 +1451,7 @@ export default {
       }
       this.itens.length = 0
       this.pedCli = ''
+      this.pedRep = ''
       this.enviadoEmpresa = false
       this.prevFaturamento = ''
       this.condPagamento = ''
