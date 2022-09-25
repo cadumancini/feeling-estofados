@@ -33,7 +33,7 @@ export default {
       const formData = new FormData()
       formData.append('user', this.user)
       formData.append('pswd', this.password)
-      axios.post('http://192.168.1.168:8081/login', formData)
+      axios.post('http://localhost:8081/login', formData)
         .then((response) => {
           document.getElementsByTagName('body')[0].style.cursor = 'auto'
           document.getElementById('btnLogin').disabled = false
