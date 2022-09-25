@@ -693,12 +693,6 @@
           </div>
           <div class="col-2">
             <div class="input-group input-group-sm">
-              <span class="input-group-text">ICMS (R$)</span>
-              <input id="icmsValor" class="form-control" type="text" disabled v-model="icmsValor">
-            </div>
-          </div>
-          <div class="col-2">
-            <div class="input-group input-group-sm">
               <span class="input-group-text">NF (R$)</span>
               <input id="nfValor" class="form-control" type="text" disabled v-model="nfValor">
             </div>
@@ -919,7 +913,6 @@ export default {
       totalVolDer: 0,
       totalValor: 0,
       ipiValor: 0,
-      icmsValor: 0,
       nfValor: 0,
       manipulando: false,
       formData: null,
@@ -1462,7 +1455,6 @@ export default {
       this.totalM3 = 0
       this.totalValor = 0
       this.ipiValor = 0
-      this.icmsValor = 0
       this.nfValor = 0
     },
     salvarItens () {
@@ -1687,7 +1679,6 @@ export default {
       this.totalM3 = parseFloat(0)
       this.totalValor = parseFloat(0)
       this.ipiValor = parseFloat(0)
-      this.icmsValor = parseFloat(0)
       this.nfValor = parseFloat(0)
       axios.get('http://localhost:8081/itensPedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + token)
         .then((response) => {
@@ -1759,8 +1750,7 @@ export default {
                   (Number(item.PERDS5) > 0 ? ((100 - Number(item.PERDS5)) / 100) : 1))
                 ))).toFixed(2)
                 this.ipiValor = parseFloat(parseFloat(this.ipiValor) + parseFloat(item.IPIIPD)).toFixed(2)
-                this.icmsValor = parseFloat(parseFloat(this.icmsValor) + parseFloat(item.ICMIPD)).toFixed(2)
-                this.nfValor = parseFloat(parseFloat(this.totalValor) + parseFloat(this.ipiValor) + parseFloat(this.icmsValor)).toFixed(2)
+                this.nfValor = parseFloat(parseFloat(this.totalValor) + parseFloat(this.ipiValor)).toFixed(2)
               })
           })
         })
