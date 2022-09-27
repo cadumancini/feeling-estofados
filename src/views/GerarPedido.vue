@@ -1337,54 +1337,72 @@ export default {
         alert('Favor selecionar uma Condição de Pagamento!')
       } else if (this.pedidosCliente && this.pedidosCliente.some(pedido => pedido.PEDCLI === this.pedCli && pedido.NUMPED !== this.numPed)) {
         alert('Valor para Pedido Cliente já utilizado. Utilize outro valor.')
-      } else {
-        document.getElementsByTagName('body')[0].style.cursor = 'wait'
-        var parseString = require('xml2js').parseString
-        var respostaPedido = null
+      } else if (this.pedRep !== '') {
+        const pedRep = this.pedRep
         const token = sessionStorage.getItem('token')
-        const body = JSON.stringify(
-          {
-            pedido: {
-              codEmp: this.empresa,
-              codFil: 1,
-              numPed: this.numPed > 0 ? this.numPed : 0,
-              codCli: this.cliente,
-              pedCli: this.pedCli !== '' ? this.pedCli : 0,
-              pedRep: this.pedRep !== '' ? this.pedRep : 0,
-              codRep: this.codRepresentada,
-              codTra: this.codTransportadora,
-              cifFob: this.frete,
-              obsPed: this.observacoesPedido,
-              codCpg: this.codCondPagamento
-            },
-            itens: []
-          }
-        )
-        const headers = { headers: { 'Content-Type': 'application/json' } }
-        axios.put('http://localhost:8081/pedido?token=' + token, body, headers)
+        axios.get('http://localhost:8081/pedidoRepresentante?emp=' + this.empresa + '&fil=' + 1 + '&pedRep=' + pedRep + '&token=' + token)
           .then((response) => {
-            this.checkInvalidLoginResponse(response.data)
-            parseString(response.data, { explicitArray: false }, (err, result) => {
-              if (err) {
-                console.log(err)
-              }
-              respostaPedido = result['S:Envelope']['S:Body']['ns2:GravarPedidos_13Response'].result.respostaPedido
-              if (parseInt(respostaPedido.numPed) === 0) {
-                alert(respostaPedido.retorno)
-              } else {
-                this.numPed = respostaPedido.numPed
-                alert('Pedido ' + this.numPed + ' gerado/atualizado com sucesso!')
-                this.carregarItens()
-              }
-            })
+            const pedidoRep = response.data.pedidos
+            if (pedidoRep.length > 0) {
+              alert('Valor para Pedido Representante já utilizado. Utilize outro valor.')
+            } else {
+              this.enviarRequestPedido()
+            }
           })
           .catch((err) => {
             console.log(err)
           })
-          .finally(() => {
-            document.getElementsByTagName('body')[0].style.cursor = 'auto'
-          })
+      } else {
+        this.enviarRequestPedido()
       }
+    },
+    enviarRequestPedido () {
+      document.getElementsByTagName('body')[0].style.cursor = 'wait'
+      var parseString = require('xml2js').parseString
+      var respostaPedido = null
+      const token = sessionStorage.getItem('token')
+      const body = JSON.stringify(
+        {
+          pedido: {
+            codEmp: this.empresa,
+            codFil: 1,
+            numPed: this.numPed > 0 ? this.numPed : 0,
+            codCli: this.cliente,
+            pedCli: this.pedCli !== '' ? this.pedCli : 0,
+            pedRep: this.pedRep !== '' ? this.pedRep : 0,
+            codRep: this.codRepresentada,
+            codTra: this.codTransportadora,
+            cifFob: this.frete,
+            obsPed: this.observacoesPedido,
+            codCpg: this.codCondPagamento
+          },
+          itens: []
+        }
+      )
+      const headers = { headers: { 'Content-Type': 'application/json' } }
+      axios.put('http://localhost:8081/pedido?token=' + token, body, headers)
+        .then((response) => {
+          this.checkInvalidLoginResponse(response.data)
+          parseString(response.data, { explicitArray: false }, (err, result) => {
+            if (err) {
+              console.log(err)
+            }
+            respostaPedido = result['S:Envelope']['S:Body']['ns2:GravarPedidos_13Response'].result.respostaPedido
+            if (parseInt(respostaPedido.numPed) === 0) {
+              alert(respostaPedido.retorno)
+            } else {
+              this.numPed = respostaPedido.numPed
+              alert('Pedido ' + this.numPed + ' gerado/atualizado com sucesso!')
+              this.carregarItens()
+            }
+          })
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+        .finally(() => {
+          document.getElementsByTagName('body')[0].style.cursor = 'auto'
+        })
     },
     filtrarClientes () {
       if (this.clientesOpcaoFiltro === 'desc') {
