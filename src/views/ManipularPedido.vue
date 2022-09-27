@@ -38,6 +38,7 @@ export default {
       trocas: [],
       trocou: false,
       exclusivos: [],
+      paiAcabado: '',
       embalado: null
     }
   },
@@ -88,6 +89,7 @@ export default {
       }
     },
     async montarArrayExclusivos () {
+      this.paiAcabado = ''
       this.exclusivos = []
       this.exclusivos.splice(0)
       while (this.exclusivos.length > 0) {
@@ -116,6 +118,9 @@ export default {
     analisarFilhosParaString (pai, filho, trocas, dono) {
       if (/^[1][.]\d+(?!.)/.test(pai.codNiv) || (pai.codFam === '14001' || pai.codFam === '05001' || pai.trocar)) {
         dono = pai
+      }
+      if (pai.codFam === '14001' && this.paiAcabado === '') {
+        this.paiAcabado = pai.desNfv + ' ' + pai.desDer
       }
       trocas.forEach(troca => {
         if (dono.codFam === '14001' && this.embalado !== null && troca.CODFAM === '15001') {
@@ -150,6 +155,15 @@ export default {
       this.exclusivos.sort(this.compareNumOri)
       let stringExclusivos = ''
       let paiAtual = null
+      let temAcabado = false
+      this.exclusivos.forEach(excl => {
+        if (excl.desPro === this.paiAcabado) {
+          temAcabado = true
+        }
+      })
+      if (!temAcabado) {
+        stringExclusivos = this.paiAcabado + ' | '
+      }
       this.exclusivos.forEach(excl => {
         if (paiAtual === null || paiAtual !== (excl.codPro + excl.codDer)) {
           if (paiAtual !== null) {
