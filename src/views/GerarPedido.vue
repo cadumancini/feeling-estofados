@@ -470,8 +470,8 @@
           </div>
           <div class="col-6">
             <div class="float-end">
-              <button class="btn btn-secondary btn-sm" :disabled="enviadoEmpresa" @click="addItemVazio">Adicionar item</button>
-              <button id="btnSalvarItens" class="btn btn-secondary btn-sm ms-2" :disabled="enviadoEmpresa" data-bs-toggle="modal" data-bs-target="#confirmaSalvarItensModal">Salvar itens</button>
+              <button class="btn btn-secondary btn-sm" :disabled="bloqueado" @click="addItemVazio">Adicionar item</button>
+              <button id="btnSalvarItens" class="btn btn-secondary btn-sm ms-2" :disabled="bloqueado" data-bs-toggle="modal" data-bs-target="#confirmaSalvarItensModal">Salvar itens</button>
             </div>
           </div>
         </div>
@@ -496,13 +496,13 @@
             <tbody v-for="item in itens" :key="item.codPro">
               <tr>
                 <td class="fw-normal">
-                  <button class="btn btn-sm btn-secondary sm" @click="setManipular(item)" :disabled="!item.seqIpd || enviadoEmpresa" data-bs-toggle="tooltip" data-bs-placement="top" title="Manipular estrutura">
+                  <button class="btn btn-sm btn-secondary sm" @click="setManipular(item)" :disabled="!item.seqIpd || bloqueado" data-bs-toggle="tooltip" data-bs-placement="top" title="Manipular estrutura">
                     <font-awesome-icon icon="edit"/>
                   </button>
                 </td>
                 <td class="fw-normal">
                   <div class="input-group input-group-sm">
-                    <input class="form-control sm" :disabled="enviadoEmpresa"
+                    <input class="form-control sm" :disabled="bloqueado"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     maxlength="2" type="number" v-model="item.cnj">
                   </div>
@@ -510,7 +510,7 @@
                 <td class="fw-normal">
                   <div class="input-group input-group-sm">
                     <input class="form-control sm" type="text" disabled v-model="item.estilo">
-                    <button :id="`btnBuscaEstilos`+item.hash" :disabled="enviadoEmpresa" class="btn btn-secondary input-group-btn sm btn-busca" @click="buscaEstilos(item)" data-bs-toggle="modal" data-bs-target="#estilosModal">...</button>
+                    <button :id="`btnBuscaEstilos`+item.hash" :disabled="bloqueado" class="btn btn-secondary input-group-btn sm btn-busca" @click="buscaEstilos(item)" data-bs-toggle="modal" data-bs-target="#estilosModal">...</button>
                   </div>
                 </td>
                 <td class="fw-normal">
@@ -529,7 +529,7 @@
                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   maxlength="2" type="number" v-model="item.un"></td>
                 <td class="fw-normal" data-bs-toggle="tooltip" data-bs-placement="top" title="Condições especiais">
-                  <button class="btn btn-secondary dropdown-toggle sm btn-sm" :disabled="enviadoEmpresa" type="button" data-bs-toggle="dropdown"
+                  <button class="btn btn-secondary dropdown-toggle sm btn-sm" :disabled="bloqueado" type="button" data-bs-toggle="dropdown"
                           aria-haspopup="true" aria-expanded="false">Selecione</button>
                   <div class="dropdown-menu">
                     <a class="dropdown-item">
@@ -564,9 +564,9 @@
                     </a>
                   </div>
                 </td>
-                <td class="fw-normal"><small><input class="form-control form-control-sm sm" :disabled="enviadoEmpresa" type="text" v-model="item.obs"></small></td>
+                <td class="fw-normal"><small><input class="form-control form-control-sm sm" :disabled="bloqueado" type="text" v-model="item.obs"></small></td>
                 <td data-bs-toggle="tooltip" data-bs-placement="top" title="Parâmetros comerciais">
-                  <button class="btn btn-sm btn-secondary sm" :disabled="enviadoEmpresa" data-bs-toggle="modal" :data-bs-target="`#paramsModal-`+item.hash">
+                  <button class="btn btn-sm btn-secondary sm" :disabled="bloqueado" data-bs-toggle="modal" :data-bs-target="`#paramsModal-`+item.hash">
                     <font-awesome-icon icon="percentage"/>
                   </button>
                   <!-- Modal Params -->
@@ -636,7 +636,7 @@
                 </td>
                 <td class="fw-normal">
                   <small class="sm">
-                    <vue-mask class="form-control form-control-sm sm" :disabled="enviadoEmpresa" mask="000.000,00" :raw="false" :options="options" v-model="item.vlrUnit"></vue-mask>
+                    <vue-mask class="form-control form-control-sm sm" :disabled="bloqueado" mask="000.000,00" :raw="false" :options="options" v-model="item.vlrUnit"></vue-mask>
                   </small>
                 </td>
                 <td class="fw-normal">
@@ -652,7 +652,7 @@
                   <button class="btn btn-sm btn-action btn-secondary sm" :disabled="item.temAnx === 'N'" @click="download(item)" data-bs-toggle="tooltip" data-bs-placement="top" title="Download de anexo(s)">
                     <font-awesome-icon icon="download"/>
                   </button>
-                  <button class="btn btn-sm btn-action btn-danger sm" :disabled="enviadoEmpresa" @click="deleteItem(item)" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir item">
+                  <button class="btn btn-sm btn-action btn-danger sm" :disabled="bloqueado" @click="deleteItem(item)" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir item">
                     <font-awesome-icon icon="trash-alt"/>
                   </button>
                 </td>
@@ -913,6 +913,7 @@ export default {
       pedCli: '',
       pedRep: '',
       enviadoEmpresa: false,
+      bloqueado: false,
       totalKg: '',
       totalM3: 0,
       totalPesLiq: 0,
@@ -1471,6 +1472,7 @@ export default {
       this.pedCli = ''
       this.pedRep = ''
       this.enviadoEmpresa = false
+      this.bloqueado = false
       this.prevFaturamento = ''
       this.condPagamento = ''
       this.comissao = ''
@@ -1692,6 +1694,7 @@ export default {
           this.codTransportadora = response.data.pedido[0].CODTRA
           this.codRepresentada = response.data.pedido[0].CODREP
           this.enviadoEmpresa = (response.data.pedido[0].SITPED === '3' || response.data.pedido[0].SITPED === '4' || response.data.pedido[0].SITPED === '5')
+          this.bloqeado = (response.data.pedido[0].SITPED === '4' || response.data.pedido[0].SITPED === '5')
           this.observacoesPedido = response.data.pedido[0].OBSPED
         })
         .catch((err) => {
