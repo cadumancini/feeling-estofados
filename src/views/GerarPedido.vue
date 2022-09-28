@@ -29,7 +29,7 @@
         <div class="row mb-2">
           <div class="col-6">
             <span class="fw-bold fs-5">Dados Gerais</span>
-            <span v-if="enviadoEmpresa" class="ms-3 fs-6 fst-italic text-danger">O pedido encontra-se bloqueado para alteração.</span>
+            <span v-if="enviadoEmpresa" class="ms-3 fs-6 fst-italic text-danger">O pedido encontra-se bloqueado para alteração no cabeçalho.</span>
           </div>
           <div class="col-6">
             <div class="float-end">
@@ -90,7 +90,7 @@
           <div class="col-3">
             <div class="input-group input-group-sm">
               <span class="input-group-text">Transação</span>
-              <input id="frete" class="form-control" type="text" disabled v-bind:class="{ 'white-bg': (!enviadoEmpresa) }" v-model="transacao" placeholder="Selecione">
+              <input id="frete" class="form-control" type="text" disabled v-bind:class="{ 'white-bg': (!enviadoEmpresa) }" v-model="transacao" placeholder="Clique ao lado para selecionar">
               <button id="btnBuscaTransacoes" :disabled="enviadoEmpresa || empresa === ''" class="btn btn-secondary input-group-btn btn-busca" @click="buscaTransacoes" data-bs-toggle="modal" data-bs-target="#transacoesModal">...</button>
             </div>
           </div>
@@ -1786,7 +1786,7 @@ export default {
           this.frete = response.data.pedido[0].CIFFOB
           this.codTransportadora = response.data.pedido[0].CODTRA
           this.codRepresentada = response.data.pedido[0].CODREP
-          this.enviadoEmpresa = (response.data.pedido[0].SITPED === '3' || response.data.pedido[0].SITPED === '4' || response.data.pedido[0].SITPED === '5')
+          this.enviadoEmpresa = (response.data.pedido[0].CODMOT === '75')
           this.bloqeado = (response.data.pedido[0].SITPED === '4' || response.data.pedido[0].SITPED === '5')
           this.observacoesPedido = response.data.pedido[0].OBSPED
           this.transacao = response.data.pedido[0].TNSPRO
