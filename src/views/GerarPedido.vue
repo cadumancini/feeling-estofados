@@ -69,40 +69,49 @@
         <div class="row mb-2">
           <div class="col-3">
             <div class="input-group input-group-sm">
-              <span class="input-group-text">Pedido Cliente</span>
-              <input id="pedCli" class="form-control" :disabled="enviadoEmpresa" type="text" v-model="pedCli" v-on:keyup="normalizarPedidoCliente">
-              <button id="btnBuscaPedidosCliente" :disabled="enviadoEmpresa" class="btn btn-secondary input-group-btn btn-busca" @click="buscaPedidosCliente" data-bs-toggle="modal" data-bs-target="#pedidosClienteModal">...</button>
-            </div>
-          </div>
-          <div class="col-2">
-            <div class="input-group input-group-sm">
-              <span class="input-group-text">Pedido Representante</span>
-              <input id="pedRep" class="form-control" :disabled="enviadoEmpresa" type="text" v-model="pedRep" v-on:keyup="normalizarPedidoRepresentante">
-            </div>
-          </div>
-          <div class="col-4">
-            <div class="input-group input-group-sm">
-              <span class="input-group-text">Representada</span>
-              <input id="representada" class="form-control" type="text" disabled v-model="representada">
-            </div>
-          </div>
-          <div class="col-3">
-            <div class="input-group input-group-sm">
-              <span class="input-group-text">Condição de pagamento</span>
-              <input class="form-control" type="text" disabled v-bind:class="{ 'white-bg': (!enviadoEmpresa) }" v-model="condPagamento" placeholder="Clique ao lado para selecionar">
-              <button id="btnBuscaCondicoesPagto" :disabled="enviadoEmpresa" class="btn btn-secondary input-group-btn btn-busca" @click="buscaCondicoesPagto" data-bs-toggle="modal" data-bs-target="#condicoesPagtoModal">...</button>
-            </div>
-          </div>
-        </div>
-        <div class="row mb-2">
-          <div class="col-3">
-            <div class="input-group input-group-sm">
               <span class="input-group-text">Cliente</span>
               <input id="nomCli" class="form-control" type="text" disabled v-bind:class="{ 'white-bg': (!enviadoEmpresa) }" v-model="nomCli" placeholder="Clique ao lado para selecionar">
               <button id="btnBuscaClientes" class="btn btn-secondary input-group-btn btn-busca" :disabled="enviadoEmpresa" @click="buscaClientes" data-bs-toggle="modal" data-bs-target="#clientesModal">...</button>
             </div>
           </div>
           <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Pedido Cliente</span>
+              <input id="pedCli" class="form-control" :disabled="enviadoEmpresa" type="text" v-model="pedCli" v-on:keyup="normalizarPedidoCliente">
+              <button id="btnBuscaPedidosCliente" :disabled="enviadoEmpresa" class="btn btn-secondary input-group-btn btn-busca" @click="buscaPedidosCliente" data-bs-toggle="modal" data-bs-target="#pedidosClienteModal">...</button>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Pedido Representante</span>
+              <input id="pedRep" class="form-control" :disabled="enviadoEmpresa" type="text" v-model="pedRep" v-on:keyup="normalizarPedidoRepresentante">
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Transação</span>
+              <input id="frete" class="form-control" type="text" disabled v-bind:class="{ 'white-bg': (!enviadoEmpresa) }" v-model="transacao" placeholder="Selecione">
+              <button id="btnBuscaTransacoes" :disabled="enviadoEmpresa || empresa === ''" class="btn btn-secondary input-group-btn btn-busca" @click="buscaTransacoes" data-bs-toggle="modal" data-bs-target="#transacoesModal">...</button>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-4">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Condição de pagamento</span>
+              <input class="form-control" type="text" disabled v-bind:class="{ 'white-bg': (!enviadoEmpresa) }" v-model="condPagamento" placeholder="Clique ao lado para selecionar">
+              <button id="btnBuscaCondicoesPagto" :disabled="enviadoEmpresa" class="btn btn-secondary input-group-btn btn-busca" @click="buscaCondicoesPagto" data-bs-toggle="modal" data-bs-target="#condicoesPagtoModal">...</button>
+            </div>
+          </div>
+          <div class="col-8">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Representada</span>
+              <input id="representada" class="form-control" type="text" disabled v-model="representada">
+            </div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-5">
             <div class="input-group input-group-sm">
               <span class="input-group-text">E-mail</span>
               <input id="email" class="form-control" type="text" disabled v-model="email">
@@ -114,7 +123,7 @@
               <input id="telefone" class="form-control" type="text" disabled v-model="telefone">
             </div>
           </div>
-          <div class="col-3">
+          <div class="col-4">
             <div class="input-group input-group-sm">
               <span class="input-group-text">CNPJ</span>
               <input id="cnpj" class="form-control" type="text" disabled v-model="cnpj">
@@ -278,6 +287,47 @@
               </div>
               <div v-else>
                 <label>Buscando fretes ...</label>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fechar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Transacoes -->
+      <div class="modal fade" id="transacoesModal" tabindex="-1" aria-labelledby="transacoesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="fretesModalLabel">Seleção de Transação</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalTransacoes"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3" v-if="transacoes != null">
+                <input type="text" class="form-control mb-3" v-on:keyup="filtrarTransacoes" v-model="transacoesFiltro" placeholder="Digite para buscar a transação na tabela abaixo">
+                <table class="table table-striped table-hover table-bordered table-sm table-responsive">
+                  <thead>
+                    <tr>
+                      <th class="sm-header" scope="col">Código</th>
+                      <th class="sm-header" scope="col">Descrição</th>
+                      <th class="sm-header" scope="col">Detalhamento</th>
+                      <th class="sm-header" scope="col">Isento de IPI</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="transacaoRow in transacoesFiltrados" :key="transacaoRow.CODTNS" class="mouseHover" @click="selectTransacao(transacaoRow)">
+                      <th class="fw-normal" scope="row">{{ transacaoRow.CODTNS }}</th>
+                      <th class="fw-normal">{{ transacaoRow.DESTNS }}</th>
+                      <th class="fw-normal">{{ transacaoRow.DETTNS }}</th>
+                      <th class="fw-normal">{{ transacaoRow.VENIPI }}</th>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div v-else>
+                <label>Buscando transações ...</label>
               </div>
             </div>
             <div class="modal-footer">
@@ -858,6 +908,7 @@ export default {
       clientes: null,
       transportadoras: null,
       fretes: null,
+      transacoes: null,
       estilos: null,
       configs: null,
       comps: null,
@@ -870,6 +921,7 @@ export default {
       configsFiltrados: null,
       compsFiltrados: null,
       condicoesPagtoFiltrados: null,
+      transacoesFiltrados: null,
       cliente: '',
       pedidos: null,
       pedidosCliente: null,
@@ -884,6 +936,7 @@ export default {
       configsFiltro: '',
       compsFiltro: '',
       condicoesPagtoFiltro: '',
+      transacoesFiltro: '',
       nomCli: '',
       email: '',
       telefone: '',
@@ -892,6 +945,8 @@ export default {
       cidadeUF: '',
       inscrEst: '',
       frete: '',
+      transacao: '',
+      isentoIpi: '',
       codTransportadora: '',
       transportadora: '',
       codRepresentada: '',
@@ -1067,6 +1122,28 @@ export default {
           })
       }
     },
+    buscaTransacoes () {
+      if (this.empresa !== '') {
+        this.transacoes = null
+        this.transacoesFiltro = ''
+        document.getElementsByTagName('body')[0].style.cursor = 'wait'
+        document.getElementById('btnBuscaTransacoes').disabled = true
+        const token = sessionStorage.getItem('token')
+        axios.get('http://localhost:8081/transacoes?emp=' + this.empresa + '&token=' + token)
+          .then((response) => {
+            this.checkInvalidLoginResponse(response.data)
+            this.transacoes = response.data.transacoes
+            this.transacoesFiltrados = response.data.transacoes
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
+            document.getElementById('btnBuscaTransacoes').disabled = false
+          })
+          .catch((err) => {
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
+            document.getElementById('btnBuscaTransacoes').disabled = false
+            console.log(err)
+          })
+      }
+    },
     buscaEstilos (item) {
       this.itemSelecionado = item
       this.estilos = null
@@ -1176,6 +1253,11 @@ export default {
       this.frete = freteClicked.CIFFOB
       document.getElementById('closeModalFretes').click()
     },
+    selectTransacao (transClicked) {
+      this.transacao = transClicked.CODTNS
+      this.isentoIpi = transClicked.VENIPI
+      document.getElementById('closeModalTransacoes').click()
+    },
     selectPedidoCliente (pedidoClienteClicked) {
       this.numPed = pedidoClienteClicked.NUMPED
       this.pedCli = pedidoClienteClicked.PEDCLI
@@ -1200,6 +1282,8 @@ export default {
       this.inscrEst = pedidoClicked.INSEST
       this.transportadora = pedidoClicked.NOMTRA
       this.representada = pedidoClicked.NOMREP
+      this.transacao = pedidoClicked.CODTNS
+      this.isentoIpi = pedidoClicked.VENIPI
       this.buscarDadosCliente(this.cliente, true)
       this.carregarCabecalho()
       this.carregarItens()
@@ -1307,6 +1391,8 @@ export default {
         guelta: this.guelta,
         rt: Number(0).toFixed(2).toLocaleString(),
         comiss: this.comissao,
+        tnsPro: this.transacao,
+        isentoIpi: this.isentoIpi,
         cMed: false,
         cDes: false,
         cCon: false,
@@ -1375,7 +1461,8 @@ export default {
             codTra: this.codTransportadora,
             cifFob: this.frete,
             obsPed: this.observacoesPedido,
-            codCpg: this.codCondPagamento
+            codCpg: this.codCondPagamento,
+            tnsPro: this.transacao
           },
           itens: []
         }
@@ -1434,6 +1521,9 @@ export default {
     filtrarCondicoesPagto () {
       this.condicoesPagtoFiltrados = this.condicoesPagto.filter(cond => cond.DESCPG.toUpperCase().startsWith(this.condicoesPagtoFiltro.toUpperCase()))
     },
+    filtrarTransacoes () {
+      this.transacoesFiltrados = this.transacoes.filter(trans => trans.CODTNS.toUpperCase().startsWith(this.transacoesFiltro.toUpperCase()))
+    },
     normalizarPedidoCliente () {
       this.pedCli = this.pedCli.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     },
@@ -1482,6 +1572,8 @@ export default {
       this.desc4 = ''
       this.desc5 = ''
       this.guelta = ''
+      this.transacao = ''
+      this.isentoIpi = ''
       this.manipulando = false
       this.observacoesPedido = ''
       this.totalKg = ''
@@ -1621,7 +1713,8 @@ export default {
               conEsp: item.cCon === true ? 'S' : 'N',
               praEsp: item.cPra === true ? 'S' : 'N',
               outEsp: item.cOut === true ? 'S' : 'N',
-              obsIpd: item.obs
+              obsIpd: item.obs,
+              tnsPro: item.tnsPro
             }
           )
         })
@@ -1696,6 +1789,8 @@ export default {
           this.enviadoEmpresa = (response.data.pedido[0].SITPED === '3' || response.data.pedido[0].SITPED === '4' || response.data.pedido[0].SITPED === '5')
           this.bloqeado = (response.data.pedido[0].SITPED === '4' || response.data.pedido[0].SITPED === '5')
           this.observacoesPedido = response.data.pedido[0].OBSPED
+          this.transacao = response.data.pedido[0].TNSPRO
+          this.isentoIpi = response.data.pedido[0].VENIPI
         })
         .catch((err) => {
           console.log(err)
@@ -1766,7 +1861,9 @@ export default {
                       (Number(item.PERDS5) > 0 ? ((100 - Number(item.PERDS5)) / 100) : 1)).toFixed(2).toLocaleString(),
                     temAnx: item.TEMANX,
                     hash: Math.floor(Math.random() * ((this.itens.length + 1) * 1000)),
-                    derivacoesPossiveis: derivacoesPossiveis
+                    derivacoesPossiveis: derivacoesPossiveis,
+                    tnsPro: item.TNSPRO,
+                    isentoIpi: item.VENIPI
                   }
                 )
                 this.itens.sort(this.compareSeqIpd)
