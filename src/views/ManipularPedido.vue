@@ -116,6 +116,9 @@ export default {
         })
     },
     analisarFilhosParaString (pai, filho, trocas, dono) {
+      if (pai.codFam === '14001') {
+        pai.desNfv = pai.desPpc
+      }
       if (/^[1][.]\d+(?!.)/.test(pai.codNiv) || (pai.codFam === '14001' || pai.codFam === '05001' || pai.trocar)) {
         dono = pai
       }
