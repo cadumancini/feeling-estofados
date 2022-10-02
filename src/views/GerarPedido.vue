@@ -1241,6 +1241,8 @@ export default {
         this.empresasCliente.pop()
       }
       this.empresasCliente.length = 0
+      this.transacao = '90100'
+      this.isentoIpi = 'N'
       document.getElementById('closeModalClientes').click()
       this.buscarDadosCliente(this.cliente, false)
     },
