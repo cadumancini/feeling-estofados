@@ -161,10 +161,10 @@ export default {
           this.exclusivos.push({
             codPro: dono.codPro,
             codDer: dono.codDer,
-            desPro: dono.desNfv + ' ' + dono.desDer,
+            desPro: dono.desNfv + ' ' + (dono.desCpl !== ' ' ? (' ' + dono.desCpl) : ''),
             codCmp: this.embalado.codPro,
             derCmp: this.embalado.codDer,
-            desCmp: (this.embalado.desNfv + ' ' + this.embalado.desDer),
+            desCmp: (this.embalado.desNfv + (this.embalado.desCpl !== ' ' ? (' ' + this.embalado.desCpl) : '')),
             oriPai: dono.numOri
           })
           this.embalado = null
@@ -173,10 +173,10 @@ export default {
           this.exclusivos.push({
             codPro: dono.codPro,
             codDer: dono.codDer,
-            desPro: dono.desNfv + ' ' + dono.desDer,
+            desPro: dono.desNfv + ' ' + (dono.desCpl !== ' ' ? (' ' + dono.desCpl) : ''),
             codCmp: (filho.codFam === '02001' || filho.codFam === '02002' || filho.codFam === '02003') ? filho.codRef : filho.codPro,
             derCmp: filho.codDer,
-            desCmp: (filho.codFam === '02001' || filho.codFam === '02002' || filho.codFam === '02003') ? filho.codRef : (filho.desNfv + ' ' + filho.desDer),
+            desCmp: (filho.codFam === '02001' || filho.codFam === '02002' || filho.codFam === '02003') ? filho.codRef : (filho.desNfv + (filho.desCpl !== ' ' ? (' ' + filho.desCpl) : '')),
             oriPai: dono.numOri
           })
           this.enviarStringExclusivos()
