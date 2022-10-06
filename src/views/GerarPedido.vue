@@ -571,7 +571,9 @@
                 </td>
                 <td class="fw-normal">
                   <div class="input-group input-group-sm">
-                    <input :id="'inputComp'+item.hash" class="form-control sm" type="text" :disabled="!item.cMed" v-model="item.comp">
+                    <input :id="'inputComp'+item.hash" class="form-control sm"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    maxlength="3" type="number" :disabled="!item.cMed" v-model="item.comp">
                     <button :id="`btnBuscaComps`+item.hash" disabled class="btn btn-secondary input-group-btn sm btn-busca" @click="buscaComps(item, item.codConfig)" data-bs-toggle="modal" data-bs-target="#compsModal">...</button>
                   </div>
                 </td>
@@ -1619,8 +1621,7 @@ export default {
               alert('Erro: Existe(m) produto(s) com medida especial sem o comprimento preenchido. Verifique!')
               temErro = true
             } else if ((Number(item.comp) < Number(item.medMin)) || (Number(item.comp) > Number(item.medMax))) {
-              alert('Erro: O produto "' + item.config + '" está com medida especial fora do mínimo (' + item.medMin + ' cm) e máximo (' + item.medMax + ' cm). Verifique!')
-              temErro = true
+              alert('Aviso: O produto "' + item.config + '" está com medida especial fora do mínimo (' + item.medMin + ' cm) e máximo (' + item.medMax + ' cm), mas será incluído no pedido normalmente.')
             } else {
               let compMaisProximo = ''
               let menorDistancia = 1000000
