@@ -84,7 +84,6 @@ export default {
         document.getElementsByTagName('body')[0].style.cursor = 'auto'
         if (this.trocou) {
           await this.montarArrayExclusivos()
-          await this.enviarStringExclusivos()
         }
       }
     },
@@ -125,6 +124,38 @@ export default {
       if (pai.codFam === '14001' && this.paiAcabado === '') {
         this.paiAcabado = pai.desNfv + ' ' + pai.desDer
       }
+      if (filho.exiCmp === 'S') {
+        const token = sessionStorage.getItem('token')
+        axios.get('http://192.168.1.168:8081/equivalentes?emp=' + this.item.CODEMP + '&modelo=' + filho.codMod + '&componente=' + filho.codPro + '&derivacao=' + filho.codDer + '&token=' + token)
+          .then((response) => {
+            this.checkInvalidLoginResponse(response.data)
+            if (response.data.equivalentes.length) {
+              filho.podeTrocar = true
+              this.analisarTrocas(trocas, dono, pai, filho)
+            } else {
+              axios.get('http://192.168.1.168:8081/derivacoesPossiveis?emp=' + this.item.CODEMP + '&pro=' + filho.codPro + '&mod=' + filho.codMod + '&derMod=' + filho.derMod + '&token=' + token)
+                .then((response) => {
+                  this.checkInvalidLoginResponse(response.data)
+                  if (response.data.derivacoes.length) {
+                    if (filho.codPro === '01070003') {
+                      console.log(filho)
+                    }
+                    filho.podeTrocar = true
+                    this.analisarTrocas(trocas, dono, pai, filho)
+                  }
+                })
+                .catch((err) => console.log(err))
+            }
+            document.getElementsByTagName('body')[0].style.cursor = 'auto'
+          })
+      } else {
+        this.analisarTrocas(trocas, dono, pai, filho)
+      }
+      if (filho.filhos) {
+        filho.filhos.forEach(neto => this.analisarFilhosParaString(filho, neto, trocas, dono))
+      }
+    },
+    analisarTrocas (trocas, dono, pai, filho) {
       trocas.forEach(troca => {
         if (dono.codFam === '14001' && this.embalado !== null && troca.CODFAM === '15001') {
           this.exclusivos.push({
@@ -137,7 +168,8 @@ export default {
             oriPai: dono.numOri
           })
           this.embalado = null
-        } else if (troca.CODPRO === pai.codPro && troca.CODDER === pai.codDer && troca.CODCMP === filho.codPro && troca.DERCMP === filho.codDer && filho.exiCmp !== 'S' && filho.numOri < 320 && filho.codFam !== '01034') {
+          this.enviarStringExclusivos()
+        } else if (troca.CODPRO === pai.codPro && troca.CODDER === pai.codDer && troca.CODCMP === filho.codPro && troca.DERCMP === filho.codDer && (filho.exiCmp !== 'S' || filho.podeTrocar === true) && filho.numOri < 320 && filho.codFam !== '01034') {
           this.exclusivos.push({
             codPro: dono.codPro,
             codDer: dono.codDer,
@@ -147,12 +179,9 @@ export default {
             desCmp: (filho.codFam === '02001' || filho.codFam === '02002' || filho.codFam === '02003') ? filho.codRef : (filho.desNfv + ' ' + filho.desDer),
             oriPai: dono.numOri
           })
+          this.enviarStringExclusivos()
         }
       })
-
-      if (filho.filhos) {
-        filho.filhos.forEach(neto => this.analisarFilhosParaString(filho, neto, trocas, dono))
-      }
     },
     async enviarStringExclusivos () {
       this.exclusivos.sort(this.compareNumOri)
