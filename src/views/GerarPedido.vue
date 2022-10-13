@@ -1428,21 +1428,6 @@ export default {
         alert('Favor selecionar uma Condição de Pagamento!')
       } else if (this.pedidosCliente && this.pedidosCliente.some(pedido => pedido.PEDCLI === this.pedCli && pedido.NUMPED !== this.numPed)) {
         alert('Valor para Pedido Cliente já utilizado. Utilize outro valor.')
-      } else if (this.pedRep !== '') {
-        const pedRep = this.pedRep
-        const token = sessionStorage.getItem('token')
-        axios.get('http://192.168.1.168:8081/pedidoRepresentante?emp=' + this.empresa + '&fil=' + 1 + '&pedRep=' + pedRep + '&token=' + token)
-          .then((response) => {
-            const pedidoRep = response.data.pedidos
-            if (pedidoRep.length > 0) {
-              alert('Valor para Pedido Representante já utilizado. Utilize outro valor.')
-            } else {
-              this.enviarRequestPedido()
-            }
-          })
-          .catch((err) => {
-            console.log(err)
-          })
       } else {
         this.enviarRequestPedido()
       }

@@ -122,7 +122,7 @@ export default {
         dono = pai
       }
       if (pai.codFam === '14001' && this.paiAcabado === '') {
-        this.paiAcabado = pai.desNfv + ' ' + pai.desDer
+        this.paiAcabado = pai.desNfv + ' ' + (pai.desCpl !== ' ' ? (' ' + pai.desCpl) : '')
       }
       if (filho.exiCmp === 'S') {
         const token = sessionStorage.getItem('token')
