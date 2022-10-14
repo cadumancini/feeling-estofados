@@ -137,9 +137,6 @@ export default {
                 .then((response) => {
                   this.checkInvalidLoginResponse(response.data)
                   if (response.data.derivacoes.length) {
-                    if (filho.codPro === '01070003') {
-                      console.log(filho)
-                    }
                     filho.podeTrocar = true
                     this.analisarTrocas(trocas, dono, pai, filho)
                   }
@@ -162,6 +159,8 @@ export default {
             codPro: dono.codPro,
             codDer: dono.codDer,
             desPro: dono.desNfv + ' ' + (dono.desCpl !== ' ' ? (' ' + dono.desCpl) : ''),
+            codRev: '0',
+            codTal: '99',
             codCmp: this.embalado.codPro,
             derCmp: this.embalado.codDer,
             desCmp: (this.embalado.desNfv + (this.embalado.desCpl !== ' ' ? (' ' + this.embalado.desCpl) : '')),
@@ -174,6 +173,8 @@ export default {
             codPro: dono.codPro,
             codDer: dono.codDer,
             desPro: dono.desNfv + ' ' + (dono.desCpl !== ' ' ? (' ' + dono.desCpl) : ''),
+            codRev: filho.revestido !== null ? filho.revestido : '0',
+            codTal: filho.talhado !== null ? filho.talhado : '99',
             codCmp: (filho.codFam === '02001' || filho.codFam === '02002' || filho.codFam === '02003') ? filho.codRef : filho.codPro,
             derCmp: filho.codDer,
             desCmp: (filho.codFam === '02001' || filho.codFam === '02002' || filho.codFam === '02003') ? filho.codRef : (filho.desNfv + (filho.desCpl !== ' ' ? (' ' + filho.desCpl) : '')),
@@ -184,7 +185,7 @@ export default {
       })
     },
     async enviarStringExclusivos () {
-      this.exclusivos.sort(this.compareNumOri)
+      this.exclusivos.sort((a,b) => (a.numOri - b.numOri || a.codRev.localeCompare(b.codRev) || a.codTal.localeCompare(b.codTal)))
       let stringExclusivos = ''
       let paiAtual = null
       let temAcabado = false
@@ -197,14 +198,14 @@ export default {
         stringExclusivos = this.paiAcabado + ' | '
       }
       this.exclusivos.forEach(excl => {
-        if (paiAtual === null || paiAtual !== (excl.codPro + excl.codDer)) {
+        if (paiAtual === null || (paiAtual !== excl.codRev || excl.codTal !== '99')) {
           if (paiAtual !== null) {
             stringExclusivos += ' | '
           }
-          paiAtual = (excl.codPro + excl.codDer)
+          paiAtual = excl.codRev
           stringExclusivos += excl.desPro + ' : '
         } else {
-          stringExclusivos += ' / '
+          stringExclusivos += ' + '
         }
         stringExclusivos += excl.desCmp
       })
@@ -224,15 +225,15 @@ export default {
         })
       this.trocou = false
     },
-    compareNumOri (a, b) {
-      if (a.oriPai > b.oriPai) {
-        return -1
-      }
-      if (a.oriPai < b.oriPai) {
-        return 1
-      }
-      return 0
-    },
+    // compareNumOri (a, b) {
+    //   if (a.oriPai > b.oriPai) {
+    //     return -1
+    //   }
+    //   if (a.oriPai < b.oriPai) {
+    //     return 1
+    //   }
+    //   return 0
+    // },
     async parseAllComponentsIntoFullProduct (item) {
       this.item.ACABADOS.forEach(async acabado => {
         acabado.codMod = this.item.CODPRO
@@ -321,18 +322,33 @@ export default {
     },
     markItemsToExchange (node) {
       if (node.filhos) {
-        node.filhos.forEach(filho => this.checkItems(node, filho))
+        node.filhos.forEach(filho => this.checkItems(node, filho, null, null, null))
       }
     },
-    checkItems (pai, filho) {
+    checkItems (pai, filho, acabado, revestido, talhado) {
       if ((filho.codDer === 'G' || filho.proGen === 'S') && filho.codDer !== 'GM') {
         pai.temG = true
       }
       if (filho.temG || filho.trocar) {
         pai.trocar = true
       }
+              
+      if (/^[1][.]\d+(?!.)/.test(pai.codNiv) || (pai.codFam === '14001' || pai.codFam === '13001' || pai.codFam === '05001')) {
+        if (pai.codFam === '13001') {
+          revestido = pai
+        } else if (pai.codFam === '05001') {
+          talhado = pai
+        } else {
+          acabado = pai
+        }
+      }
+
+      filho.revestido = revestido !== null ? revestido.codPro + ';' + revestido.codDer : null
+      filho.talhado = talhado !== null ? talhado.codPro + ';' + talhado.codDer : null
+      filho.acabado = acabado !== null ? acabado.codPro + ';' + acabado.codDer : null
+        
       if (filho.filhos) {
-        filho.filhos.forEach(neto => this.checkItems(filho, neto))
+        filho.filhos.forEach(neto => this.checkItems(filho, neto, acabado, revestido, talhado))
       }
       if (filho.temG || filho.trocar) {
         pai.trocar = true

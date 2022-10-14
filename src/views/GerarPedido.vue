@@ -77,14 +77,18 @@
           <div class="col-3">
             <div class="input-group input-group-sm">
               <span class="input-group-text">Pedido Cliente</span>
-              <input id="pedCli" class="form-control" :disabled="enviadoEmpresa" type="text" v-model="pedCli" v-on:keyup="normalizarPedidoCliente">
+              <input id="pedCli" class="form-control" :disabled="enviadoEmpresa"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              maxlength="20" type="text" v-model="pedCli" v-on:keyup="normalizarPedidoCliente">
               <button id="btnBuscaPedidosCliente" :disabled="enviadoEmpresa" class="btn btn-secondary input-group-btn btn-busca" @click="buscaPedidosCliente" data-bs-toggle="modal" data-bs-target="#pedidosClienteModal">...</button>
             </div>
           </div>
           <div class="col-3">
             <div class="input-group input-group-sm">
               <span class="input-group-text">Pedido Representante</span>
-              <input id="pedRep" class="form-control" :disabled="enviadoEmpresa" type="text" v-model="pedRep" v-on:keyup="normalizarPedidoRepresentante">
+              <input id="pedRep" class="form-control" :disabled="enviadoEmpresa"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              maxlength="30" type="text" v-model="pedRep" v-on:keyup="normalizarPedidoRepresentante">
             </div>
           </div>
           <div class="col-3">
