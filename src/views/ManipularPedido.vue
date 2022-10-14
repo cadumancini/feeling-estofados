@@ -175,9 +175,9 @@ export default {
             desPro: dono.desNfv + ' ' + (dono.desCpl !== ' ' ? (' ' + dono.desCpl) : ''),
             codRev: filho.revestido !== null ? filho.revestido : '0',
             codTal: filho.talhado !== null ? filho.talhado : '99',
-            codCmp: (filho.codFam === '02001' || filho.codFam === '02002' || filho.codFam === '02003') ? filho.codRef : filho.codPro,
+            codCmp: (filho.codFam === '02001' || filho.codFam === '02002' || filho.codFam === '02003' || filho.codFam === '02004') ? filho.codRef : filho.codPro,
             derCmp: filho.codDer,
-            desCmp: (filho.codFam === '02001' || filho.codFam === '02002' || filho.codFam === '02003') ? filho.codRef : (filho.desNfv + (filho.desCpl !== ' ' ? (' ' + filho.desCpl) : '')),
+            desCmp: (filho.codFam === '02001' || filho.codFam === '02002' || filho.codFam === '02003' || filho.codFam === '02004') ? filho.codRef : (filho.desNfv + (filho.desCpl !== ' ' ? (' ' + filho.desCpl) : '')),
             oriPai: dono.numOri
           })
           this.enviarStringExclusivos()
@@ -396,20 +396,24 @@ export default {
         filho.codNiv !== itemTroca.codNiv) {
         // ver qual é o equivalente do filho
         if (filho.equivalentes.length) {
-          if ((itemTroca.dscCmp.includes('TECIDO') && filho.equivalentes[0].DSCEQI.includes('TECIDO')) ||
-          (itemTroca.dscCmp.includes('COURO') && filho.equivalentes[0].DSCEQI.includes('COURO'))) {
-            const objTroca = {
-              codNiv: filho.codNiv,
-              codMod: pai.codPro,
-              derMod: pai.codDer,
-              cmpAnt: filho.codPro,
-              derAnt: filho.codDer,
-              cmpAtu: filho.equivalentes[0].CODPRO,
-              derAtu: filho.equivalentes[0].CODDER,
-              dscCmp: filho.equivalentes[0].DSCEQI
+          filho.equivalentes.forEach(equiv => {
+            if ((itemTroca.dscCmp.includes('(TECIDO') && equiv.DSCEQI.includes('(TECIDO')) ||
+                (itemTroca.dscCmp.includes('(RECOURO') && equiv.DSCEQI.includes('(RECOURO')) ||
+                (itemTroca.dscCmp.includes('(COURO') && equiv.DSCEQI.includes('(COURO')) ||
+                (itemTroca.dscCmp.includes('(MANTA TRA') && equiv.DSCEQI.includes('(MANTA TRA'))) {
+              const objTroca = {
+                codNiv: filho.codNiv,
+                codMod: pai.codPro,
+                derMod: pai.codDer,
+                cmpAnt: filho.codPro,
+                derAnt: filho.codDer,
+                cmpAtu: equiv.CODPRO,
+                derAtu: equiv.CODDER,
+                dscCmp: equiv.DSCEQI
+              }
+              this.trocas.push(objTroca)
             }
-            this.trocas.push(objTroca)
-          }
+          })
         }
       }
       if (filho.filhos) {
