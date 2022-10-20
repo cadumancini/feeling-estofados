@@ -166,7 +166,7 @@ export default {
       let paiAtual = null
       let temAcabado = false
       this.exclusivos.forEach(excl => {
-        if (excl.desPro === this.paiAcabado) {
+        if (excl.desPro === this.paiAcabado && excl.codRev === '0') {
           temAcabado = true
         }
       })
