@@ -3,10 +3,10 @@
     <Navbar/>
     <div class="mx-3">
       <div class="row mb-1">
-        <div class="col-6">
+        <div class="col-3">
           <span class="fw-bold fs-4">Geração de Pedido</span>
         </div>
-        <div class="col-6">
+        <div class="col">
           <div class="float-end">
             <button class="btn btn-sm btn-secondary ms-2" :disabled="numPed == '' || (numPed != '' && enviadoEmpresa)" data-bs-toggle="modal" data-bs-target="#confirmaEnviarEmpresaModal">Enviar à empresa</button>
             <button class="btn btn-sm btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmaExclusaoRascunhoModal">Limpar</button>
@@ -27,11 +27,11 @@
       </div>
       <div class="border border-2 rounded-3 px-2 py-2">
         <div class="row mb-2">
-          <div class="col-6">
+          <div class="col">
             <span class="fw-bold fs-5">Dados Gerais</span>
             <span v-if="enviadoEmpresa" class="ms-3 fs-6 fst-italic text-danger">O pedido encontra-se bloqueado para alteração no cabeçalho.</span>
           </div>
-          <div class="col-6">
+          <div class="col-2">
             <div class="float-end">
               <button id="btnSalvar" class="btn btn-secondary btn-sm" :disabled="enviadoEmpresa" data-bs-toggle="modal" data-bs-target="#confirmaPedidoModal">Salvar</button>
             </div>
@@ -52,14 +52,14 @@
               <button id="btnBuscaTransportadoras" :disabled="enviadoEmpresa || cliente === ''" class="btn btn-secondary input-group-btn btn-busca" @click="buscaTransportadoras" data-bs-toggle="modal" data-bs-target="#transportadorasModal">...</button>
             </div>
           </div>
-          <div class="col-3">
+          <div class="col-2">
             <div class="input-group input-group-sm">
               <span class="input-group-text">Frete</span>
               <input id="frete" class="form-control" type="text" disabled v-model="frete">
               <button id="btnBuscaFretes" :disabled="enviadoEmpresa || cliente === ''" class="btn btn-secondary input-group-btn btn-busca" @click="buscaFretes" data-bs-toggle="modal" data-bs-target="#fretesModal">...</button>
             </div>
           </div>
-          <div class="col-3">
+          <div class="col">
             <div class="input-group input-group-sm">
               <span class="input-group-text">Previsão faturamento</span>
               <input id="prevFaturamento" class="form-control" type="text" disabled v-model="prevFaturamento">
@@ -714,7 +714,7 @@
                 </td>
               </tr>
               <tr v-if="item.MANIPULAR">
-                <td colspan="7">
+                <td colspan="8">
                   <ManipularPedido ref="manipularPedido" :numPed="numPed" :seqIpd="{
                                                                               CODEMP: empresa,
                                                                               NUMPED: numPed,
@@ -729,7 +729,7 @@
           </table>
         </div>
         <div class="row">
-          <div class="col-2">
+          <div class="col">
             <div class="input-group input-group-sm">
               <span class="input-group-text">Total (Kg - Bru. | Líq.)</span>
               <input id="totalKg" class="form-control" type="text" disabled v-model="totalKg">
