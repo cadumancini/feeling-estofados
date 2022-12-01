@@ -83,11 +83,15 @@ export default {
   props: ['item', 'level', 'codEmp'],
   data () {
     return {
+      api_url: '',
+      token: '',
       isOpen: true,
       equivalentesFiltro: ''
     }
   },
   created () {
+    this.api_url = process.env.VUE_APP_API_URL
+    this.token = sessionStorage.getItem('token')
     const niv = String(this.$props.item.codNiv).replaceAll('.', '')
     this.$props.item.hashModal = Math.floor(Math.random() * (niv * 1000))
     this.$props.item.equivalentes = []
@@ -112,14 +116,13 @@ export default {
       this.isOpen = !this.isOpen
     },
     async buscarOpcoes (item) {
-      const token = sessionStorage.getItem('token')
       item.equivalentes = []
       item.equivalentesFiltrados = []
       this.$props.item.equivalenteSelecionado = null
       item.equivalenteSelecionado = null
       document.getElementsByTagName('body')[0].style.cursor = 'wait'
       if (item.proGen === 'S') {
-        await axios.get('http://192.168.1.168:8081/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&derivacao=' + item.codDer + '&token=' + token)
+        await axios.get(this.api_url + '/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&derivacao=' + item.codDer + '&token=' + this.token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
@@ -131,7 +134,7 @@ export default {
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
           })
       } else if (item.podeTrocar && item.codDer !== 'G') {
-        await axios.get('http://192.168.1.168:8081/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&derivacao=' + item.codDer + '&token=' + token)
+        await axios.get(this.api_url + '/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&derivacao=' + item.codDer + '&token=' + this.token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
@@ -139,7 +142,7 @@ export default {
             if (!item.equivalentes.length) {
               item.equivalentes = []
               item.equivalentesFiltrados = []
-              axios.get('http://192.168.1.168:8081/derivacoesPossiveis?emp=' + this.codEmp + '&pro=' + item.codPro + '&mod=' + item.codMod + '&derMod=' + item.derMod + '&token=' + token)
+              axios.get(this.api_url + '/derivacoesPossiveis?emp=' + this.codEmp + '&pro=' + item.codPro + '&mod=' + item.codMod + '&derMod=' + item.derMod + '&token=' + this.token)
                 .then((response) => {
                   this.checkInvalidLoginResponse(response.data)
                   item.equivalentes = response.data.derivacoes
@@ -158,7 +161,7 @@ export default {
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
           })
       } else {
-        await axios.get('http://192.168.1.168:8081/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&derivacao=' + item.codDer + '&token=' + token)
+        await axios.get(this.api_url + '/equivalentes?emp=' + this.codEmp + '&modelo=' + item.codMod + '&componente=' + item.codPro + '&derivacao=' + item.codDer + '&token=' + this.token)
           .then(async (response) => {
             this.checkInvalidLoginResponse(response.data)
             item.equivalentes = response.data.equivalentes
@@ -166,7 +169,7 @@ export default {
             if (!item.equivalentes.length) {
               item.equivalentes = []
               item.equivalentesFiltrados = []
-              await axios.get('http://192.168.1.168:8081/derivacoesPossiveis?emp=' + this.codEmp + '&pro=' + item.codPro + '&mod=' + item.codMod + '&derMod=' + item.derMod + '&token=' + token)
+              await axios.get(this.api_url + '/derivacoesPossiveis?emp=' + this.codEmp + '&pro=' + item.codPro + '&mod=' + item.codMod + '&derMod=' + item.derMod + '&token=' + this.token)
                 .then((response) => {
                   this.checkInvalidLoginResponse(response.data)
                   item.equivalentes = response.data.derivacoes
@@ -208,8 +211,7 @@ export default {
         dscCmp: equivalente.DSCEQI,
         codFam: this.$props.item.codFam
       }
-      const token = sessionStorage.getItem('token')
-      axios.get('http://192.168.1.168:8081/itensMontagem?emp=' + this.codEmp + '&pro=' + itemTroca.cmpAtu + '&der=' + itemTroca.derAtu + '&token=' + token)
+      axios.get(this.api_url + '/itensMontagem?emp=' + this.codEmp + '&pro=' + itemTroca.cmpAtu + '&der=' + itemTroca.derAtu + '&token=' + this.token)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           if (response.data.itensMontagem.length) {

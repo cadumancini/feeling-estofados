@@ -911,6 +911,8 @@ export default {
   components: { Navbar, ManipularPedido, vueMask },
   data () {
     return {
+      api_url: '',
+      token: '',
       clientes: null,
       transportadoras: null,
       fretes: null,
@@ -990,6 +992,10 @@ export default {
       }
     }
   },
+  created () {
+    this.api_url = process.env.VUE_APP_API_URL
+    this.token = sessionStorage.getItem('token')
+  },
   mounted () {
     if (!sessionStorage.getItem('token')) {
       this.$router.push({ name: 'Login' })
@@ -1008,9 +1014,8 @@ export default {
       this.clientesFiltro = ''
       if (this.clientes === null) {
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
-        document.getElementById('btnBuscaClientes').disabled = true
-        const token = sessionStorage.getItem('token')
-        axios.get('http://192.168.1.168:8081/clientes?token=' + token)
+        document.getElementById('btnBuscaClientes').disabled = 
+        axios.get(this.api_url + '/clientes?token=' + this.token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             this.clientes = response.data.clientes
@@ -1038,8 +1043,7 @@ export default {
       if (this.transportadoras === null) {
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
         document.getElementById('btnBuscaTransportadoras').disabled = true
-        const token = sessionStorage.getItem('token')
-        axios.get('http://192.168.1.168:8081/transportadoras?token=' + token)
+        axios.get(this.api_url + '/transportadoras?token=' + this.token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             this.transportadoras = response.data.transportadoras
@@ -1070,8 +1074,7 @@ export default {
         this.pedidosClienteFiltro = ''
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
         document.getElementById('btnBuscaPedidosCliente').disabled = true
-        const token = sessionStorage.getItem('token')
-        axios.get('http://192.168.1.168:8081/pedidosCliente?cli=' + this.cliente + '&token=' + token)
+        axios.get(this.api_url + '/pedidosCliente?cli=' + this.cliente + '&token=' + this.token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             this.pedidosCliente = response.data.pedidos
@@ -1091,8 +1094,7 @@ export default {
       this.pedidosFiltro = ''
       document.getElementsByTagName('body')[0].style.cursor = 'wait'
       document.getElementById('btnBuscaPedidos').disabled = true
-      const token = sessionStorage.getItem('token')
-      axios.get('http://192.168.1.168:8081/pedidos?token=' + token)
+      axios.get(this.api_url + '/pedidos?token=' + this.token)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           this.pedidos = response.data.pedidos
@@ -1112,8 +1114,7 @@ export default {
         this.condicoesPagtoFiltro = ''
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
         document.getElementById('btnBuscaCondicoesPagto').disabled = true
-        const token = sessionStorage.getItem('token')
-        axios.get('http://192.168.1.168:8081/condicoesPagto?emp=' + this.empresa + '&token=' + token)
+        axios.get(this.api_url + '/condicoesPagto?emp=' + this.empresa + '&token=' + this.token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             this.condicoesPagto = response.data.condicoes
@@ -1134,8 +1135,7 @@ export default {
         this.transacoesFiltro = ''
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
         document.getElementById('btnBuscaTransacoes').disabled = true
-        const token = sessionStorage.getItem('token')
-        axios.get('http://192.168.1.168:8081/transacoes?emp=' + this.empresa + '&token=' + token)
+        axios.get(this.api_url + '/transacoes?emp=' + this.empresa + '&token=' + this.token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             this.transacoes = response.data.transacoes
@@ -1158,8 +1158,7 @@ export default {
       document.getElementById('btnBuscaEstilos' + item.hash).disabled = true
       document.getElementById('btnBuscaConfigs' + item.hash).disabled = true
       document.getElementById('btnBuscaComps' + item.hash).disabled = true
-      const token = sessionStorage.getItem('token')
-      axios.get('http://192.168.1.168:8081/estilos?emp=1&token=' + token)
+      axios.get(this.api_url + '/estilos?emp=1&token=' + this.token)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           this.estilos = response.data.estilos
@@ -1188,8 +1187,7 @@ export default {
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
         document.getElementById('btnBuscaConfigs' + item.hash).disabled = true
         document.getElementById('btnBuscaComps' + item.hash).disabled = true
-        const token = sessionStorage.getItem('token')
-        axios.get('http://192.168.1.168:8081/produtosPorEstilo?emp=1&estilo=' + estilo + '&token=' + token)
+        axios.get(this.api_url + '/produtosPorEstilo?emp=1&estilo=' + estilo + '&token=' + this.token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             this.configs = response.data.produtos
@@ -1213,8 +1211,7 @@ export default {
         this.compsFiltro = ''
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
         document.getElementById('btnBuscaComps' + item.hash).disabled = true
-        const token = sessionStorage.getItem('token')
-        axios.get('http://192.168.1.168:8081/derivacoesPorProduto?emp=1&produto=' + config + '&token=' + token)
+        axios.get(this.api_url + '/derivacoesPorProduto?emp=1&produto=' + config + '&token=' + this.token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             this.comps = response.data.derivacoes
@@ -1336,8 +1333,7 @@ export default {
       this.itemSelecionado = null
     },
     buscarDadosCliente (codCli, apenasEmpresas) {
-      const token = sessionStorage.getItem('token')
-      axios.get('http://192.168.1.168:8081/dadosCliente?token=' + token + '&codCli=' + codCli)
+      axios.get(this.api_url + '/dadosCliente?token=' + this.token + '&codCli=' + codCli)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           this.dadosCliente = response.data.dadosCliente
@@ -1364,8 +1360,7 @@ export default {
               })
             })
 
-            const token = sessionStorage.getItem('token')
-            axios.get('http://192.168.1.168:8081/pedidosCliente?cli=' + this.cliente + '&token=' + token)
+            axios.get(this.api_url + '/pedidosCliente?cli=' + this.cliente + '&token=' + this.token)
               .then((response) => {
                 this.checkInvalidLoginResponse(response.data)
                 this.pedidosCliente = response.data.pedidos
@@ -1440,7 +1435,6 @@ export default {
       document.getElementsByTagName('body')[0].style.cursor = 'wait'
       var parseString = require('xml2js').parseString
       var respostaPedido = null
-      const token = sessionStorage.getItem('token')
       const body = JSON.stringify(
         {
           pedido: {
@@ -1461,7 +1455,7 @@ export default {
         }
       )
       const headers = { headers: { 'Content-Type': 'application/json' } }
-      axios.put('http://192.168.1.168:8081/pedido?token=' + token, body, headers)
+      axios.put(this.api_url + '/pedido?token=' + this.token, body, headers)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           parseString(response.data, { explicitArray: false }, (err, result) => {
@@ -1714,7 +1708,6 @@ export default {
         document.getElementById('btnSalvarItens').disabled = true
         var parseString = require('xml2js').parseString
         var respostaPedido = null
-        const token = sessionStorage.getItem('token')
         const body = JSON.stringify(
           {
             pedido: {
@@ -1726,7 +1719,7 @@ export default {
           }
         )
         const headers = { headers: { 'Content-Type': 'application/json' } }
-        axios.post('http://192.168.1.168:8081/pedido/itens?token=' + token, body, headers)
+        axios.post(this.api_url + '/pedido/itens?token=' + this.token, body, headers)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             parseString(response.data, { explicitArray: false }, (err, result) => {
@@ -1756,8 +1749,7 @@ export default {
       }
     },
     buscarDerivacoes (config) {
-      const token = sessionStorage.getItem('token')
-      return axios.get('http://192.168.1.168:8081/derivacoesPorProduto?emp=1&produto=' + config + '&token=' + token)
+      return axios.get(this.api_url + '/derivacoesPorProduto?emp=1&produto=' + config + '&token=' + this.token)
     },
     compare (a, b) {
       if (a.cnj < b.cnj) {
@@ -1769,8 +1761,7 @@ export default {
       return 0
     },
     carregarCabecalho () {
-      const token = sessionStorage.getItem('token')
-      axios.get('http://192.168.1.168:8081/pedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + token)
+      axios.get(this.api_url + '/pedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + this.token)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data.pedido)
           this.prevFaturamento = response.data.pedido[0].DATENT
@@ -1789,7 +1780,6 @@ export default {
         })
     },
     carregarItens () {
-      const token = sessionStorage.getItem('token')
       this.itens = []
       this.itens.splice(0)
       while (this.itens.length > 0) {
@@ -1801,7 +1791,7 @@ export default {
       this.totalValor = parseFloat(0)
       this.ipiValor = parseFloat(0)
       this.nfValor = parseFloat(0)
-      axios.get('http://192.168.1.168:8081/itensPedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + token)
+      axios.get(this.api_url + '/itensPedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + this.token)
         .then((response) => {
           this.checkInvalidLoginResponse(response.data)
           response.data.itens.forEach(item => {
@@ -1896,8 +1886,7 @@ export default {
         alert('O pedido não possui itens. Verifique!')
       } else {
         document.getElementsByTagName('body')[0].style.cursor = 'wait'
-        const token = sessionStorage.getItem('token')
-        axios.post('http://192.168.1.168:8081/enviarPedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + token)
+        axios.post(this.api_url + '/enviarPedido?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&token=' + this.token)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
             if (response.data.pesoTotalBruto) {
@@ -1936,8 +1925,7 @@ export default {
         Accept: 'application/json',
         'Content-Type': 'multipart/form-data'
       }
-      const token = sessionStorage.getItem('token')
-      axios.post('http://192.168.1.168:8081/uploadArquivo?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&ipd=' + item.seqIpd + '&token=' + token, this.formData, { headers: headers })
+      axios.post(this.api_url + '/uploadArquivo?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&ipd=' + item.seqIpd + '&token=' + this.token, this.formData, { headers: headers })
         .then((response) => {
           if (response.data === 'OK') {
             item.temAnx = 'S'
@@ -1955,10 +1943,9 @@ export default {
     },
     download (item) {
       document.getElementsByTagName('body')[0].style.cursor = 'wait'
-      const token = sessionStorage.getItem('token')
-      axios.get('http://192.168.1.168:8081/downloadArquivo?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&ipd=' + item.seqIpd + '&token=' + token)
+      axios.get(this.api_url + '/downloadArquivo?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&ipd=' + item.seqIpd + '&token=' + this.token)
       axios({
-        url: 'http://192.168.1.168:8081/downloadArquivo?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&ipd=' + item.seqIpd + '&token=' + token, // your url
+        url: this.api_url + '/downloadArquivo?emp=' + this.empresa + '&fil=1&ped=' + this.numPed + '&ipd=' + item.seqIpd + '&token=' + this.token, // your url
         method: 'GET',
         responseType: 'blob'
       })
