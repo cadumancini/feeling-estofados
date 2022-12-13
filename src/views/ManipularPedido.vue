@@ -166,6 +166,7 @@ export default {
     },
     async enviarStringExclusivos () {
       this.exclusivos.sort((a,b) => (a.paiAca.localeCompare(b.paiAca) || a.codRev.localeCompare(b.codRev) || a.codTal.localeCompare(b.codTal)))
+      console.log(this.exclusivos)
       let stringExclusivos = ''
       let paiAtual = null
       let temAcabado = false
@@ -180,7 +181,7 @@ export default {
       this.exclusivos.forEach(excl => {
         if (paiAtual === null || (paiAtual !== excl.codRev || excl.codTal !== '99')) {
           if (paiAtual !== null) {
-            stringExclusivos += ' | '
+            stringExclusivos += excl.desPro === excl.paiAca ? (String.fromCharCode(10) + String.fromCharCode(13)) : ' | '
           }
           paiAtual = excl.codRev
           stringExclusivos += excl.desPro + ' : '
@@ -189,6 +190,7 @@ export default {
         }
         stringExclusivos += excl.desCmp
       })
+      console.log(stringExclusivos)
       const codfil = 1
       const formData = new FormData()
       formData.append('exclusivos', stringExclusivos)
