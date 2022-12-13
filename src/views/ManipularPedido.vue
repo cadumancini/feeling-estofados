@@ -124,7 +124,7 @@ export default {
       if (/^[1][.]\d+(?!.)/.test(pai.codNiv) || (pai.codFam === '14001' || pai.codFam === '05001' || pai.trocar)) {
         dono = pai
       }
-      if (pai.codFam === '14001' && this.paiAcabado === '') {
+      if (pai.codFam === '14001' /*&& this.paiAcabado === ''*/) {
         this.paiAcabado = pai.desNfv + ' ' + (pai.desCpl !== ' ' ? (' ' + pai.desCpl) : '')
       }
       this.analisarTrocas(trocas, dono, pai, filho)
@@ -144,7 +144,8 @@ export default {
             codCmp: this.embalado.codPro,
             derCmp: this.embalado.codDer,
             desCmp: (this.embalado.desNfv + (this.embalado.desCpl !== ' ' ? (' ' + this.embalado.desCpl) : '')),
-            oriPai: dono.numOri
+            oriPai: dono.numOri,
+            paiAca: this.paiAcabado
           })
           this.embalado = null
         } else if (troca.CODPRO === pai.codPro && troca.CODDER === pai.codDer && troca.CODCMP === filho.codPro && troca.DERCMP === filho.codDer && filho.numOri < 320) {
@@ -157,13 +158,14 @@ export default {
             codCmp: (filho.codFam === '02001' || filho.codFam === '02002' || filho.codFam === '02003' || filho.codFam === '02004') ? filho.codRef : filho.codPro,
             derCmp: filho.codDer,
             desCmp: (filho.codFam === '02001' || filho.codFam === '02002' || filho.codFam === '02003' || filho.codFam === '02004') ? filho.codRef : (filho.desNfv + (filho.desCpl !== ' ' ? (' ' + filho.desCpl) : '')),
-            oriPai: dono.numOri
+            oriPai: dono.numOri,
+            paiAca: this.paiAcabado
           })
         }
       })
     },
     async enviarStringExclusivos () {
-      this.exclusivos.sort((a,b) => (a.numOri - b.numOri || a.codRev.localeCompare(b.codRev) || a.codTal.localeCompare(b.codTal)))
+      this.exclusivos.sort((a,b) => (a.paiAca.localeCompare(b.paiAca) || a.codRev.localeCompare(b.codRev) || a.codTal.localeCompare(b.codTal)))
       let stringExclusivos = ''
       let paiAtual = null
       let temAcabado = false
