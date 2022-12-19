@@ -125,7 +125,7 @@ export default {
         dono = pai
       }
       if (pai.codFam === '14001' /*&& this.paiAcabado === ''*/) {
-        this.paiAcabado = pai.desNfv + ' ' + (pai.desCpl !== ' ' ? (' ' + pai.desCpl) : '')
+        this.paiAcabado = pai.desNfv + (pai.desCpl !== ' ' ? (' ' + pai.desCpl) : '')
       }
       this.analisarTrocas(trocas, dono, pai, filho)
       if (filho.filhos) {
@@ -138,7 +138,7 @@ export default {
           this.exclusivos.push({
             codPro: dono.codPro,
             codDer: dono.codDer,
-            desPro: dono.desNfv + ' ' + (dono.desCpl !== ' ' ? (' ' + dono.desCpl) : ''),
+            desPro: dono.desNfv + (dono.desCpl !== ' ' ? (' ' + dono.desCpl) : ''),
             codRev: '0',
             codTal: '99',
             codCmp: this.embalado.codPro,
@@ -148,11 +148,11 @@ export default {
             paiAca: this.paiAcabado
           })
           this.embalado = null
-        } else if (troca.CODPRO === pai.codPro && troca.CODDER === pai.codDer && troca.CODCMP === filho.codPro && troca.DERCMP === filho.codDer && filho.numOri < 320) {
+        } else if (troca.CODPRO === pai.codPro && troca.CODDER === pai.codDer && troca.CODCMP === filho.codPro && troca.DERCMP === filho.codDer && filho.numOri < 320 && filho.codFam !== '05001') {
           this.exclusivos.push({
             codPro: dono.codPro,
             codDer: dono.codDer,
-            desPro: dono.desNfv + ' ' + (dono.desCpl !== ' ' ? (' ' + dono.desCpl) : ''),
+            desPro: dono.desNfv + (dono.desCpl !== ' ' ? (' ' + dono.desCpl) : ''),
             codRev: filho.revestido !== null ? filho.revestido : '0',
             codTal: filho.talhado !== null ? filho.talhado : '99',
             codCmp: (filho.codFam === '02001' || filho.codFam === '02002' || filho.codFam === '02003' || filho.codFam === '02004') ? filho.codRef : filho.codPro,
@@ -178,7 +178,7 @@ export default {
         stringExclusivos = this.paiAcabado + ' | '
       }
       this.exclusivos.forEach(excl => {
-        if (paiAtual === null || (paiAtual !== excl.codRev || excl.codTal !== '99')) {
+        if (paiAtual === null || paiAtual !== excl.codRev || excl.codTal !== '99') {
           if (paiAtual !== null) {
             stringExclusivos += excl.desPro === excl.paiAca ? (String.fromCharCode(10) + String.fromCharCode(13)) : ' | '
           }
