@@ -145,7 +145,8 @@ export default {
             derCmp: this.embalado.codDer,
             desCmp: (this.embalado.desNfv + (this.embalado.desCpl !== ' ' ? (' ' + this.embalado.desCpl) : '')),
             oriPai: dono.numOri,
-            paiAca: this.paiAcabado
+            paiAca: this.paiAcabado,
+            ordPai: (dono.desNfv + (dono.desCpl !== ' ' ? (' ' + dono.desCpl) : '')) === this.paiAcabado ? '0' : '1'
           })
           this.embalado = null
         } else if (troca.CODPRO === pai.codPro && troca.CODDER === pai.codDer && troca.CODCMP === filho.codPro && troca.DERCMP === filho.codDer && filho.numOri < 320 && filho.codFam !== '05001') {
@@ -159,15 +160,18 @@ export default {
             derCmp: filho.codDer,
             desCmp: (filho.codFam === '02001' || filho.codFam === '02002' || filho.codFam === '02003' || filho.codFam === '02004') ? filho.codRef : (filho.desNfv + (filho.desCpl !== ' ' ? (' ' + filho.desCpl) : '')),
             oriPai: dono.numOri,
-            paiAca: this.paiAcabado
+            paiAca: this.paiAcabado,
+            ordPai: (dono.desNfv + (dono.desCpl !== ' ' ? (' ' + dono.desCpl) : '')) === this.paiAcabado ? '0' : '1'
           })
         }
       })
     },
     async enviarStringExclusivos () {
-      this.exclusivos.sort((a,b) => (a.paiAca.localeCompare(b.paiAca) || a.codRev.localeCompare(b.codRev) || b.codTal.localeCompare(a.codTal)))
+      this.exclusivos.sort((a,b) => (a.paiAca.localeCompare(b.paiAca) || a.ordPai.localeCompare(b.ordPai) || 
+                                     a.codRev.localeCompare(b.codRev) || b.codTal.localeCompare(a.codTal)))
       let stringExclusivos = ''
       let paiAtual = null
+      let paiAcaAtual = ''
       let temAcabado = false
       this.exclusivos.forEach(excl => {
         if (excl.desPro === this.paiAcabado && excl.codRev === '0') {
@@ -180,10 +184,15 @@ export default {
       this.exclusivos.forEach(excl => {
         if (paiAtual === null || paiAtual !== excl.codRev || excl.codTal !== '99') {
           if (paiAtual !== null) {
-            stringExclusivos += excl.desPro === excl.paiAca ? (String.fromCharCode(10) + String.fromCharCode(13)) : ' | '
+            stringExclusivos += excl.desPro === excl.paiAca ? ((paiAcaAtual !== excl.paiAca) ? (String.fromCharCode(10) + String.fromCharCode(13)) : '') : ' | '
+          }
+          if ((excl.desPro === excl.paiAca) && (paiAcaAtual === excl.paiAca) && (paiAtual !== null)) {
+            stringExclusivos += ' + '
+          } else { 
+            stringExclusivos += excl.desPro + ' : '
           }
           paiAtual = excl.codRev
-          stringExclusivos += excl.desPro + ' : '
+          paiAcaAtual = excl.paiAca
         } else {
           stringExclusivos += ' + '
         }
