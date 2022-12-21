@@ -1872,10 +1872,10 @@ export default {
         })
     },
     compareSeqIpd (a, b) {
-      if (a.seqIpd < b.seqIpd) {
+      if (Number(a.seqIpd) < Number(b.seqIpd)) {
         return -1
       }
-      if (a.seqIpd > b.seqIpd) {
+      if (Number(a.seqIpd) > Number(b.seqIpd)) {
         return 1
       }
       return 0
