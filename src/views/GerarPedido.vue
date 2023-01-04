@@ -1425,8 +1425,6 @@ export default {
         alert('Favor preencher o campo Pedido Cliente!')
       } else if (this.condPagamento === '') {
         alert('Favor selecionar uma Condição de Pagamento!')
-      } else if (this.pedidosCliente && this.pedidosCliente.some(pedido => pedido.PEDCLI === this.pedCli && pedido.NUMPED !== this.numPed)) {
-        alert('Valor para Pedido Cliente já utilizado. Utilize outro valor.')
       } else {
         this.enviarRequestPedido()
       }
