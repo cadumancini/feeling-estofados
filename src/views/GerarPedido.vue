@@ -550,13 +550,13 @@
             <tbody v-for="item in itens" :key="item.codPro">
               <tr>
                 <td class="fw-normal">
-                  <button class="btn btn-sm btn-secondary sm" @click="setManipular(item)" :disabled="!item.seqIpd || bloqueado" data-bs-toggle="tooltip" data-bs-placement="top" title="Manipular estrutura">
+                  <button class="btn btn-sm btn-secondary sm" @click="setManipular(item)" :disabled="!item.seqIpd || bloqueado || item.temOrp" data-bs-toggle="tooltip" data-bs-placement="top" title="Manipular estrutura">
                     <font-awesome-icon icon="edit"/>
                   </button>
                 </td>
                 <td class="fw-normal">
                   <div class="input-group input-group-sm">
-                    <input class="form-control sm" :disabled="bloqueado"
+                    <input class="form-control sm" :disabled="bloqueado || item.temOrp"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     maxlength="2" type="number" v-model="item.cnj">
                   </div>
@@ -564,7 +564,7 @@
                 <td class="fw-normal">
                   <div class="input-group input-group-sm">
                     <input class="form-control sm" type="text" disabled v-model="item.estilo">
-                    <button :id="`btnBuscaEstilos`+item.hash" :disabled="bloqueado" class="btn btn-secondary input-group-btn sm btn-busca" @click="buscaEstilos(item)" data-bs-toggle="modal" data-bs-target="#estilosModal">...</button>
+                    <button :id="`btnBuscaEstilos`+item.hash" :disabled="bloqueado || item.temOrp" class="btn btn-secondary input-group-btn sm btn-busca" @click="buscaEstilos(item)" data-bs-toggle="modal" data-bs-target="#estilosModal">...</button>
                   </div>
                 </td>
                 <td class="fw-normal">
@@ -577,15 +577,15 @@
                   <div class="input-group input-group-sm">
                     <input :id="'inputComp'+item.hash" class="form-control sm"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                    maxlength="3" type="number" :disabled="!item.cMed" v-model="item.comp">
+                    maxlength="3" type="number" :disabled="!item.cMed || item.temOrp" v-model="item.comp">
                     <button :id="`btnBuscaComps`+item.hash" disabled class="btn btn-secondary input-group-btn sm btn-busca" @click="buscaComps(item, item.codConfig)" data-bs-toggle="modal" data-bs-target="#compsModal">...</button>
                   </div>
                 </td>
-                <td class="fw-normal"><input class="form-control form-control-sm sm"
+                <td class="fw-normal"><input class="form-control form-control-sm sm" :disabled="item.temOrp"
                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   maxlength="2" type="number" v-model="item.un"></td>
                 <td class="fw-normal" data-bs-toggle="tooltip" data-bs-placement="top" title="Condições especiais">
-                  <button class="btn btn-secondary dropdown-toggle sm btn-sm" :disabled="bloqueado" type="button" data-bs-toggle="dropdown"
+                  <button class="btn btn-secondary dropdown-toggle sm btn-sm" :disabled="bloqueado || item.temOrp" type="button" data-bs-toggle="dropdown"
                           aria-haspopup="true" aria-expanded="false">Selecione</button>
                   <div class="dropdown-menu">
                     <a class="dropdown-item">
@@ -620,9 +620,9 @@
                     </a>
                   </div>
                 </td>
-                <td class="fw-normal"><small><input class="form-control form-control-sm sm" :disabled="bloqueado" type="text" v-model="item.obs"></small></td>
+                <td class="fw-normal"><small><input class="form-control form-control-sm sm" :disabled="bloqueado || item.temOrp" type="text" v-model="item.obs"></small></td>
                 <td data-bs-toggle="tooltip" data-bs-placement="top" title="Parâmetros comerciais">
-                  <button class="btn btn-sm btn-secondary sm" :disabled="bloqueado" data-bs-toggle="modal" :data-bs-target="`#paramsModal-`+item.hash">
+                  <button class="btn btn-sm btn-secondary sm" :disabled="bloqueado || item.temOrp" data-bs-toggle="modal" :data-bs-target="`#paramsModal-`+item.hash">
                     <font-awesome-icon icon="percentage"/>
                   </button>
                   <!-- Modal Params -->
@@ -692,7 +692,7 @@
                 </td>
                 <td class="fw-normal">
                   <small class="sm">
-                    <vue-mask class="form-control form-control-sm sm" :disabled="bloqueado" mask="000.000,00" :raw="false" :options="options" v-model="item.vlrUnit"></vue-mask>
+                    <vue-mask class="form-control form-control-sm sm" :disabled="bloqueado || item.temOrp" mask="000.000,00" :raw="false" :options="options" v-model="item.vlrUnit"></vue-mask>
                   </small>
                 </td>
                 <td class="fw-normal">
@@ -708,7 +708,7 @@
                   <button class="btn btn-sm btn-action btn-secondary sm" :disabled="item.temAnx === 'N'" @click="download(item)" data-bs-toggle="tooltip" data-bs-placement="top" title="Download de anexo(s)">
                     <font-awesome-icon icon="download"/>
                   </button>
-                  <button class="btn btn-sm btn-action btn-danger sm" :disabled="bloqueado" @click="deleteItem(item)" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir item">
+                  <button class="btn btn-sm btn-action btn-danger sm" :disabled="bloqueado || item.temOrp" @click="deleteItem(item)" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir item">
                     <font-awesome-icon icon="trash-alt"/>
                   </button>
                 </td>
@@ -763,6 +763,11 @@
         <div class="row">
           <div class="col-12">
             <span class="sm fw-bold fst-italic">* O total em peso e cubagem serão carregados ao enviar o pedido à empresa.</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <span class="sm fw-bold fst-italic">** Caso o item do pedido já tiver ordem de produção gerada, o mesmo estará desabilitado para edição.</span>
           </div>
         </div>
       </div>
@@ -1843,7 +1848,8 @@ export default {
                     hash: Math.floor(Math.random() * ((this.itens.length + 1) * 1000)),
                     derivacoesPossiveis: derivacoesPossiveis,
                     tnsPro: item.TNSPRO,
-                    isentoIpi: item.VENIPI
+                    isentoIpi: item.VENIPI,
+                    temOrp: item.TEMORP === 'S' ? true : false
                   }
                 )
                 this.itens.sort(this.compareSeqIpd)
