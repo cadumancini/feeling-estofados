@@ -1426,8 +1426,6 @@ export default {
         alert('Favor preencher o Cliente!')
       } else if (this.empresa === '') {
         alert('Favor escolher uma empresa!')
-      } else if (this.pedCli === '') {
-        alert('Favor preencher o campo Pedido Cliente!')
       } else if (this.condPagamento === '') {
         alert('Favor selecionar uma Condição de Pagamento!')
       } else {
