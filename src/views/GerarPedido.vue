@@ -594,7 +594,7 @@
                         <label class="custom-control-label ps-1" :for="'cbMedida'+item.hash">Medida Especial</label>
                       </div>
                     </a>
-                    <a class="dropdown-item" href="#">
+                    <!-- <a class="dropdown-item" href="#">
                       <div class="custom-control custom-checkbox sm">
                         <input type="checkbox" class="custom-control-input" :id="'cbDesconto'+item.hash" @change="checkDesconto(item)" v-model="item.cDes">
                         <label class="custom-control-label ps-1" :for="'cbDesconto'+item.hash">Desconto Especial</label>
@@ -606,7 +606,7 @@
                         <label class="custom-control-label ps-1" :for="'cbCondicao'+item.hash">Condição de Pagto</label>
                       </div>
                     </a>
-                    <!-- <a class="dropdown-item" href="#">
+                    <a class="dropdown-item" href="#">
                       <div class="custom-control custom-checkbox sm">
                         <input type="checkbox" class="custom-control-input" :id="'cbPrazo'+item.hash" @change="checkPrazo(item)" v-model="item.cPra">
                         <label class="custom-control-label ps-1" :for="'cbPrazo'+item.hash">Prazo Especial</label>
@@ -615,7 +615,7 @@
                     <a class="dropdown-item" href="#">
                       <div class="custom-control custom-checkbox sm">
                         <input type="checkbox" class="custom-control-input" :id="'cbOutras'+item.hash" @change="checkOutras(item)" v-model="item.cOut">
-                        <label class="custom-control-label ps-1" :for="'cbOutras'+item.hash">Outras</label>
+                        <label class="custom-control-label ps-1" :for="'cbOutras'+item.hash">Outras Esppeciais</label>
                       </div>
                     </a>
                   </div>
@@ -1443,8 +1443,8 @@ export default {
             codFil: 1,
             numPed: this.numPed > 0 ? this.numPed : 0,
             codCli: this.cliente,
-            pedCli: this.pedCli !== '' ? this.pedCli : 0,
-            pedRep: this.pedRep !== '' ? this.pedRep : 0,
+            pedCli: this.pedCli !== '' ? this.pedCli : ' ',
+            pedRep: this.pedRep !== '' ? this.pedRep : ' ',
             codRep: this.codRepresentada,
             codTra: this.codTransportadora,
             cifFob: this.frete,
@@ -1970,22 +1970,23 @@ export default {
     checkMedida (item) {
       if (document.getElementById('cbMedida' + item.hash).checked) {
         alert('Informe o novo comprimento, em centímetros, para o produto. Produtos de medida especial tem acréscimo no valor de tabela.')
+        document.getElementById('cbOutras' + item.hash).checked = false
         this.buscarDerivacoes(item.codConfig)
           .then(response => {
             item.derivacoesPossiveis = response.data.derivacoes
           })
       }
     },
-    checkDesconto (item) {
-      if (document.getElementById('cbDesconto' + item.hash).checked) {
-        alert('Descreva o critério e desconto aplicado para a condição especial nas observações do item.')
-      }
-    },
-    checkCondicao (item) {
-      if (document.getElementById('cbCondicao' + item.hash).checked) {
-        alert('Descreva o critério e a condição de pagamento aplicado para a condição especial nas observações do item.')
-      }
-    },
+    // checkDesconto (item) {
+    //   if (document.getElementById('cbDesconto' + item.hash).checked) {
+    //     alert('Descreva o critério e desconto aplicado para a condição especial nas observações do item.')
+    //   }
+    // },
+    // checkCondicao (item) {
+    //   if (document.getElementById('cbCondicao' + item.hash).checked) {
+    //     alert('Descreva o critério e a condição de pagamento aplicado para a condição especial nas observações do item.')
+    //   }
+    // },
     // checkPrazo (item) {
     //   if (document.getElementById('cbPrazo' + item.hash).checked) {
     //     alert('Em dias corridos, descreva o prazo especial desejado nas observações do item.')
@@ -1993,7 +1994,14 @@ export default {
     // },
     checkOutras (item) {
       if (document.getElementById('cbOutras' + item.hash).checked) {
-        alert('Descreva a condição especial nas observações do item.')
+        if (document.getElementById('cbMedida' + item.hash).checked) {
+          alert('Descreva a condição especial nas observações do item, e selecione novamente o comprimento do produto, pois a opção de Medida Especial estava selecionada.')
+          document.getElementById('cbMedida' + item.hash).checked = false
+          item.comp = ''
+          item.codComp = ''
+        } else {
+          alert('Descreva a condição especial nas observações do item.')
+        }
       }
     }
   }
