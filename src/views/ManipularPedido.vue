@@ -73,6 +73,7 @@ export default {
         const response = await axios.get(this.api_url + '/estrutura?emp=' + this.item.CODEMP + '&fil=1&pro=' + this.item.CODPRO +
           '&der=' + this.item.CODDER + '&ped=' + this.pedido + '&ipd=' + this.item.SEQIPD + '&token=' + this.token)
         this.checkInvalidLoginResponse(response.data)
+        if (response.data.includes('>GM<')) console.log(response.data)
         parseString(response.data, { explicitArray: false }, (err, result) => {
           if (err) {
             console.log(err)
@@ -339,6 +340,7 @@ export default {
       const seqIpd = item.SEQIPD
       this.trocas = []
       this.trocas.push(itemTroca)
+      console.log(itemTroca)
       // if (itemTroca.codFam === '02001' || itemTroca.codFam === '02002') {
       if (itemTroca.agpMod !== ' ') {
         item.ACABADOS.forEach(acabado => {

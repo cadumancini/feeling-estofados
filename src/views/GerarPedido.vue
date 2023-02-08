@@ -107,10 +107,19 @@
               <button id="btnBuscaCondicoesPagto" :disabled="enviadoEmpresa" class="btn btn-secondary input-group-btn btn-busca" @click="buscaCondicoesPagto" data-bs-toggle="modal" data-bs-target="#condicoesPagtoModal">...</button>
             </div>
           </div>
-          <div class="col-8">
+          <div class="col-6">
             <div class="input-group input-group-sm">
               <span class="input-group-text">Representada</span>
               <input id="representada" class="form-control" type="text" disabled v-model="representada">
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">Feira</span>
+              <select :disabled="enviadoEmpresa" id="inputGroupSelectFeira" class="form-select" v-model="feira">
+                  <option selected value="N">Não</option>
+                  <option value="S">Sim</option>
+              </select>
             </div>
           </div>
         </div>
@@ -548,7 +557,7 @@
               </tr>
             </thead>
             <tbody v-for="item in itens" :key="item.codPro">
-              <tr>
+              <tr v-if="item.sitIpd !== '5'">
                 <td class="fw-normal">
                   <button class="btn btn-sm btn-secondary sm" @click="setManipular(item)" :disabled="!item.seqIpd || bloqueado || item.temOrp" data-bs-toggle="tooltip" data-bs-placement="top" title="Manipular estrutura">
                     <font-awesome-icon icon="edit"/>
@@ -994,7 +1003,8 @@ export default {
       formData: null,
       options: {
         reverse: true
-      }
+      },
+      feira: 'N'
     }
   },
   created () {
@@ -1450,7 +1460,8 @@ export default {
             cifFob: this.frete,
             obsPed: this.observacoesPedido,
             codCpg: this.codCondPagamento,
-            tnsPro: this.transacao
+            tnsPro: this.transacao,
+            pedFei: this.feira === 'S' ? 'S' : 'N'
           },
           itens: []
         }
@@ -1569,6 +1580,7 @@ export default {
       this.totalValor = 0
       this.ipiValor = 0
       this.nfValor = 0
+      this.feira = 'N'
     },
     salvarItens () {
       document.getElementById('closeModalSalvarItens').click()
@@ -1775,6 +1787,7 @@ export default {
           this.observacoesPedido = response.data.pedido[0].OBSPED
           this.transacao = response.data.pedido[0].TNSPRO
           this.isentoIpi = response.data.pedido[0].VENIPI
+          this.feira = response.data.pedido[0].PEDFEI === 'S' ? 'S' : 'N'
         })
         .catch((err) => {
           console.log(err)
@@ -1847,7 +1860,8 @@ export default {
                     derivacoesPossiveis: derivacoesPossiveis,
                     tnsPro: item.TNSPRO,
                     isentoIpi: item.VENIPI,
-                    temOrp: item.TEMORP === 'S' ? true : false
+                    temOrp: item.TEMORP === 'S' ? true : false,
+                    sitIpd: item.SITIPD
                   }
                 )
                 this.itens.sort(this.compareSeqIpd)
