@@ -8,7 +8,7 @@
         </div>
         <div class="col">
           <div class="float-end">
-            <button class="btn btn-sm btn-secondary ms-2" :disabled="numPed == '' || (numPed != '' && enviadoEmpresa)" data-bs-toggle="modal" data-bs-target="#confirmaEnviarEmpresaModal">Enviar à empresa</button>
+            <button class="btn btn-sm btn-secondary ms-2" :disabled="numPed == '' || (numPed != '' && (enviadoEmpresa && !itemAbe))" data-bs-toggle="modal" data-bs-target="#confirmaEnviarEmpresaModal">Enviar à empresa</button>
             <button class="btn btn-sm btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#confirmaExclusaoRascunhoModal">Limpar</button>
           </div>
           <div class="float-end">
@@ -559,13 +559,13 @@
             <tbody v-for="item in itens" :key="item.codPro">
               <tr v-if="item.sitIpd !== '5'">
                 <td class="fw-normal">
-                  <button class="btn btn-sm btn-secondary sm" @click="setManipular(item)" :disabled="!item.seqIpd || bloqueado || item.temOrp" data-bs-toggle="tooltip" data-bs-placement="top" title="Manipular estrutura">
+                  <button class="btn btn-sm btn-secondary sm" @click="setManipular(item)" :disabled="!item.seqIpd || bloqueado || item.temOrp || item.ipdEnv" data-bs-toggle="tooltip" data-bs-placement="top" title="Manipular estrutura">
                     <font-awesome-icon icon="edit"/>
                   </button>
                 </td>
                 <td class="fw-normal">
                   <div class="input-group input-group-sm">
-                    <input class="form-control sm" :disabled="bloqueado || item.temOrp"
+                    <input class="form-control sm" :disabled="bloqueado || item.temOrp || item.ipdEnv"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     maxlength="2" type="number" v-model="item.cnj">
                   </div>
@@ -573,7 +573,7 @@
                 <td class="fw-normal">
                   <div class="input-group input-group-sm">
                     <input class="form-control sm" type="text" disabled v-model="item.estilo">
-                    <button :id="`btnBuscaEstilos`+item.hash" :disabled="bloqueado || item.temOrp" class="btn btn-secondary input-group-btn sm btn-busca" @click="buscaEstilos(item)" data-bs-toggle="modal" data-bs-target="#estilosModal">...</button>
+                    <button :id="`btnBuscaEstilos`+item.hash" :disabled="bloqueado || item.temOrp || item.ipdEnv" class="btn btn-secondary input-group-btn sm btn-busca" @click="buscaEstilos(item)" data-bs-toggle="modal" data-bs-target="#estilosModal">...</button>
                   </div>
                 </td>
                 <td class="fw-normal">
@@ -594,7 +594,7 @@
                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   maxlength="2" type="number" v-model="item.un"></td>
                 <td class="fw-normal" data-bs-toggle="tooltip" data-bs-placement="top" title="Condições especiais">
-                  <button class="btn btn-secondary dropdown-toggle sm btn-sm" :disabled="bloqueado || item.temOrp" type="button" data-bs-toggle="dropdown"
+                  <button class="btn btn-secondary dropdown-toggle sm btn-sm" :disabled="bloqueado || item.temOrp || item.ipdEnv" type="button" data-bs-toggle="dropdown"
                           aria-haspopup="true" aria-expanded="false">Selecione</button>
                   <div class="dropdown-menu">
                     <a class="dropdown-item">
@@ -629,9 +629,9 @@
                     </a>
                   </div>
                 </td>
-                <td class="fw-normal"><small><input class="form-control form-control-sm sm" :disabled="bloqueado || item.temOrp" type="text" v-model="item.obs"></small></td>
+                <td class="fw-normal"><small><input class="form-control form-control-sm sm" :disabled="bloqueado || item.temOrp || item.ipdEnv" type="text" v-model="item.obs"></small></td>
                 <td data-bs-toggle="tooltip" data-bs-placement="top" title="Parâmetros comerciais">
-                  <button class="btn btn-sm btn-secondary sm" :disabled="bloqueado || item.temOrp" data-bs-toggle="modal" :data-bs-target="`#paramsModal-`+item.hash">
+                  <button class="btn btn-sm btn-secondary sm" :disabled="bloqueado || item.temOrp || item.ipdEnv" data-bs-toggle="modal" :data-bs-target="`#paramsModal-`+item.hash">
                     <font-awesome-icon icon="percentage"/>
                   </button>
                   <!-- Modal Params -->
@@ -701,7 +701,7 @@
                 </td>
                 <td class="fw-normal">
                   <small class="sm">
-                    <vue-mask class="form-control form-control-sm sm" :disabled="bloqueado || item.temOrp" mask="000.000,00" :raw="false" :options="options" v-model="item.vlrUnit"></vue-mask>
+                    <vue-mask class="form-control form-control-sm sm" :disabled="bloqueado || item.temOrp || item.ipdEnv" mask="000.000,00" :raw="false" :options="options" v-model="item.vlrUnit"></vue-mask>
                   </small>
                 </td>
                 <td class="fw-normal">
@@ -711,13 +711,13 @@
                 </td>
 
                 <td class="d-flex justify-content-around">
-                  <label class="btn btn-sm btn-action btn-secondary sm" v-bind:class="{ disabled: (!item.seqIpd || !enviadoEmpresa) }" data-bs-toggle="tooltip" data-bs-placement="top" title="Upload de anexo(s)">
+                  <label class="btn btn-sm btn-action btn-secondary sm" v-bind:class="{ disabled: (!item.seqIpd || !item.ipdEnv) }" data-bs-toggle="tooltip" data-bs-placement="top" title="Upload de anexo(s)">
                     <font-awesome-icon icon="file-upload"/><input type="file" ref="uploadArquivo" style="display: none;" @change="onUploadArquivo(item)"/>
                   </label>
                   <button class="btn btn-sm btn-action btn-secondary sm" :disabled="item.temAnx === 'N'" @click="download(item)" data-bs-toggle="tooltip" data-bs-placement="top" title="Download de anexo(s)">
                     <font-awesome-icon icon="download"/>
                   </button>
-                  <button class="btn btn-sm btn-action btn-danger sm" :disabled="bloqueado || item.temOrp" @click="deleteItem(item)" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir item">
+                  <button class="btn btn-sm btn-action btn-danger sm" :disabled="bloqueado || item.temOrp || item.ipdEnv" @click="deleteItem(item)" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir item">
                     <font-awesome-icon icon="trash-alt"/>
                   </button>
                 </td>
@@ -990,6 +990,7 @@ export default {
       pedCli: '',
       pedRep: '',
       enviadoEmpresa: false,
+      itemAbe: false,
       bloqueado: false,
       totalKg: '',
       totalM3: 0,
@@ -1420,6 +1421,7 @@ export default {
         vlrUnit: '',
         vlrFinal: '',
         temAnx: 'N',
+        ipdEnv: false,
         hash: Math.floor(Math.random() * ((this.itens.length + 1) * 1000))
       }
       this.itens.push(item)
@@ -1561,6 +1563,7 @@ export default {
       this.pedCli = ''
       this.pedRep = ''
       this.enviadoEmpresa = false
+      this.itemAbe = false
       this.bloqueado = false
       this.prevFaturamento = ''
       this.condPagamento = ''
@@ -1782,7 +1785,8 @@ export default {
           this.frete = response.data.pedido[0].CIFFOB
           this.codTransportadora = response.data.pedido[0].CODTRA
           this.codRepresentada = response.data.pedido[0].CODREP
-          this.enviadoEmpresa = (response.data.pedido[0].CODMOT === '75')
+          this.enviadoEmpresa = (response.data.pedido[0].PEDENV === 'S')
+          this.itemAbe = (response.data.pedido[0].PEDABE === 'S')
           this.bloqeado = (response.data.pedido[0].SITPED === '4' || response.data.pedido[0].SITPED === '5')
           this.observacoesPedido = response.data.pedido[0].OBSPED
           this.transacao = response.data.pedido[0].TNSPRO
@@ -1861,7 +1865,8 @@ export default {
                     tnsPro: item.TNSPRO,
                     isentoIpi: item.VENIPI,
                     temOrp: item.TEMORP === 'S' ? true : false,
-                    sitIpd: item.SITIPD
+                    sitIpd: item.SITIPD,
+                    ipdEnv: item.IPDENV === 'S' ? true : false
                   }
                 )
                 this.itens.sort(this.compareSeqIpd)
@@ -1908,8 +1913,12 @@ export default {
             if (response.data.pesoTotalBruto) {
               alert('Pedido enviado à empresa com sucesso!')
               this.enviadoEmpresa = true
+              this.itemAbe = false
               this.totalKg = parseFloat(response.data.pesoTotalBruto).toFixed(2) + ' | ' + parseFloat(response.data.pesoTotalLiq).toFixed(2)
               this.totalM3 = parseFloat(response.data.volumeTotal).toFixed(2)
+              this.itens.forEach(ipd => {
+                ipd.ipdEnv = true
+              })
             } else {
               alert(response.data)
             }
