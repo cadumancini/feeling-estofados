@@ -1625,16 +1625,26 @@ export default {
               let compMaisProximo = ''
               let menorDistancia = 1000000
               compMaisProximo = item.derivacoesPossiveis[0].CODDER
+              let achou = false
               item.derivacoesPossiveis.forEach(comp => {
-                if (comp.CODDER !== compMaisProximo) {
-                  let distancia = Number(comp.CODDER) - Number(item.comp)
-                  if (distancia < 0) distancia *= -1
-                  if (distancia <= menorDistancia) {
-                    menorDistancia = distancia
-                    compMaisProximo = comp.CODDER
-                  }
+                if (Number(comp.CODDER) === Number(item.comp)) {
+                  compMaisProximo = comp.CODDER
+                  achou = true
                 }
               })
+
+              if (!achou) {
+                item.derivacoesPossiveis.forEach(comp => {
+                  if (comp.CODDER !== compMaisProximo) {
+                    distancia = Number(comp.CODDER) - Number(item.comp)
+                    if (distancia < 0) distancia *= -1
+                    if (distancia <= menorDistancia) {
+                      menorDistancia = distancia
+                      compMaisProximo = comp.CODDER
+                    }
+                  }
+                })
+              }
               item.codComp = compMaisProximo
             }
           }
