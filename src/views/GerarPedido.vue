@@ -1636,7 +1636,7 @@ export default {
               if (!achou) {
                 item.derivacoesPossiveis.forEach(comp => {
                   if (comp.CODDER !== compMaisProximo) {
-                    distancia = Number(comp.CODDER) - Number(item.comp)
+                    let distancia = Number(comp.CODDER) - Number(item.comp)
                     if (distancia < 0) distancia *= -1
                     if (distancia <= menorDistancia) {
                       menorDistancia = distancia
