@@ -73,23 +73,29 @@ export default {
         const response = await axios.get(this.api_url + '/estrutura?emp=' + this.item.CODEMP + '&fil=1&pro=' + this.item.CODPRO +
           '&der=' + this.item.CODDER + '&ped=' + this.pedido + '&ipd=' + this.item.SEQIPD + '&token=' + this.token)
         this.checkInvalidLoginResponse(response.data)
-        if (response.data.includes('>GM<')) console.log(response.data)
-        parseString(response.data, { explicitArray: false }, (err, result) => {
-          if (err) {
-            console.log(err)
+        if (response.data.includes('<erroExecucao>')) {
+          const index1 = response.data.indexOf("<erroExecucao>");
+          const index2 = response.data.indexOf("</erroExecucao>");
+
+          alert('Ocorreu um erro: ' + response.data.substring((index1 + 14), index2))
+        } else {
+          parseString(response.data, { explicitArray: false }, (err, result) => {
+            if (err) {
+              console.log(err)
+            }
+            json = result
+            this.item.ALLCOMPONENTS = json['S:Envelope']['S:Body']['ns2:EstruturaResponse'].result.componentes
+            this.item.ACABADO = this.item.ALLCOMPONENTS[0] // inserindo primeiro (produto pai) no objeto
+            this.item.ACABADOS = this.item.ALLCOMPONENTS.filter(comp => /^[1][.]\d+(?!.)/.test(comp.codNiv))
+          })
+          await this.parseAllComponentsIntoFullProduct(this.item)
+          this.item.PRODUCTFOUND = true
+          if (this.trocou) {
+            await this.montarArrayExclusivos()
+            this.enviarStringExclusivos()
           }
-          json = result
-          this.item.ALLCOMPONENTS = json['S:Envelope']['S:Body']['ns2:EstruturaResponse'].result.componentes
-          this.item.ACABADO = this.item.ALLCOMPONENTS[0] // inserindo primeiro (produto pai) no objeto
-          this.item.ACABADOS = this.item.ALLCOMPONENTS.filter(comp => /^[1][.]\d+(?!.)/.test(comp.codNiv))
-        })
-        await this.parseAllComponentsIntoFullProduct(this.item)
-        this.item.PRODUCTFOUND = true
-        document.getElementsByTagName('body')[0].style.cursor = 'auto'
-        if (this.trocou) {
-          await this.montarArrayExclusivos()
-          this.enviarStringExclusivos()
         }
+        document.getElementsByTagName('body')[0].style.cursor = 'auto'
       }
     },
     async montarArrayExclusivos () {

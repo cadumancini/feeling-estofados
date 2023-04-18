@@ -1748,22 +1748,29 @@ export default {
         axios.post(this.api_url + '/pedido/itens?token=' + this.token, body, headers)
           .then((response) => {
             this.checkInvalidLoginResponse(response.data)
-            parseString(response.data, { explicitArray: false }, (err, result) => {
-              if (err) {
-                console.log(err)
-              }
-              respostaPedido = result['S:Envelope']['S:Body']['ns2:GravarPedidos_13Response'].result.respostaPedido
-              if (respostaPedido.retorno === 'OK') {
-                alert('Itens salvos com sucesso!')
-                this.manipulando = false
-                this.carregarCabecalho()
-                this.carregarItens()
-              } else if (respostaPedido.gridPro.retorno.length) {
-                alert(respostaPedido.gridPro.retorno)
-              } else {
-                alert(respostaPedido.retorno)
-              }
-            })
+            if (response.data.includes('<erroExecucao>')) {
+              const index1 = response.data.indexOf("<erroExecucao>");
+              const index2 = response.data.indexOf("</erroExecucao>");
+
+              alert('Ocorreu um erro: ' + response.data.substring((index1 + 14), index2))
+            } else {
+              parseString(response.data, { explicitArray: false }, (err, result) => {
+                if (err) {
+                  console.log(err)
+                }
+                respostaPedido = result['S:Envelope']['S:Body']['ns2:GravarPedidos_13Response'].result.respostaPedido
+                if (respostaPedido.retorno === 'OK') {
+                  alert('Itens salvos com sucesso!')
+                  this.manipulando = false
+                  this.carregarCabecalho()
+                  this.carregarItens()
+                } else if (respostaPedido.gridPro.retorno.length) {
+                  alert(respostaPedido.gridPro.retorno)
+                } else {
+                  alert(respostaPedido.retorno)
+                }
+              })
+            }
             document.getElementsByTagName('body')[0].style.cursor = 'auto'
             document.getElementById('btnSalvarItens').disabled = false
           })
