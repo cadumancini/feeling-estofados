@@ -1764,8 +1764,8 @@ export default {
                   this.manipulando = false
                   this.carregarCabecalho()
                   this.carregarItens()
-                } else if (respostaPedido.gridPro.retorno.length) {
-                  alert(respostaPedido.gridPro.retorno)
+                // } else if (respostaPedido.gridPro.retorno.length) {
+                //   alert(respostaPedido.gridPro.retorno)
                 } else {
                   alert(respostaPedido.retorno)
                 }
