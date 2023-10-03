@@ -110,10 +110,14 @@ export default {
         .then((response) => {
           if (response.data.trocas.length) {
             const trocas = response.data.trocas
-            this.item.ACABADOS.forEach(acabado => {
-              if (acabado.codFam === '15001') {
-                this.embalado = acabado
+            
+            for (let i = 0; i < this.item.ACABADOS.length; i++) {
+              if (this.item.ACABADOS[i].codFam === '15001') {
+                this.embalado = this.item.ACABADOS[i]
               }
+            }
+            
+            this.item.ACABADOS.forEach(acabado => {
               if (acabado.filhos) {
                 acabado.filhos.forEach(filho => this.analisarFilhosParaString(acabado, filho, trocas, acabado))
               }
