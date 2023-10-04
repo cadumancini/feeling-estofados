@@ -631,7 +631,7 @@
                 </td>
                 <td class="fw-normal"><small><input class="form-control form-control-sm sm" :disabled="bloqueado || item.temOrp || item.ipdEnv" type="text" v-model="item.obs"></small></td>
                 <td data-bs-toggle="tooltip" data-bs-placement="top" title="Parâmetros comerciais">
-                  <button class="btn btn-sm btn-secondary sm" :disabled="bloqueado || item.temOrp || item.ipdEnv" data-bs-toggle="modal" :data-bs-target="`#paramsModal-`+item.hash">
+                  <button class="btn btn-sm btn-secondary sm" :disabled="!aberto" data-bs-toggle="modal" :data-bs-target="`#paramsModal-`+item.hash">
                     <font-awesome-icon icon="percentage"/>
                   </button>
                   <!-- Modal Params -->
@@ -701,7 +701,7 @@
                 </td>
                 <td class="fw-normal">
                   <small class="sm">
-                    <vue-mask class="form-control form-control-sm sm" :disabled="bloqueado || item.temOrp || item.ipdEnv" mask="000.000,00" :raw="false" :options="options" v-model="item.vlrUnit"></vue-mask>
+                    <vue-mask class="form-control form-control-sm sm" :disabled="!aberto" mask="000.000,00" :raw="false" :options="options" v-model="item.vlrUnit"></vue-mask>
                   </small>
                 </td>
                 <td class="fw-normal">
@@ -992,6 +992,7 @@ export default {
       enviadoEmpresa: false,
       itemAbe: false,
       bloqueado: false,
+      aberto: false,
       totalKg: '',
       totalM3: 0,
       totalPesLiq: 0,
@@ -1565,6 +1566,7 @@ export default {
       this.enviadoEmpresa = false
       this.itemAbe = false
       this.bloqueado = false
+      this.aberto = false
       this.prevFaturamento = ''
       this.condPagamento = ''
       this.comissao = ''
@@ -1804,7 +1806,8 @@ export default {
           this.codRepresentada = response.data.pedido[0].CODREP
           this.enviadoEmpresa = (response.data.pedido[0].PEDENV === 'S')
           this.itemAbe = (response.data.pedido[0].PEDABE === 'S')
-          this.bloqeado = (response.data.pedido[0].SITPED === '4' || response.data.pedido[0].SITPED === '5')
+          this.bloqueado = (response.data.pedido[0].SITPED === '4' || response.data.pedido[0].SITPED === '5')
+          this.aberto = (response.data.pedido[0].SITPED === '1' || response.data.pedido[0].SITPED === '9')
           this.observacoesPedido = response.data.pedido[0].OBSPED
           this.transacao = response.data.pedido[0].TNSPRO
           this.isentoIpi = response.data.pedido[0].VENIPI
@@ -1900,7 +1903,13 @@ export default {
                   (Number(item.PERDS4) > 0 ? ((100 - Number(item.PERDS4)) / 100) : 1) *
                   (Number(item.PERDS5) > 0 ? ((100 - Number(item.PERDS5)) / 100) : 1))
                 ))).toFixed(2)
-                this.ipiValor = parseFloat(parseFloat(this.ipiValor) + parseFloat(item.IPIIPD)).toFixed(2)
+                this.ipiValor = parseFloat(parseFloat(this.ipiValor) + parseFloat(parseFloat(item.IPIIPD) * parseFloat(
+                  Number((Number(item.PERDS1) > 0 ? ((100 - Number(item.PERDS1)) / 100) : 1) *
+                  (Number(item.PERDS2) > 0 ? ((100 - Number(item.PERDS2)) / 100) : 1) *
+                  (Number(item.PERDS3) > 0 ? ((100 - Number(item.PERDS3)) / 100) : 1) *
+                  (Number(item.PERDS4) > 0 ? ((100 - Number(item.PERDS4)) / 100) : 1) *
+                  (Number(item.PERDS5) > 0 ? ((100 - Number(item.PERDS5)) / 100) : 1))
+                ))).toFixed(2)
                 this.nfValor = parseFloat(parseFloat(this.totalValor) + parseFloat(this.ipiValor)).toFixed(2)
               })
           })
