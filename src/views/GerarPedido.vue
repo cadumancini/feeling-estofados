@@ -1482,6 +1482,7 @@ export default {
               alert(respostaPedido.retorno)
             } else {
               this.numPed = respostaPedido.numPed
+              this.aberto = true
               alert('Pedido ' + this.numPed + ' gerado/atualizado com sucesso!')
               this.carregarItens()
             }
